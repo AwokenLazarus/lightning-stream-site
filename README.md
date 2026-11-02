@@ -20,7 +20,7 @@ The planned 301s from lazarus-xbt.xyz are in `REDIRECTS.md`, not applied.
 | `worker/src/` | The API Worker: `index.js` (routes, Nostr fetch, KV cache), `parse.js` (reading and checking listings), `graph.js` (graph snapshots). |
 | `worker/test/` | `npm test`: the parser against real relay events (fixture of 2026-11-02) and a synthetic graph. |
 | `scripts/build.sh` | Regenerates the changelog page and the migrated papers, then stamps the shared header and footer. |
-| `scripts/changelog.py` | `site/changelog/` from Lightning-Stream's `CHANGELOG.md` (default `../Lightning-Stream/CHANGELOG.md`, or `CHANGELOG=`). |
+| `scripts/changelog.py` | `site/changelog/` from Lightning-Stream's `CHANGELOG.md` (default `../lightning-stream/CHANGELOG.md`, or `CHANGELOG=`). |
 | `scripts/migrate_papers.py` | The whitepaper, design, tests, progress and uses pages from the old `/stream/` pages (`PAPERS=` path to `cloudflare/map-site/public/stream` in an AwokenLazarus/Bitcoin checkout). |
 | `scripts/chrome.mjs` | The shared header and footer, stamped between `<!-- chrome:… -->` markers. Edit them here. |
 | `scripts/publish_graph.py` | The graph publisher (below). |

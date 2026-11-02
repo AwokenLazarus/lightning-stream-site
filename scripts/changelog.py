@@ -3,7 +3,7 @@
 
     python3 scripts/changelog.py [path/to/CHANGELOG.md]
 
-The default source is ../Lightning-Stream/CHANGELOG.md (a checkout of AwokenLazarus/Lightning-Stream beside this one). The page keeps
+The default source is ../lightning-stream/CHANGELOG.md (a checkout of AwokenLazarus/Lightning-Stream beside this one). The page keeps
 every word of the changelog. It understands the subset the changelog uses: "## version (date)"
 headings, "**Section**" lines, "- " items with indented continuation lines, plain paragraphs, and
 inline `code`, **bold**, *emphasis* and [links](url). Afterwards run `node scripts/chrome.mjs`
@@ -17,9 +17,11 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "..", "Lightning-Stream", "CHANGELOG.md")
+SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "..", "lightning-stream", "CHANGELOG.md")
 OUT = os.path.join(ROOT, "site", "changelog", "index.html")
 REPO = "https://github.com/AwokenLazarus/Lightning-Stream/blob/main/"
+# Addresses that no longer answer: shown as text, not as links.
+DEAD_LINKS = {"https://stream.lazarus-xbt.xyz"}
 # Versions with a GitHub release page.
 RELEASES = {"0.2.0": "https://github.com/AwokenLazarus/Lightning-Stream/releases/tag/v0.2.0"}
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -46,6 +48,8 @@ def inline(s):
             out.append(f'<a href="{html.escape(href)}">{inline(ltext)}</a>')
         elif em is not None:
             out.append(f"<em>{inline(em)}</em>")
+        elif url.rstrip("/") in DEAD_LINKS:
+            out.append(html.escape(url, quote=False))
         else:
             out.append(f'<a href="{html.escape(url)}">{html.escape(url, quote=False)}</a>')
         i = m.end()
