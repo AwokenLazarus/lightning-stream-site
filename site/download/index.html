@@ -83,7 +83,7 @@
             <span class="plat-mark">STARTOS 0.4</span>
             <h2 id="startos-h">StartOS</h2>
             <ol>
-              <li>Marketplace &rarr; the registry menu at the top &rarr; <strong>Add</strong>. Add Paul's registry and install <strong>Knots-BLAKE2b</strong> and <strong>Lightning Fork</strong> (0.21.4-beta.21.1:2 or later).</li>
+              <li>Marketplace &rarr; the registry menu at the top &rarr; <strong>Add</strong>. Add Paul's registry and install <strong>Knots-BLAKE2b</strong> and <strong>Lightning Fork</strong> (0.21.4-beta.21.1:2 or later). Lightning Stream needs <strong>StartOS 0.4.0.2 or later</strong>: on an older StartOS the install fails with a “Deserialization Error”, so update StartOS first (System → Updates).</li>
               <li>Add the Lightning Stream registry the same way, switch to it, and install Lightning Stream. In its Actions, run <strong>Node connection</strong> (your Knots-BLAKE2b node's RPC host, port, user and password), then start the service. Run <strong>Web UI setup code</strong>, open the Web interface, enter the code and choose a password.</li>
               <li>In Lightning Fork, approve the task <strong>Grant app access</strong> for Lightning Stream. The app gets its own narrow key: it can pay and read, nothing more, and you can revoke it there at any time.</li>
             </ol>
