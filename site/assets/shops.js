@@ -57,7 +57,7 @@
       var li = el("li"); li.appendChild(el("b", null, r[0])); li.appendChild(document.createTextNode(": " + r[1])); ul.appendChild(li);
     });
     card.appendChild(ul);
-    card.appendChild(el("div", "who", "Rented into your own Stream Gateway, with masked jobs, paid as the work arrives. Find it in the app under Services → Hashrate."));
+    card.appendChild(el("div", "who", "Rented into your own Stream Gateway, with masked jobs, paid as the work arrives. Find it in the app under Buy → Hashrate."));
     foot(card, el("span", null, "Published " + ago(h.published_at)), checked(true, "Link key checked"));
     return card;
   }

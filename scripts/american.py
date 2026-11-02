@@ -15,6 +15,7 @@ WORDS = {
     "grey": "gray", "greys": "grays",
     "organise": "organize", "organised": "organized", "organising": "organizing",
     "recognise": "recognize", "recognised": "recognized", "favour": "favor", "favours": "favors",
+    "defence": "defense", "defences": "defenses",
     "labelled": "labeled", "labelling": "labeling", "modelled": "modeled", "travelled": "traveled",
 }
 _word = re.compile(r"\b(" + "|".join(sorted(WORDS, key=len, reverse=True)) + r")\b", re.I)
