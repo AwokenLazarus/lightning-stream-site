@@ -550,3 +550,34 @@ a.live-card:hover { text-decoration: none; border-color: rgba(255, 214, 10, 0.4)
 }
 .section-gap-sm { margin-top: 18px; margin-bottom: 26px; }
 .listing > .tag { align-self: flex-start; }
+/* map legend and sources (2026-11-02) */
+.map-legend { grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.map-legend .lg-hex { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); border-radius: 0; }
+.map-legend .lg-ico { width: 10px; height: 10px; border-radius: 3px; background: transparent; border: 1.5px solid currentColor; }
+.lg-app { color: var(--k-app); } .lg-files { color: var(--k-files); } .lg-ai { color: var(--k-ai); } .lg-hash { color: var(--k-hash); background: transparent; } .lg-vpn { color: var(--k-vpn); background: transparent; }
+.map-legend .lg-priv { background: transparent; border: 1.5px dashed var(--muted); }
+.map-sources { margin-top: 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); padding: 16px 18px; font-size: 14.5px; color: var(--ink-2); }
+.map-sources:empty { display: none; }
+.map-sources h2 { font-size: 15px; margin: 0 0 8px; }
+.map-sources p { margin: 0 0 6px; }
+.map-sources ul { margin: 0 0 8px; padding-left: 1.2em; }
+@media (max-width: 720px) { .map-legend { position: static; border-radius: 0; border-left: 0; border-right: 0; border-bottom: 0; } }
+
+/* map: the panel overlays the map on wide screens and sits above it on phones; the legend is a row under it */
+.map-wrap { position: relative; }
+.map-wrap .map-panel { position: absolute; left: 14px; top: 14px; z-index: 1; }
+.map-legend { position: static; display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; background: none; border: 0; padding: 0; grid-template-columns: none; }
+@media (max-width: 720px) {
+  .map-wrap .map-panel { position: static; max-width: none; margin-bottom: 10px; border-radius: var(--r); border: 1px solid var(--line); }
+  .map-legend { border: 0; }
+}
+@media (max-width: 720px) { .map-shell { height: 62vh; min-height: 420px; } }
+/* donations */
+.donate { display: flex; flex-wrap: wrap; gap: 20px 28px; align-items: center; margin-top: 1.2em; padding: 20px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--panel); }
+.donate-qr { margin: 0; flex: none; width: 168px; background: #fff; border-radius: 12px; padding: 6px; }
+.donate-qr svg { width: 100%; height: auto; display: block; }
+.donate-addr { flex: 1 1 260px; min-width: 0; }
+.donate-addr p { margin: 0 0 8px; }
+.donate-addr .copy { margin-bottom: 10px; }
+.donate-addr .copy code { white-space: normal; word-break: break-all; }
+.split > * { min-width: 0; }

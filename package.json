@@ -10,7 +10,8 @@
   "devDependencies": {
     "@noble/curves": "^1.9.7",
     "@noble/hashes": "^1.8.0",
-    "playwright-core": "^1.48.2"
+    "playwright-core": "^1.48.2",
+    "qrcode": "^1.5.4"
   },
   "type": "module",
   "private": true

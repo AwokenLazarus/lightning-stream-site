@@ -38,7 +38,7 @@
   };
   var FLOW_C = { sats: "#ffd60a", data: "#a9dcff", work: "#ff8f45", find: "#c58cff" };
 
-  /* ---------- glyphs, drawn in a 26 px box centred on 0,0 ---------- */
+  /* ---------- glyphs, drawn in a 26 px box centered on 0,0 ---------- */
   var G = {
     buyer: function (c) { c.beginPath(); c.arc(0, -4.5, 4, 0, 7); c.stroke(); c.beginPath(); c.arc(0, 9, 8, Math.PI * 1.12, Math.PI * 1.88); c.stroke(); },
     dev: function (c) { rr(c, -6, -8, 12, 16, 2.5); c.stroke(); c.beginPath(); c.moveTo(-2, 5); c.lineTo(2, 5); c.stroke(); },

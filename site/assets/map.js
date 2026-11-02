@@ -1,18 +1,28 @@
-/* The network map: XBT Lightning's public channel graph (/api/graph) with Lightning Stream's shops,
-   hashrate offers, VPN exits and relays (/api/listings) drawn on top. A small force layout on a 2D canvas.
-   With prefers-reduced-motion the layout is settled before the first frame and nothing moves by itself. */
+/* The network map: XBT Lightning's public channel graph (/api/graph), where a Lightning Stream shop is a kind of
+   Lightning node: its own node, recolored and named, with small icons for what it sells around it (web apps and
+   films, files, AI, hashrate, VPN exits). Data come from /api/listings:
+   - a shop's node is the one that signs for its link key, or the node its hashrate offer is paid at;
+   - a shop whose node is not in the public graph (a private node) is drawn at the graph's edge, marked so;
+   - a Stream relay is a bridge: it carries traffic between buyer and shop without seeing it, so it sits beside the
+     shops that use it, with thin dotted traffic links, and is not part of the channel graph (relays move traffic,
+     not payments);
+   - Nostr relays, where listings are found, are listed beside the map, not drawn on it.
+   A small force layout on a 2D canvas; with prefers-reduced-motion it settles before the first frame. */
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var C = { node: "#ffffff", shop: "#ffd60a", hash: "#ff8f45", vpn: "#5fe8d2", relay: "#7fb9ff", nostr: "#c58cff" };
+  var C = { node: "#ffffff", shop: "#ffd60a", app: "#ffb648", files: "#fff09a", ai: "#b9a4ff", web: "#9fd8ff", hash: "#ff8f45", vpn: "#5fe8d2", relay: "#7fb9ff", priv: "#a4a8b1" };
+  var SVC = { app: "web app or films", files: "files", ai: "AI", web: "web service", hash: "hashrate", vpn: "VPN exit" };
   var cv, ctx, tip, panel, W = 0, H = 0, dpr = 1;
-  var nodes = [], edges = [], byId = {}, cam = { x: 0, y: 0, z: 1 }, alpha = 1, hover = null, pinned = null, found = null, pulses = [];
+  var nodes = [], edges = [], byId = {}, relays = [];
+  var cam = { x: 0, y: 0, z: 1 }, alpha = 1, hover = null, pinned = null, found = null, pulses = [];
   var graphInfo = null, listInfo = null;
 
-  function pl(n, one, many) { return n + " " + (n === 1 ? one : many); }
   function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function pl(n, one, many) { return n + " " + (n === 1 ? one : many); }
   function ago(t) { var s = Math.max(0, Date.now() / 1000 - t); return s < 90 ? "just now" : s < 5400 ? Math.round(s / 60) + " min ago" : s < 172800 ? Math.round(s / 3600) + " h ago" : Math.round(s / 86400) + " days ago"; }
   function fmtSat(n) { return n >= 1e8 ? (n / 1e8).toFixed(2) + " XBT" : n >= 1e6 ? (n / 1e6).toFixed(1) + "M sat" : n >= 1e3 ? Math.round(n / 1e3) + "k sat" : n + " sat"; }
+  function short(k) { return k ? k.slice(0, 10) + "…" + k.slice(-4) : ""; }
   function rgba(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
   var glowCache = {};
   function glow(col) {
@@ -22,132 +32,242 @@
     return (glowCache[col] = c);
   }
 
-  function add(id, kind, label, info, r) {
-    if (byId[id]) return byId[id];
-    var a = Math.random() * 6.283, d = 80 + Math.random() * 380;
-    var n = { id: id, kind: kind, label: label || "", info: info || [], r: r || 5, x: Math.cos(a) * d, y: Math.sin(a) * d, vx: 0, vy: 0, deg: 0 };
+  /* ---------- the model ---------- */
+  function addNode(id, label, info, r, priv) {
+    var a = Math.random() * 6.283, d = 60 + Math.random() * 320;
+    var n = { id: id, label: label, info: info, r: r, x: Math.cos(a) * d, y: Math.sin(a) * d, vx: 0, vy: 0, deg: 0, priv: !!priv, shop: null };
     nodes.push(n); byId[id] = n; return n;
   }
-  function link(a, b, type, w) { if (!a || !b || a === b) return; edges.push({ a: a, b: b, type: type, w: w || 1 }); a.deg++; b.deg++; }
+  function nodeFor(key, why) {
+    if (key && byId["ln:" + key]) return byId["ln:" + key];
+    var id = "pv:" + (key || why);
+    return byId[id] || addNode(id, key ? short(key) : "", [["Lightning node", "private node: not in the public graph"], ["Key", key || "not named in the listing"]], 4, true);
+  }
+  // make a node a shop (or add to the shop already on it)
+  function shopOn(n, name) {
+    if (!n.shop) n.shop = { names: [], svc: [], lines: [], relays: [], from: "", published: 0 };
+    if (name && n.shop.names.indexOf(name) < 0) n.shop.names.push(name);
+    return n.shop;
+  }
+  function addSvc(sh, k) { if (sh.svc.indexOf(k) < 0) sh.svc.push(k); }
 
   function build(g, l) {
     if (g && g.nodes) {
-      var alias = {}; g.nodes.forEach(function (n) { alias[n.id] = n; });
       var deg = {}; g.channels.forEach(function (c) { deg[c.a] = (deg[c.a] || 0) + 1; deg[c.b] = (deg[c.b] || 0) + 1; });
       var maxSat = 1; g.channels.forEach(function (c) { if (c.sat > maxSat) maxSat = c.sat; });
       g.nodes.forEach(function (n) {
         if (!deg[n.id]) return;
-        add("ln:" + n.id, "node", n.alias || n.id.slice(0, 10) + "…", [["Lightning node", n.alias || "(no alias)"], ["Key", n.id], ["Channels", String(deg[n.id])]], 2.2 + Math.sqrt(deg[n.id]) * 1.5);
+        addNode("ln:" + n.id, n.alias || short(n.id), [["Lightning node", n.alias || "(no alias)"], ["Key", n.id], ["Channels", String(deg[n.id])]], 2.2 + Math.sqrt(deg[n.id]) * 1.5);
       });
-      g.channels.forEach(function (c) { link(byId["ln:" + c.a], byId["ln:" + c.b], "chan", 0.35 + 0.65 * Math.sqrt(c.sat / maxSat)); });
+      g.channels.forEach(function (c) {
+        var a = byId["ln:" + c.a], b = byId["ln:" + c.b]; if (!a || !b) return;
+        edges.push({ a: a, b: b, w: 0.35 + 0.65 * Math.sqrt(c.sat / maxSat) }); a.deg++; b.deg++;
+      });
     }
     if (!l) return;
-    function relayNode(host) { return add("r:" + host, "relay", host, [["Stream relay", host], ["What it does", "carries encrypted links between apps that can't connect directly; it can't read them"]], 7); }
-    function nostrNode(host) { return add("n:" + host, "nostr", host, [["Nostr relay", host], ["What it does", "carries signed listings; shops are found here"]], 6); }
-    var shopByNpub = {};
+    var shopNode = {}, relayUse = {};
+    function useRelay(host, n) { if (!host) return; (relayUse[host] || (relayUse[host] = [])).indexOf(n) < 0 && relayUse[host].push(n); }
     l.shops.filter(function (s) { return !s.stale; }).forEach(function (s) {
-      var kinds = []; s.services.forEach(function (x) { if (kinds.indexOf(x.kind) < 0) kinds.push(x.kind); });
-      var n = add("s:" + s.id, "shop", s.name, [["Stream shop", s.name], ["Sells", kinds.join(", ")], [s.npub ? "Shop key" : "Web address", s.npub || s.origin], ["Published", ago(s.published_at)]], 9);
-      if (s.npub) shopByNpub[s.npub] = n;
-      s.iroh_relays.forEach(function (h) { link(n, relayNode(h), "relay"); });
-      s.seen_on.forEach(function (h) { link(n, nostrNode(h), "find"); });
+      var n = nodeFor(s.node, "shop:" + s.id), sh = shopOn(n, s.name);
+      shopNode[s.id] = n;
+      sh.from = s.node_from || "its node is not named in the listing";
+      sh.published = Math.max(sh.published, s.published_at);
+      sh.reach = s.npub ? "Shop key " + s.npub : "Web address " + s.origin;
+      var vpnPaths = s.exits.length;
+      s.services.forEach(function (x) {
+        if (x.kind === "app" && s.services.some(function (y) { return y !== x && y.name === x.name && y.kind !== "app"; })) return;
+        if (x.kind === "api" && vpnPaths && /vpn/i.test(x.name)) return; // the exit's own route, shown as the exit
+        var k = x.kind === "video" || x.kind === "app" ? "app" : x.kind === "api" ? "web" : x.kind === "hashrate" ? "hash" : x.kind;
+        if (!C[k]) return;
+        addSvc(sh, k);
+        if (k !== "hash") sh.lines.push([x.name || SVC[k], x.prices.join(", ") || "price on asking"]);
+      });
+      s.iroh_relays.forEach(function (h) { useRelay(h, n); });
     });
     l.hashrate.forEach(function (h) {
-      var n = add("h:" + h.id, "hash", h.name, [["Hashrate offer", h.name], ["Price", h.price], ["Miners", h.free_miners + " of " + h.miners + " free"], ["Published", ago(h.published_at)]], 8);
-      if (h.pay_node && byId["ln:" + h.pay_node]) link(n, byId["ln:" + h.pay_node], "pay");
-      h.iroh_relays.forEach(function (x) { link(n, relayNode(x), "relay"); });
-      h.seen_on.forEach(function (x) { link(n, nostrNode(x), "find"); });
+      var n = h.shop && shopNode[h.shop] ? shopNode[h.shop] : nodeFor(h.pay_node, "hash:" + h.id), sh = shopOn(n, h.shop ? "" : h.name);
+      addSvc(sh, "hash");
+      sh.lines.push(["Hashrate", h.price + (h.start_slices ? ", start fee " + h.start_slices + " slices" : "") + ", " + h.free_miners + " of " + h.miners + " miners free"]);
+      if (!sh.from) sh.from = "named by its hashrate offer";
+      h.iroh_relays.forEach(function (x) { useRelay(x, n); });
     });
     l.exits.forEach(function (x) {
-      var n = add("e:" + x.id, "vpn", "VPN exit" + (x.region ? " " + x.region : ""), [["VPN exit", x.region ? "country claimed: " + x.region : "no country given"], ["Price", x.price], ["Kind", x.filtered ? "filtered" : "private"], ["Published", ago(x.published_at)]], 8);
-      if (x.relay) link(n, relayNode(x.relay), "relay");
-      if (x.shop_npub && shopByNpub[x.shop_npub]) link(n, shopByNpub[x.shop_npub], "own");
-      x.seen_on.forEach(function (h) { link(n, nostrNode(h), "find"); });
+      var n = x.shop && shopNode[x.shop] ? shopNode[x.shop] : nodeFor(null, "exit:" + x.id), sh = shopOn(n, x.shop ? "" : "VPN exit" + (x.region ? " " + x.region : ""));
+      addSvc(sh, "vpn");
+      sh.lines.push(["VPN exit", x.price + (x.region ? ", country claimed " + x.region : "") + ", " + (x.filtered ? "filtered" : "private")]);
+      useRelay(x.relay, n);
     });
-    l.relays_announced.forEach(function (r) { relayNode(r.relay).info.push(["Region", r.region || "not given"]); });
+    // Stream relays: the ones shops name, and the ones that announce themselves
+    var announced = {}; l.relays_announced.forEach(function (r) { announced[r.relay] = r; });
+    Object.keys(relayUse).concat(Object.keys(announced)).forEach(function (h) {
+      if (relays.some(function (r) { return r.host === h; })) return;
+      var r = announced[h];
+      relays.push({ host: h, shops: relayUse[h] || [], x: 0, y: 0, info: [["Stream relay", h], ["What it does", "carries encrypted traffic between a buyer's app and a shop when they can't connect directly; it can't read it, and carries no money"],
+        ["Used by", (relayUse[h] || []).map(function (n) { return n.shop.names.join(" / ") || n.label; }).join(", ") || "no shop named it"]].concat(r ? [["Region", r.region || "not given"]] : []) });
+    });
   }
+  function shopName(n) { return n.shop ? n.shop.names.join(" / ") || n.label : n.label; }
 
-  /* ---------- layout: springs on edges, repulsion between nearby nodes (spatial hash), a gentle pull to the centre ---------- */
+  /* ---------- layout: the public graph; private shops and relays sit at its edge ---------- */
   function tick() {
-    var cell = 90, grid = {}, i, j, n, m;
-    for (i = 0; i < nodes.length; i++) { n = nodes[i]; var k = Math.floor(n.x / cell) + "," + Math.floor(n.y / cell); (grid[k] || (grid[k] = [])).push(n); }
-    for (i = 0; i < nodes.length; i++) {
-      n = nodes[i]; var cx = Math.floor(n.x / cell), cy = Math.floor(n.y / cell);
+    var cell = 90, grid = {}, i, j, n, m, pub = nodes.filter(function (x) { return !x.priv; });
+    for (i = 0; i < pub.length; i++) { n = pub[i]; var k = Math.floor(n.x / cell) + "," + Math.floor(n.y / cell); (grid[k] || (grid[k] = [])).push(n); }
+    for (i = 0; i < pub.length; i++) {
+      n = pub[i]; var cx = Math.floor(n.x / cell), cy = Math.floor(n.y / cell);
       for (var dx = -2; dx <= 2; dx++) for (var dy = -2; dy <= 2; dy++) {
         var list = grid[(cx + dx) + "," + (cy + dy)]; if (!list) continue;
         for (j = 0; j < list.length; j++) {
           m = list[j]; if (m === n) continue;
           var ex = n.x - m.x, ey = n.y - m.y, d2 = ex * ex + ey * ey + 0.01;
           if (d2 > 40000) continue;
-          var f = 900 / d2; n.vx += ex * f * alpha; n.vy += ey * f * alpha;
+          var f = (n.shop || m.shop ? 2600 : 900) / d2; n.vx += ex * f * alpha; n.vy += ey * f * alpha;
         }
       }
       n.vx -= n.x * 0.004 * alpha; n.vy -= n.y * 0.004 * alpha;
     }
     edges.forEach(function (e) {
-      var want = e.type === "chan" ? 46 : e.type === "find" ? 120 : 60;
-      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, f = (d - want) / d * 0.06 * alpha;
+      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, f = (d - 50) / d * 0.06 * alpha;
       e.a.vx += ex * f; e.a.vy += ey * f; e.b.vx -= ex * f; e.b.vy -= ey * f;
     });
-    nodes.forEach(function (n) { n.vx *= 0.6; n.vy *= 0.6; n.x += Math.max(-20, Math.min(20, n.vx)); n.y += Math.max(-20, Math.min(20, n.vy)); });
+    pub.forEach(function (n) { n.vx *= 0.6; n.vy *= 0.6; n.x += Math.max(-20, Math.min(20, n.vx)); n.y += Math.max(-20, Math.min(20, n.vy)); });
     alpha *= 0.985;
+    placeOutside();
+  }
+  function bounds(list) {
+    var b = { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 };
+    list.forEach(function (n) { b.x0 = Math.min(b.x0, n.x); b.x1 = Math.max(b.x1, n.x); b.y0 = Math.min(b.y0, n.y); b.y1 = Math.max(b.y1, n.y); });
+    return b;
+  }
+  function placeOutside() {
+    var pub = nodes.filter(function (x) { return !x.priv; }), b = pub.length ? bounds(pub) : { x0: -100, y0: -100, x1: 100, y1: 100 };
+    var cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2;
+    var priv = nodes.filter(function (x) { return x.priv; }), h = Math.max(200, b.y1 - b.y0);
+    if (W < 600) priv.forEach(function (n, i) { n.x = cx + (i - (priv.length - 1) / 2) * 170; n.y = b.y1 + 150; });
+    else priv.forEach(function (n, i) { n.x = b.x1 + 150; n.y = cy + (i - (priv.length - 1) / 2) * Math.min(150, h / Math.max(1, priv.length)); });
+    // a relay sits beside the shops that use it, pushed out from the graph's center
+    relays.forEach(function (r, i) {
+      if (!r.shops.length) { r.x = b.x0 - 120; r.y = cy + i * 60; return; }
+      var mx = 0, my = 0; r.shops.forEach(function (n) { mx += n.x; my += n.y; }); mx /= r.shops.length; my /= r.shops.length;
+      var vx = mx - cx, vy = my - cy, d = Math.hypot(vx, vy) || 1;
+      var R = Math.max(b.x1 - b.x0, b.y1 - b.y0) / 2;
+      r.x = cx + vx / d * (R + 70); r.y = cy + vy / d * (R + 70);
+    });
   }
   function fit() {
     if (!nodes.length) return;
-    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-    nodes.forEach(function (n) { x0 = Math.min(x0, n.x); x1 = Math.max(x1, n.x); y0 = Math.min(y0, n.y); y1 = Math.max(y1, n.y); });
-    var pad = 60, z = Math.min(W / (x1 - x0 + pad * 2), H / (y1 - y0 + pad * 2));
-    cam = { x: (x0 + x1) / 2, y: (y0 + y1) / 2, z: Math.max(0.15, Math.min(z, 3)) };
+    var b = bounds(nodes.concat(relays)), padX = 110, padY = 80;
+    var z = Math.min(W / (b.x1 - b.x0 + padX * 2), H / (b.y1 - b.y0 + padY * 2));
+    cam = { x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2, z: Math.max(0.15, Math.min(z, 2.4)) };
   }
   function sx(x) { return (x - cam.x) * cam.z + W / 2; }
   function sy(y) { return (y - cam.y) * cam.z + H / 2; }
+  function nodeR(n) { return n.shop ? 9 : Math.max(1.8, n.r * Math.min(1.6, Math.max(0.65, cam.z))); }
 
-  function draw(t) {
+  /* ---------- drawing ---------- */
+  function hexPath(x, y, r) { ctx.beginPath(); for (var i = 0; i < 6; i++) { var t = Math.PI / 6 + i * Math.PI / 3; ctx[i ? "lineTo" : "moveTo"](x + Math.cos(t) * r, y + Math.sin(t) * r); } ctx.closePath(); }
+  function icon(k, x, y) {
+    var col = C[k]; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.4; ctx.beginPath();
+    if (k === "app") { ctx.moveTo(x - 2.5, y - 3.5); ctx.lineTo(x + 3.5, y); ctx.lineTo(x - 2.5, y + 3.5); ctx.closePath(); ctx.fill(); }
+    else if (k === "files") { ctx.rect(x - 3, y - 4, 6, 8); ctx.stroke(); }
+    else if (k === "ai") { ctx.moveTo(x, y - 4.5); ctx.quadraticCurveTo(x + 0.8, y - 0.8, x + 4.5, y); ctx.quadraticCurveTo(x + 0.8, y + 0.8, x, y + 4.5); ctx.quadraticCurveTo(x - 0.8, y + 0.8, x - 4.5, y); ctx.quadraticCurveTo(x - 0.8, y - 0.8, x, y - 4.5); ctx.fill(); }
+    else if (k === "hash") { ctx.rect(x - 3, y - 3, 6, 6); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x - 3, y); ctx.moveTo(x + 3, y); ctx.lineTo(x + 5, y); ctx.moveTo(x, y - 5); ctx.lineTo(x, y - 3); ctx.moveTo(x, y + 3); ctx.lineTo(x, y + 5); ctx.stroke(); }
+    else if (k === "vpn") { ctx.moveTo(x, y - 4.5); ctx.lineTo(x + 4, y - 2.5); ctx.quadraticCurveTo(x + 4, y + 3, x, y + 4.5); ctx.quadraticCurveTo(x - 4, y + 3, x - 4, y - 2.5); ctx.closePath(); ctx.stroke(); }
+    else { ctx.arc(x, y, 3.5, 0, 7); ctx.stroke(); }
+  }
+  function svcSpots(n) {
+    var x = sx(n.x), y = sy(n.y), k = n.shop.svc.length, r = 21, out = [];
+    for (var i = 0; i < k; i++) { var a = -Math.PI / 2 + (i - (k - 1) / 2) * 0.62 - Math.PI / 2 * 0; out.push({ k: n.shop.svc[i], x: x + Math.cos(a + Math.PI) * 0 + Math.cos(a) * r, y: y + Math.sin(a) * r }); }
+    return out;
+  }
+  function labelBox(x, y, text) { var w = ctx.measureText(text).width; return { x: x - w / 2 - 4, y: y - 2, w: w + 8, h: 17 }; }
+  function hits(a, b) { return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h; }
+
+  function draw() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     var focus = pinned || hover || found, near = {};
-    if (focus) { near[focus.id] = 1; edges.forEach(function (e) { if (e.a === focus) near[e.b.id] = 1; if (e.b === focus) near[e.a.id] = 1; }); }
+    if (focus && focus.id) { near[focus.id] = 1; edges.forEach(function (e) { if (e.a === focus) near[e.b.id] = 1; if (e.b === focus) near[e.a.id] = 1; }); }
+    if (focus && focus.host) focus.shops.forEach(function (n) { near[n.id] = 1; });
+    function dimOf(n) { return focus && !near[n.id] ? 0.3 : 1; }
     ctx.lineCap = "round";
     edges.forEach(function (e) {
       var on = focus && (e.a === focus || e.b === focus), dim = focus && !on ? 0.35 : 1;
       ctx.beginPath(); ctx.moveTo(sx(e.a.x), sy(e.a.y)); ctx.lineTo(sx(e.b.x), sy(e.b.y));
-      if (e.type === "chan") { ctx.strokeStyle = on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.07 + 0.16 * e.w) * dim + ")"; ctx.lineWidth = on ? 1.6 : 1; }
-      else if (e.type === "relay") { ctx.strokeStyle = rgba(C.relay, (on ? 0.8 : 0.4) * dim); ctx.setLineDash([5, 5]); ctx.lineWidth = 1.2; }
-      else if (e.type === "find") { ctx.strokeStyle = rgba(C.nostr, (on ? 0.8 : 0.3) * dim); ctx.setLineDash([1, 6]); ctx.lineWidth = 1.4; }
-      else { ctx.strokeStyle = rgba(e.type === "pay" ? C.shop : C.vpn, (on ? 0.9 : 0.45) * dim); ctx.lineWidth = 1.3; }
-      ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.07 + 0.16 * e.w) * dim + ")"; ctx.lineWidth = on ? 1.6 : 1; ctx.stroke();
     });
-    // payments streaming along channels: a few pulses, slowly
-    if (!reduce) {
-      var chans = edges.filter(function (e) { return e.type === "chan"; });
-      if (chans.length && pulses.length < Math.min(14, chans.length) && Math.random() < 0.05) { var e = chans[Math.floor(Math.random() * chans.length)]; pulses.push({ e: e, t: 0, dir: Math.random() < 0.5 }); }
+    // relays' traffic links: thin, dotted, blue; never part of the channel graph
+    ctx.setLineDash([1.5, 5]); ctx.lineWidth = 1.3;
+    relays.forEach(function (r) { r.shops.forEach(function (n) { ctx.beginPath(); ctx.moveTo(sx(r.x), sy(r.y)); ctx.lineTo(sx(n.x), sy(n.y)); ctx.strokeStyle = rgba(C.relay, focus && focus !== r && !near[n.id] ? 0.15 : 0.55); ctx.stroke(); }); });
+    ctx.setLineDash([]);
+    // payments streaming along channels
+    if (!reduce && edges.length) {
+      if (pulses.length < Math.min(14, edges.length) && Math.random() < 0.05) pulses.push({ e: edges[Math.floor(Math.random() * edges.length)], t: 0, dir: Math.random() < 0.5 });
       ctx.globalCompositeOperation = "lighter";
       pulses = pulses.filter(function (p) {
         p.t += 0.008; if (p.t >= 1) return false;
         var a = p.dir ? p.e.a : p.e.b, b = p.dir ? p.e.b : p.e.a, x = sx(a.x + (b.x - a.x) * p.t), y = sy(a.y + (b.y - a.y) * p.t);
-        ctx.globalAlpha = Math.sin(p.t * Math.PI); ctx.drawImage(glow(C.shop), x - 9, y - 9, 18, 18); ctx.globalAlpha = 1; return true;
+        ctx.globalAlpha = Math.sin(p.t * Math.PI) * (focus ? 0.4 : 1); ctx.drawImage(glow(C.shop), x - 9, y - 9, 18, 18); ctx.globalAlpha = 1; return true;
       });
       ctx.globalCompositeOperation = "source-over";
     }
-    nodes.forEach(function (n) {
-      var col = C[n.kind] || C.node, r = Math.max(1.6, n.r * Math.min(1.6, Math.max(0.6, cam.z))), x = sx(n.x), y = sy(n.y);
-      if (x < -40 || y < -40 || x > W + 40 || y > H + 40) return;
-      var dim = focus && !near[n.id] ? 0.3 : 1;
-      ctx.globalAlpha = dim;
-      ctx.drawImage(glow(col), x - r * 4, y - r * 4, r * 8, r * 8);
-      ctx.beginPath(); ctx.arc(x, y, r, 0, 7);
-      if (n.kind === "node") { ctx.fillStyle = n === focus ? C.shop : "#fff"; ctx.fill(); }
-      else { ctx.fillStyle = "#08090c"; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = col; ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r * 0.38, 0, 7); ctx.fillStyle = col; ctx.fill(); }
+    // plain Lightning nodes first, then shops on top
+    nodes.filter(function (n) { return !n.shop; }).concat(nodes.filter(function (n) { return n.shop; })).forEach(function (n) {
+      var r = nodeR(n), x = sx(n.x), y = sy(n.y);
+      if (x < -60 || y < -60 || x > W + 60 || y > H + 60) return;
+      ctx.globalAlpha = dimOf(n);
+      if (n.shop) {
+        ctx.drawImage(glow(C.shop), x - 30, y - 30, 60, 60);
+        hexPath(x, y, r); ctx.fillStyle = "#0b0a03"; ctx.fill(); ctx.strokeStyle = C.shop; ctx.lineWidth = 2; if (n.priv) ctx.setLineDash([3, 2.5]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fillStyle = C.shop; ctx.fill();
+        svcSpots(n).forEach(function (s) { ctx.beginPath(); ctx.arc(s.x, s.y, 7.5, 0, 7); ctx.fillStyle = "rgba(8,9,12,0.92)"; ctx.fill(); ctx.strokeStyle = rgba(C[s.k], 0.55); ctx.lineWidth = 1; ctx.stroke(); icon(s.k, s.x, s.y); });
+      } else if (n.priv) {
+        ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.strokeStyle = rgba(C.priv, 0.8); ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
+      } else {
+        ctx.drawImage(glow(C.node), x - r * 4, y - r * 4, r * 8, r * 8);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = n === focus ? C.shop : "#fff"; ctx.fill();
+      }
       ctx.globalAlpha = 1;
     });
-    // labels: Stream's own nodes, the busiest Lightning nodes, and whatever is in focus
+    relays.forEach(function (r) {
+      var x = sx(r.x), y = sy(r.y); ctx.globalAlpha = focus && focus !== r && !r.shops.some(function (n) { return near[n.id]; }) ? 0.3 : 1;
+      ctx.drawImage(glow(C.relay), x - 24, y - 24, 48, 48);
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, 7); ctx.fillStyle = "#08090c"; ctx.fill(); ctx.strokeStyle = C.relay; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 7); ctx.fillStyle = C.relay; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 11, -0.7, 0.7); ctx.moveTo(x - 11 * Math.cos(0.7), y - 11 * Math.sin(0.7)); ctx.arc(x, y, 11, Math.PI - 0.7, Math.PI + 0.7); ctx.strokeStyle = rgba(C.relay, 0.7); ctx.lineWidth = 1.2; ctx.stroke();
+      ctx.globalAlpha = 1;
+    });
+
+    // labels, most important first; any that would overlap a placed label or a node's icons is left out
     ctx.font = "500 12px Inter, system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
-    var top = nodes.filter(function (n) { return n.kind === "node"; }).sort(function (a, b) { return b.deg - a.deg; }).slice(0, cam.z > 1.2 ? 30 : 8);
+    var placed = [], want = [];
     nodes.forEach(function (n) {
-      var show = n.kind !== "node" || top.indexOf(n) >= 0 || near[n.id];
-      if (!show || !n.label || (focus && !near[n.id])) return;
-      var x = sx(n.x), y = sy(n.y) + n.r * Math.min(1.6, Math.max(0.6, cam.z)) + 6;
-      ctx.fillStyle = "rgba(5,5,7,0.75)"; var w = ctx.measureText(n.label).width; ctx.fillRect(x - w / 2 - 4, y - 2, w + 8, 17);
-      ctx.fillStyle = n.kind === "node" ? "rgba(255,255,255,0.75)" : C[n.kind]; ctx.fillText(n.label, x, y);
+      if (n.shop) { placed.push({ x: sx(n.x) - 28, y: sy(n.y) - 30, w: 56, h: 41, owner: n }); }
+    });
+    nodes.filter(function (n) { return n.shop; }).forEach(function (n) {
+      var y = sy(n.y) + 13;
+      want.push({ text: shopName(n), x: sx(n.x), y: y, col: C.shop, pri: 5, a: dimOf(n), bold: true, owner: n, side: 19 });
+      if (n.priv) want.push({ text: "private node: not in the public graph", x: sx(n.x), y: y + 17, col: C.priv, pri: 4.9, a: dimOf(n), up: 64 });
+    });
+    relays.forEach(function (r) { want.push({ text: r.host, x: sx(r.x), y: sy(r.y) + 14, col: C.relay, pri: 4, a: 1, up: 28, side: 8 }); });
+    var top = nodes.filter(function (n) { return !n.priv && !n.shop; }).sort(function (a, b) { return b.deg - a.deg; }).slice(0, cam.z > 1.3 ? 40 : W < 600 ? 5 : 12);
+    nodes.forEach(function (n) {
+      if (n.priv || n.shop) return;
+      if (top.indexOf(n) < 0 && !near[n.id]) return;
+      want.push({ text: n.label, x: sx(n.x), y: sy(n.y) + nodeR(n) + 5, col: "rgba(255,255,255,0.78)", pri: near[n.id] ? 3 : 1 + n.deg / 1000, a: dimOf(n) });
+    });
+    want.sort(function (a, b) { return b.pri - a.pri; });
+    want.forEach(function (w) {
+      ctx.font = (w.bold ? "650 " : "500 ") + "12px Inter, system-ui, sans-serif";
+      // below first, then above, right and left of the thing it names; left out only when none is free
+      var tw = ctx.measureText(w.text).width, down = w.y, tries = w.alt === false ? [[0, 0]] : [[0, 0], [tw / 2 + 16, -(w.side || 20)], [-tw / 2 - 16, -(w.side || 20)], [0, -(w.up || 30) - 17]];
+      for (var i = 0; i < tries.length; i++) {
+        var x = w.x + tries[i][0], y = down + tries[i][1], box = labelBox(x, y, w.text);
+        if (box.x < 2 || box.x + box.w > W - 2 || box.y < 2 || box.y + box.h > H - 2) continue;
+        if (placed.some(function (p) { return (!p.owner || p.owner !== w.owner || i === 0) && hits(p, box); })) continue;
+        placed.push(box);
+        ctx.globalAlpha = w.a; ctx.fillStyle = "rgba(5,5,7,0.8)"; ctx.fillRect(box.x, box.y, box.w, box.h);
+        ctx.fillStyle = w.col; ctx.fillText(w.text, x, y); ctx.globalAlpha = 1;
+        return;
+      }
     });
   }
 
@@ -156,21 +276,36 @@
     if (!document.hidden) draw();
     requestAnimationFrame(loop);
   }
+  function redraw() { if (reduce) draw(); }
   function resize() {
     var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); if (reduce) draw();
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); redraw();
   }
 
   /* ---------- interaction ---------- */
   function at(px, py) {
     var best = null, bd = 18 * 18;
+    nodes.forEach(function (n) { if (!n.shop) return; var dx = sx(n.x) - px, dy = sy(n.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = n; } });
+    relays.forEach(function (r) { var dx = sx(r.x) - px, dy = sy(r.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = r; } });
+    if (best) return best;
+    bd = 14 * 14;
     nodes.forEach(function (n) { var dx = sx(n.x) - px, dy = sy(n.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = n; } });
     return best;
+  }
+  function rows(n) {
+    if (!n.shop) return n.info;
+    var sh = n.shop, out = [["Stream shop", shopName(n)]];
+    sh.lines.forEach(function (l) { out.push(l); });
+    out.push(["Lightning node", n.priv ? "private node, not in the public graph" + (n.id.indexOf("pv:0") === 0 ? " (" + short(n.id.slice(3)) + ")" : "") : n.label + " (" + short(n.id.slice(3)) + ")"]);
+    out.push(["How we know", sh.from]);
+    if (sh.reach) out.push(["Reach it by", sh.reach]);
+    if (sh.published) out.push(["Published", ago(sh.published)]);
+    return out;
   }
   function showTip(n, px, py) {
     if (!n) { tip.hidden = true; return; }
     tip.textContent = "";
-    n.info.forEach(function (row, i) {
+    (n.host ? n.info : rows(n)).forEach(function (row, i) {
       if (i === 0) { tip.appendChild(el("b", null, row[0] + ": " + row[1])); return; }
       var d = el("div"); d.appendChild(el("span", "muted", row[0] + ": ")); d.appendChild(document.createTextNode(row[1])); tip.appendChild(d);
     });
@@ -186,76 +321,95 @@
       if (ids.length === 2 && ptrs[e.pointerId]) {
         ptrs[e.pointerId] = { x: e.offsetX, y: e.offsetY };
         var a = ptrs[ids[0]], b = ptrs[ids[1]], d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (pinchD) cam.z = Math.max(0.1, Math.min(8, cam.z * d / pinchD)); pinchD = d; moved += 10; if (reduce) draw(); return;
+        if (pinchD) cam.z = Math.max(0.1, Math.min(8, cam.z * d / pinchD)); pinchD = d; moved += 10; redraw(); return;
       }
       if (ptrs[e.pointerId] && last) {
         var dx = e.offsetX - last.x, dy = e.offsetY - last.y; moved += Math.abs(dx) + Math.abs(dy);
-        cam.x -= dx / cam.z; cam.y -= dy / cam.z; last = { x: e.offsetX, y: e.offsetY }; if (reduce) draw(); return;
+        cam.x -= dx / cam.z; cam.y -= dy / cam.z; last = { x: e.offsetX, y: e.offsetY }; redraw(); return;
       }
-      if (e.pointerType === "mouse") { hover = at(e.offsetX, e.offsetY); if (!pinned) showTip(hover, e.offsetX, e.offsetY); if (reduce) draw(); }
+      if (e.pointerType === "mouse") { hover = at(e.offsetX, e.offsetY); if (!pinned) showTip(hover, e.offsetX, e.offsetY); redraw(); }
     });
     function up(e) {
       delete ptrs[e.pointerId]; pinchD = 0;
-      if (moved < 6) { pinned = at(e.offsetX, e.offsetY); showTip(pinned, e.offsetX, e.offsetY); if (reduce) draw(); }
+      if (moved < 6) { pinned = at(e.offsetX, e.offsetY); showTip(pinned, e.offsetX, e.offsetY); redraw(); }
       last = null;
     }
     cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", function (e) { delete ptrs[e.pointerId]; pinchD = 0; last = null; });
-    cv.addEventListener("pointerleave", function () { hover = null; if (!pinned) tip.hidden = true; });
+    cv.addEventListener("pointerleave", function () { hover = null; if (!pinned) tip.hidden = true; redraw(); });
     cv.addEventListener("wheel", function (e) {
       e.preventDefault();
       var f = Math.exp(-e.deltaY * 0.0015), wx = (e.offsetX - W / 2) / cam.z + cam.x, wy = (e.offsetY - H / 2) / cam.z + cam.y;
-      cam.z = Math.max(0.1, Math.min(8, cam.z * f)); cam.x = wx - (e.offsetX - W / 2) / cam.z; cam.y = wy - (e.offsetY - H / 2) / cam.z; if (reduce) draw();
+      cam.z = Math.max(0.1, Math.min(8, cam.z * f)); cam.x = wx - (e.offsetX - W / 2) / cam.z; cam.y = wy - (e.offsetY - H / 2) / cam.z; redraw();
     }, { passive: false });
-    document.getElementById("map-reset").addEventListener("click", function () { pinned = found = null; tip.hidden = true; fit(); if (reduce) draw(); });
+    document.getElementById("map-reset").addEventListener("click", function () { pinned = found = null; tip.hidden = true; fit(); redraw(); });
     var q = document.getElementById("map-q");
     q.addEventListener("input", function () {
       var s = q.value.trim().toLowerCase(); found = null;
-      if (s.length >= 2) found = nodes.filter(function (n) { return n.label.toLowerCase().indexOf(s) >= 0 || n.id.toLowerCase().indexOf(s) >= 0 || n.info.some(function (r) { return String(r[1]).toLowerCase().indexOf(s) >= 0; }); })[0] || null;
+      function m(x) { return (x.host || shopName(x) || "").toLowerCase().indexOf(s) >= 0 || (x.id || "").toLowerCase().indexOf(s) >= 0 || (x.host ? x.info : rows(x)).some(function (r) { return String(r[1]).toLowerCase().indexOf(s) >= 0; }); }
+      if (s.length >= 2) found = nodes.filter(function (n) { return n.shop && m(n); })[0] || relays.filter(m)[0] || nodes.filter(m)[0] || null;
       if (found) { cam.x = found.x; cam.y = found.y; cam.z = Math.max(cam.z, 1.6); showTip(found, W / 2, H / 2); } else if (!pinned) tip.hidden = true;
-      if (reduce) draw();
+      redraw();
     });
   }
 
   function writePanel() {
     panel.textContent = "";
-    var g = graphInfo, l = listInfo;
+    var g = graphInfo, l = listInfo, pub = nodes.filter(function (n) { return !n.priv; }).length, shops = nodes.filter(function (n) { return n.shop; });
     if (g) {
-      var cap = g.channels.reduce(function (s, c) { return s + c.sat; }, 0), live = nodes.filter(function (n) { return n.kind === "node"; }).length;
-      panel.appendChild(el("h2", null, live.toLocaleString("en-US") + " nodes · " + g.channels.length.toLocaleString("en-US") + " channels"));
+      var cap = g.channels.reduce(function (s, c) { return s + c.sat; }, 0);
+      panel.appendChild(el("h2", null, pub.toLocaleString("en-US") + " nodes · " + g.channels.length.toLocaleString("en-US") + " channels"));
       panel.appendChild(el("p", "small", fmtSat(cap) + " in public channels · snapshot " + ago(g.taken_at)));
     } else {
-      panel.appendChild(el("h2", null, "Lightning Stream, on Nostr"));
-      panel.appendChild(el("p", "small muted", "No channel-graph snapshot has been published yet, so only Stream's own shops, exits and relays are drawn."));
+      panel.appendChild(el("h2", null, "No channel graph yet"));
+      panel.appendChild(el("p", "small muted", "No snapshot of the public graph has been published, so Stream's shops are shown on their own."));
     }
-    if (l) {
-      var shops = l.shops.filter(function (s) { return !s.stale; }).length;
-      panel.appendChild(el("p", "small", pl(shops, "shop", "shops") + " · " + pl(l.hashrate.length, "hashrate offer", "hashrate offers") + " · " + pl(l.exits.length, "VPN exit", "VPN exits") + " · listings read " + ago(l.fetched_at)));
+    if (l) panel.appendChild(el("p", "small", pl(shops.length, "Stream shop", "Stream shops") + ", " + shops.filter(function (n) { return !n.priv; }).length + " of them on the public graph"));
+    // Nostr relays: where the listings come from, beside the map
+    var side = document.getElementById("map-sources");
+    if (side && l) {
+      side.textContent = "";
+      var ok = l.relays.filter(function (r) { return r.ok; });
+      side.appendChild(el("h2", null, "Where the listings come from"));
+      side.appendChild(el("p", null, "Listings read " + ago(l.fetched_at) + " from " + ok.length + " of " + l.relays.length + " Nostr relays:"));
+      var ul = el("ul");
+      l.relays.forEach(function (r) { ul.appendChild(el("li", r.ok ? null : "muted", r.url.replace("wss://", "") + (r.ok ? ": " + pl(r.events, "event", "events") : ": not read (" + (r.error || "no answer") + ")"))); });
+      side.appendChild(ul);
+      side.appendChild(el("p", "muted small", "Nostr relays only carry the signed listings; they are not part of the network shown on the map."));
     }
     // a text version of what the map shows
     var t = document.getElementById("map-text"); t.textContent = "";
     t.appendChild(el("h2", null, "In words"));
-    var p = el("p"); p.textContent = (g ? "The latest snapshot of the public XBT Lightning graph, " + ago(g.taken_at) + ", has " + g.channels.length + " public channels between " + nodes.filter(function (n) { return n.kind === "node"; }).length + " nodes. " : "No channel-graph snapshot has been published yet. ") +
-      (l ? "Lightning Stream's Nostr listings show " + pl(l.shops.filter(function (s) { return !s.stale; }).length, "shop", "shops") + ", " + pl(l.hashrate.length, "hashrate offer", "hashrate offers") + " and " + pl(l.exits.length, "VPN exit", "VPN exits") + "." : "");
-    t.appendChild(p);
-    var busiest = nodes.filter(function (n) { return n.kind === "node"; }).sort(function (a, b) { return b.deg - a.deg; }).slice(0, 10);
+    t.appendChild(el("p", null, g ? "The latest snapshot of the public XBT Lightning graph, " + ago(g.taken_at) + ", has " + g.channels.length + " public channels between " + pub + " nodes." : "No channel-graph snapshot has been published yet."));
+    if (shops.length) {
+      t.appendChild(el("h3", null, "Stream shops and their nodes"));
+      var ul2 = el("ul");
+      shops.forEach(function (n) { ul2.appendChild(el("li", null, shopName(n) + " sells " + n.shop.svc.map(function (k) { return SVC[k]; }).join(", ") + ": " + (n.priv ? "on a private node, not in the public graph" : "on the Lightning node " + n.label) + ".")); });
+      t.appendChild(ul2);
+    }
+    if (relays.length) {
+      t.appendChild(el("h3", null, "Stream relays"));
+      var ul3 = el("ul"); relays.forEach(function (r) { ul3.appendChild(el("li", null, r.host + ": carries traffic for " + (r.shops.map(shopName).join(", ") || "no shop named it") + ".")); }); t.appendChild(ul3);
+    }
+    var busiest = nodes.filter(function (n) { return !n.priv; }).sort(function (a, b) { return b.deg - a.deg; }).slice(0, 10);
     if (busiest.length) {
       t.appendChild(el("h3", null, "Best-connected Lightning nodes in the snapshot"));
       var ol = el("ol"); busiest.forEach(function (n) { ol.appendChild(el("li", null, n.label + ": " + n.deg + " channels")); }); t.appendChild(ol);
     }
-    t.appendChild(el("p", "small muted")).appendChild(document.createTextNode("Shops in detail are on the shops page."));
   }
 
   function init() {
     cv = document.getElementById("map"); if (!cv) return;
     ctx = cv.getContext("2d"); tip = document.getElementById("map-tip"); panel = document.getElementById("map-panel");
-    resize(); window.addEventListener("resize", function () { resize(); });
+    resize(); window.addEventListener("resize", resize);
     bind();
     function getJ(u) { return fetch(u, { headers: { accept: "application/json" } }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
     Promise.all([getJ("/api/graph"), getJ("/api/listings")]).then(function (res) {
       graphInfo = res[0] && res[0].nodes ? res[0] : null; listInfo = res[1];
       build(graphInfo, listInfo);
-      if (reduce) { for (var i = 0; i < 400; i++) tick(); alpha = 0; fit(); draw(); }
-      else { for (var j = 0; j < 120; j++) tick(); fit(); requestAnimationFrame(loop); setTimeout(function () { if (!pinned && !found) fit(); }, 2500); }
+      for (var i = 0; i < (reduce ? 500 : 300); i++) tick();
+      if (reduce) alpha = 0;
+      fit(); draw();
+      if (!reduce) requestAnimationFrame(loop);
       writePanel();
       if (!nodes.length) { panel.textContent = ""; panel.appendChild(el("h2", null, "Nothing to draw yet")); panel.appendChild(el("p", "small muted", "Neither a graph snapshot nor live listings could be loaded.")); }
     });

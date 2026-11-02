@@ -115,6 +115,42 @@ export function verifyShopBind(receiptKey, nostrPubHex, seller, sigHex) {
   return ecdsaDer(sigHex, bindDigest(nostrPubHex, seller), receiptKey);
 }
 
+/* ---------- the shop's Lightning node, from its transport document ----------
+   transport/1 (crates/xbt402/src/transport.rs) is signed by the listing's receipt key like the listing, and
+   each link carries node_sig: lnd's SignMessage, by the shop's own Lightning node, over
+   "lightning-stream link v1\nendpoint <key>\nseller <origin>\nexpires <unix>" (crates/xbt402/src/claim.rs).
+   lnd's signatures are recoverable, so the node is read from them; every live link must name the same one. */
+export function transportDigest(doc) {
+  const bare = { ...doc }; delete bare.sig;
+  return tagged("xbt402/transport/1", [utf8ToBytes(canonical(bare))]);
+}
+const ZB32 = "ybndrfg8ejkmcpqxot1uwisza345h769";
+function zbase32(s) {
+  let acc = 0, bits = 0; const out = [];
+  for (const ch of s) { const v = ZB32.indexOf(ch); if (v < 0) return null; acc = ((acc << 5) | v) & 0xffff; bits += 5; if (bits >= 8) { out.push((acc >>> (bits - 8)) & 255); bits -= 8; } }
+  return Uint8Array.from(out);
+}
+export function recoverLndSigner(message, sigZ) {
+  try {
+    const sig = zbase32(sigZ || "");
+    if (!sig || sig.length !== 65 || sig[0] < 27 || sig[0] > 34) return null;
+    const h = sha256(sha256(concatBytes(utf8ToBytes("Lightning Signed Message:"), utf8ToBytes(message))));
+    return secp256k1.Signature.fromCompact(sig.slice(1)).addRecoveryBit((sig[0] - 27) & 3).recoverPublicKey(h).toHex(true);
+  } catch { return null; }
+}
+export function shopNode(tdoc, doc, seller, now) {
+  if (!tdoc || tdoc.version !== "transport/1" || canonicalOrigin(tdoc.seller || "") !== seller || tdoc.receipt_key !== doc.receipt_key) return null;
+  if (!ecdsaDer(tdoc.sig || "", transportDigest(tdoc), doc.receipt_key)) return null;
+  const nodes = new Set();
+  for (const l of Array.isArray(tdoc.transport) ? tdoc.transport : []) {
+    if (!l || !isHex(l.endpoint_id, 64) || !(Number(l.expires) > now)) continue;
+    const n = recoverLndSigner(`lightning-stream link v1\nendpoint ${l.endpoint_id}\nseller ${seller}\nexpires ${l.expires}`, l.node_sig);
+    if (!n) return null;
+    nodes.add(n);
+  }
+  return nodes.size === 1 ? [...nodes][0] : null;
+}
+
 /* ---------- names and numbers for people ---------- */
 const B32 = "abcdefghijklmnopqrstuvwxyz234567";
 // A shop with no web address is http://<its Nostr key, base32>.shop.invalid (docs/DIRECT-LINKS.md).
@@ -171,6 +207,7 @@ export function readShop(ev, now) {
   const bindOk = listingOk && verifyShopBind(doc.receipt_key, ev.pubkey, seller, tag(ev, "xbt402-bind"));
   const services = (doc.version === "listing/1" ? doc.services : [{ name: doc.name, kind: doc.kind, path: "/", prices: doc.prices, items: doc.items }]) || [];
   let transport = null; try { transport = JSON.parse(tag(ev, "transport") || "null"); } catch {}
+  const node = bindOk ? shopNode(transport, doc, seller, now) : null;
   const irohRelays = transport && Array.isArray(transport.transport)
     ? [...new Set(transport.transport.flatMap((t) => (Array.isArray(t.relays) ? t.relays : [])).map(host).filter(Boolean))] : [];
   return {
@@ -192,6 +229,8 @@ export function readShop(ev, now) {
       titles: Array.isArray(s.items) ? s.items.slice(0, 6).map((i) => clean(i && i.title, 60)).filter(Boolean) : [],
     })),
     iroh_relays: irohRelays,
+    node, node_from: node ? "its node vouches for its link" : null,
+    hashrate: [], exits: [],
     checks: { event: true, listing: listingOk, bind: bindOk },
   };
 }
@@ -220,6 +259,8 @@ export function readHashrate(ev, now) {
     miners: Number(c.miners) || 0, free_miners: Number(c.freeMiners) || 0,
     proves: h.proof != null,
     pay_node: isHex(h.pay && h.pay.node, 66) ? h.pay.node : null,
+    pay_origin: canonicalOrigin((h.pay && h.pay.url) || "") || null,
+    shop: null,
     iroh_relays: h.link.iroh && Array.isArray(h.link.iroh.relays) ? [...new Set(h.link.iroh.relays.map(host).filter(Boolean))] : [],
     published_at: ev.created_at,
     nostr: ev.pubkey,
@@ -248,6 +289,7 @@ export function readExit(ev, now) {
     blocked_ports: tags(ev, "port").filter((p) => /^\d{1,5}$/.test(p)).slice(0, 32).map(Number),
     relay: host(tag(ev, "relay") || ""),
     shop_npub: shop ? npub(shop) : null,
+    shop: null,
     published_at: ev.created_at, expires: exp,
     nostr: ev.pubkey,
     checks: { event: true, link: true },
@@ -284,6 +326,17 @@ export function digest(events, now, { hide = [] } = {}) {
     if (!rec) { out.rejected++; continue; }
     rec.seen_on = (ev._seen || []).map((u) => u.replace(/^wss:\/\//, "").replace(/\/$/, ""));
     ({ shop: out.shops, hashrate: out.hashrate, exit: out.exits, relay: out.relays })[rec.type].push(rec);
+  }
+  // what each shop sells beyond its listing: hashrate offers paid at the shop's origin, VPN exits its key runs
+  for (const h of out.hashrate) {
+    const s = out.shops.find((x) => !x.stale && x.origin && x.origin === h.pay_origin) || out.shops.find((x) => x.origin && x.origin === h.pay_origin);
+    if (!s) continue;
+    h.shop = s.id; s.hashrate.push(h.id);
+    if (!s.node && h.pay_node) { s.node = h.pay_node; s.node_from = "named by its hashrate offer"; }
+  }
+  for (const x of out.exits) {
+    const s = x.shop_npub && out.shops.find((y) => y.npub === x.shop_npub);
+    if (s) { x.shop = s.id; s.exits.push(x.id); }
   }
   // a shop whose newer listing names the same receipt key and seller wins; order: fresh first, then newest
   const byFresh = (a, b) => ((a.stale ? 1 : 0) - (b.stale ? 1 : 0)) || (b.published_at - a.published_at);

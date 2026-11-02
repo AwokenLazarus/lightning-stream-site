@@ -3,7 +3,7 @@
 
 Run it on a schedule (every 15 to 60 minutes) on any box that has an XBT Lightning node: the Worker
 can't reach a node on a home network, so the node's box pushes the graph out. It sends only public
-gossip (node ids, aliases, colours, channels and their capacities). It never sends node addresses,
+gossip (node ids, aliases, colors, channels and their capacities). It never sends node addresses,
 balances, or anything about the node's own wallet. Python 3.8+, standard library only.
 
 Where the graph comes from (pick one):

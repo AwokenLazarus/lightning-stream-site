@@ -10,9 +10,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=9f9deef2ab">
-<script src="/assets/site.js?v=9f9deef2ab" defer></script>
-<script src="/assets/web.js?v=9f9deef2ab" defer></script>
+<link rel="stylesheet" href="/assets/site.css?v=ca760a9dc9">
+<script src="/assets/site.js?v=ca760a9dc9" defer></script>
+<script src="/assets/web.js?v=ca760a9dc9" defer></script>
 </head>
 <body>
 <!-- chrome:header -->
@@ -39,7 +39,7 @@
     <div class="wrap with-toc">
       <aside class="toc" aria-label="On this page"><div class="toc-inner"><h2>On this page</h2><ol>
         <li><a href="#what">What it is</a></li><li><a href="#status">Status</a></li><li><a href="#limits">Known limits</a></li>
-        <li><a href="#next">Coming next</a></li><li><a href="#credits">Credits</a></li><li><a href="#project">The project</a></li>
+        <li><a href="#next">Coming next</a></li><li><a href="#credits">Credits</a></li><li><a href="#support">Support Lightning Stream</a></li><li><a href="#project">The project</a></li>
       </ol></div></aside>
 
       <div class="prose">
@@ -63,7 +63,7 @@
         <ul>
           <li>Money moves a ticket at a time, and a dishonest shop can keep a ticket or two per answer it is sending, plus a small allowance per request, before it is caught and blocked. One that cheats inside that bound is not caught, which is why each shop has a daily cap.</li>
           <li>A web app over a relay on a slow path starts slowly: 15 to 25&nbsp;s for a 4K film in our lab.</li>
-          <li>Unused held tickets are locked until cancelled or expired, for hours if a seller vanishes. Unspent prepaid credit stays with a seller until the buyer returns.</li>
+          <li>Unused held tickets are locked until canceled or expired, for hours if a seller vanishes. Unspent prepaid credit stays with a seller until the buyer returns.</li>
           <li>A seller needs an lnd-family Lightning node with room to receive, online while it serves; a Core Lightning node cannot sell held tickets today.</li>
           <li>Paid by lottery, income and cost are uneven in the short run.</li>
           <li>The Lightning nodes on both sides hold hot keys.</li>
@@ -89,9 +89,23 @@
         <p>Chris Guida's two reviews are why Lightning Stream is built on Lightning, and they narrowed what it claims. Kyle Santiago pointed out the slot and dust limits the ticket defaults are built around. Kilombino named the hashmaker and the hashtaker and runs a relay the app uses. The mistakes that remain are ours.</p>
         <p>Ideas and prior work, with references, are in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/REFERENCES.md">REFERENCES.md</a> and the <a href="/whitepaper/#references">whitepaper</a>; code and libraries from others in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</p>
 
+        <h2 id="support">Support Lightning Stream</h2>
+        <p>Donations in XBT, Bitcoin on BLAKE2b, help fund Lightning Stream's development.</p>
+        <!-- donate -->
+        <div class="donate">
+          <figure class="donate-qr"><svg role="img" aria-label="QR code of the XBT donation address" class="qr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h37v37H0z"/><path stroke="#000000" d="M2 2.5h7m2 0h6m1 0h2m1 0h5m2 0h7M2 3.5h1m5 0h1m2 0h3m3 0h1m1 0h1m3 0h2m3 0h1m5 0h1M2 4.5h1m1 0h3m1 0h1m1 0h5m2 0h1m2 0h2m1 0h3m2 0h1m1 0h3m1 0h1M2 5.5h1m1 0h3m1 0h1m1 0h3m2 0h1m3 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1M2 6.5h1m1 0h3m1 0h1m1 0h3m3 0h1m1 0h1m1 0h6m2 0h1m1 0h3m1 0h1M2 7.5h1m5 0h1m1 0h1m1 0h6m6 0h1m1 0h1m1 0h1m5 0h1M2 8.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M10 9.5h1m1 0h1m1 0h1m2 0h2m1 0h7M2 10.5h1m1 0h5m4 0h1m1 0h5m5 0h1m2 0h5M5 11.5h3m1 0h2m1 0h1m1 0h3m1 0h1m2 0h2m1 0h3m1 0h1m3 0h3M2 12.5h1m1 0h2m2 0h2m1 0h1m1 0h2m2 0h1m1 0h2m2 0h1m2 0h1m1 0h1m2 0h1M3 13.5h1m1 0h2m2 0h3m4 0h1m1 0h1m3 0h4m1 0h1m4 0h1m1 0h1M5 14.5h7m5 0h1m1 0h1m1 0h1m4 0h2m2 0h2m1 0h1M2 15.5h2m3 0h1m7 0h1m2 0h1m2 0h2m1 0h2m1 0h3m4 0h1M3 16.5h4m1 0h1m6 0h5m3 0h1m2 0h1m2 0h1m2 0h2M9 17.5h2m3 0h4m2 0h8m1 0h2m1 0h1m1 0h1M3 18.5h3m1 0h2m3 0h2m1 0h1m1 0h5m2 0h2m1 0h1m1 0h3M2 19.5h1m1 0h1m5 0h1m3 0h1m1 0h1m1 0h1m2 0h2m2 0h4m3 0h3M3 20.5h2m2 0h4m2 0h2m2 0h4m2 0h1m2 0h1m4 0h2M2 21.5h1m2 0h2m2 0h1m5 0h2m1 0h1m3 0h2m1 0h8m1 0h1M2 22.5h1m5 0h3m4 0h1m1 0h1m1 0h1m5 0h1m1 0h1m2 0h2M2 23.5h3m1 0h2m1 0h2m2 0h2m1 0h1m1 0h1m2 0h5m1 0h2m3 0h1m1 0h1M2 24.5h1m2 0h2m1 0h2m2 0h1m4 0h3m2 0h3m5 0h1m1 0h2M2 25.5h1m1 0h3m5 0h7m1 0h2m1 0h1m5 0h1m1 0h2m1 0h1M2 26.5h1m5 0h4m2 0h2m1 0h4m1 0h1m3 0h6m1 0h2M10 27.5h1m2 0h1m1 0h1m5 0h1m1 0h4m3 0h1m1 0h3M2 28.5h7m2 0h3m3 0h2m1 0h1m2 0h1m1 0h2m1 0h1m1 0h3M2 29.5h1m5 0h1m1 0h1m2 0h2m2 0h1m3 0h3m1 0h2m3 0h3m1 0h1M2 30.5h1m1 0h3m1 0h1m1 0h1m2 0h1m3 0h1m1 0h1m4 0h1m1 0h6m1 0h1M2 31.5h1m1 0h3m1 0h1m1 0h2m1 0h1m4 0h1m1 0h4m2 0h2m2 0h1m1 0h3M2 32.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h3m8 0h4m1 0h2M2 33.5h1m5 0h1m2 0h7m2 0h4m4 0h1m1 0h1m1 0h1M2 34.5h7m1 0h1m1 0h2m4 0h2m2 0h1m2 0h2m4 0h1m1 0h1"/></svg>
+</figure>
+          <div class="donate-addr">
+            <p class="muted small">XBT address</p>
+            <div class="copy"><code>bc1qw9eappz67w9d264ljtv64q7vxvv2680q3x9sxezjey80fcnfncsqheadh9</code><button type="button" hidden>Copy</button></div>
+            <p class="muted small">The QR code holds the plain address. Send XBT, Bitcoin on BLAKE2b.</p>
+          </div>
+        </div>
+        <!-- /donate -->
+
         <h2 id="project">The project</h2>
         <p>Lightning Stream is developed in the open on <a href="https://github.com/AwokenLazarus/Lightning-Stream">GitHub</a>, licensed under either the Apache License 2.0 or the MIT license, at your option. Bugs and confusing screens go to its <a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">issues</a>.</p>
-        <p>This site reads public data only: sellers' signed listings from Nostr relays, and a snapshot of the public XBT Lightning channel graph. It sets no cookies and loads nothing from other sites. It is set in Inter (Rasmus Andersson), under the SIL Open Font License.</p>
+        <p>This site reads public data only: sellers' signed listings from Nostr relays, and a snapshot of the public XBT Lightning channel graph. It sets no cookies. The only thing it loads from elsewhere is Cloudflare's cookieless Web Analytics beacon, which counts visits. It is set in Inter (Rasmus Andersson), under the SIL Open Font License.</p>
       </div>
     </div>
   </div>
@@ -111,7 +125,7 @@
       <nav aria-label="Papers"><h2>Papers</h2><ul>
         <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
       <nav aria-label="Project"><h2>Project</h2><ul>
-        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li><li><a href="/about/#support">Donate</a></li></ul></nav>
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>

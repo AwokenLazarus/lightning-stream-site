@@ -78,3 +78,12 @@ test("graph snapshots are checked and stripped", () => {
   assert.throws(() => normalize({ ...doc, version: "x" }, NOW));
   assert.throws(() => normalize({ ...doc, taken_at: NOW - 30 * 86400 }, NOW));
 });
+
+test("a shop's node is recovered from its link signature, as the app checks it", async () => {
+  const { recoverLndSigner } = await import("../src/parse.js");
+  // lnd SignMessage by Lightning Stream Genesis's node over one of its published link claims (2026-11-02)
+  const msg = "lightning-stream link v1\nendpoint 4189557c2079a1e888d9a505ae7e02ca906bba872d4c00eca0917986c5a507a4\nseller http://wandj3ji23iukqerzx4vmm63rjsb5phrpdxsn3madjpf4rlr6kva.shop.invalid\nexpires 1796176492";
+  const sig = "d6bm7gybsgonkagryz3j15kxjg1axrpjsncyg6wixi1a3yqub1u8ksbb51ozhtgk17558wtdsd3jz13djop97gjc9tz4gaxms9kw6txc";
+  assert.equal(recoverLndSigner(msg, sig), "035d867908cdcdbccda8763bf81a99574dc042e2a6d00e44e9845836b7123d0b7d");
+  assert.notEqual(recoverLndSigner(msg.replace("1796176492", "1796176493"), sig), "035d867908cdcdbccda8763bf81a99574dc042e2a6d00e44e9845836b7123d0b7d");
+});

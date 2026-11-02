@@ -10,10 +10,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=9f9deef2ab">
-<link rel="stylesheet" href="/assets/paper.css?v=9f9deef2ab">
-<script src="/assets/site.js?v=9f9deef2ab" defer></script>
-<script src="/assets/web.js?v=9f9deef2ab" defer></script>
+<link rel="stylesheet" href="/assets/site.css?v=ca760a9dc9">
+<link rel="stylesheet" href="/assets/paper.css?v=ca760a9dc9">
+<script src="/assets/site.js?v=ca760a9dc9" defer></script>
+<script src="/assets/web.js?v=ca760a9dc9" defer></script>
 </head>
 <body class="paper-page">
 <!-- chrome:header -->
@@ -219,7 +219,7 @@
     <h2 id="cost"><span class="n">8</span>What it costs</h2>
     <dl>
       <dt>A Lightning node on each side</dt><dd>A buyer needs a node with a channel; a seller needs an lnd-family node with room to receive, online while it serves.</dd>
-      <dt>Money tied up</dt><dd>Unused held tickets are locked until cancelled or expired, for hours if a seller vanishes. Unspent credit on a prepaid ticket stays with that seller until the buyer comes back.</dd>
+      <dt>Money tied up</dt><dd>Unused held tickets are locked until canceled or expired, for hours if a seller vanishes. Unspent credit on a prepaid ticket stays with that seller until the buyer comes back.</dd>
       <dt>Routing</dt><dd>Each ticket pays the usual routing fee. Held tickets take slots on every channel of their route, which is why they stay few, small and short-lived <a href="#ref-10">[10]</a>.</dd>
       <dt>An uneven lottery</dt><dd>Paid by lottery, income and cost even out only over many wins, and the seller goes first by about one win per new buyer.</dd>
       <dt>A relay is slower</dt><dd>Straight links and https add little: a 4K film started within about 1.5&nbsp;s of the same film with no Stream in the path. Through a relay over a slow path it starts much later: 15 to 25&nbsp;s in our lab, against 1 to 1.5&nbsp;s straight from the server (<a href="/whitepaper/tests/#hdr">4K and HDR</a>).</dd>
@@ -262,7 +262,7 @@
       <li id="ref-43" value="43">O. Kurbatov. "Emulating OP_RAND in Bitcoin". arXiv:2501.16451, January 2025, and the Delving Bitcoin thread "Emulating OP_RAND". <a href="https://arxiv.org/abs/2501.16451" rel="noopener">arXiv:2501.16451</a>, <a href="https://delvingbitcoin.org/t/emulating-op-rand/1409" rel="noopener">thread</a>, <a href="https://bitcoinops.org/en/topics/probabilistic-payments/" rel="noopener">Optech: probabilistic payments</a>.</li>
       <li id="ref-44" value="44">P. Gerhart, J. Taylor, S. A. K. Thyagarajan. "Probabilistic Atomic Swaps for Bitcoin and Friends". arXiv:2605.04975, 6 May 2026. <a href="https://arxiv.org/abs/2605.04975" rel="noopener">arXiv:2605.04975</a>.</li>
       <li id="ref-60" value="60">Bitcoin Knots, maintained by Luke Dashjr. Release 29.4.1 (September 2026) carries the BLAKE2b proof of work (L. Dashjr) and the unified opt-in signature hash (K. Santiago; specified in the tree's doc/unified-sighash.md), activated at block 961,640 together with the reduced-data rules of BIP 110 (D. Ohm). MIT. <a href="https://github.com/bitcoinknots/bitcoin" rel="noopener">bitcoinknots/bitcoin</a>, <a href="https://github.com/bitcoinknots/bitcoin/blob/29.x-knots/doc/unified-sighash.md" rel="noopener">unified-sighash.md</a>.</li>
-      <li id="ref-61" value="61">Lightning Fork, by Paul Lamb: lnd for the BLAKE2b chain. Measured here at tag v0.21.3-beta-blake2b.17 (commit cebc10fe), in the regtest lab of the same author, lightning-fork-lab, at commit a5cadc5. Lightning Fork is MIT; the lab carries no licence file. <a href="https://github.com/paulscode/lightning-fork" rel="noopener">paulscode/lightning-fork</a>, <a href="https://github.com/paulscode/lightning-fork-lab" rel="noopener">paulscode/lightning-fork-lab</a>.</li>
+      <li id="ref-61" value="61">Lightning Fork, by Paul Lamb: lnd for the BLAKE2b chain. Measured here at tag v0.21.3-beta-blake2b.17 (commit cebc10fe), in the regtest lab of the same author, lightning-fork-lab, at commit a5cadc5. Lightning Fork is MIT; the lab carries no license file. <a href="https://github.com/paulscode/lightning-fork" rel="noopener">paulscode/lightning-fork</a>, <a href="https://github.com/paulscode/lightning-fork-lab" rel="noopener">paulscode/lightning-fork-lab</a>.</li>
       <li id="ref-62" value="62">lnd, the Lightning Network Daemon, by Lightning Labs and the Lightning Network developers. MIT. <a href="https://github.com/lightningnetwork/lnd" rel="noopener">lightningnetwork/lnd</a>.</li>
       <li id="ref-63" value="63">The Core Lightning fork for the BLAKE2b chain, by PrivKey, built on Core Lightning (R. Russell, Blockstream, and contributors). Measured here at release v26.06.9-blake2b.7 (commit 482c8c52), from the released binaries, as buyer, routing node and seller. Its documentation at that tag (doc/lightningd-config.5.md) gives the default of 30 pending payments in each direction of a channel. <a href="https://github.com/privkeyio/lightning" rel="noopener">privkeyio/lightning</a>, <a href="https://github.com/privkeyio/lightning/releases/tag/v26.06.9-blake2b.7" rel="noopener">release</a>, <a href="https://github.com/ElementsProject/lightning" rel="noopener">ElementsProject/lightning</a>.</li>
       <li id="ref-66" value="66">OCEAN. DATUM Gateway (Bitcoin Ocean, LLC, Jason Hughes and contributors; MIT), and J. Hughes, "TIDES: Transparent Index of Distinct Extended Shares", 2024. <a href="https://github.com/OCEAN-xyz/datum_gateway" rel="noopener">OCEAN-xyz/datum_gateway</a>, <a href="https://ocean.xyz/docs/tides" rel="noopener">TIDES</a>.</li>
@@ -296,7 +296,7 @@
       <nav aria-label="Papers"><h2>Papers</h2><ul>
         <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
       <nav aria-label="Project"><h2>Project</h2><ul>
-        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li><li><a href="/about/#support">Donate</a></li></ul></nav>
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>

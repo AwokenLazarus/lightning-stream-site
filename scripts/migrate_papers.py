@@ -11,6 +11,7 @@ afterwards (scripts/build.sh does both).
 """
 import html
 import os
+from american import american
 import re
 import sys
 
@@ -127,7 +128,7 @@ def migrate(name, new, eyebrow, short):
 """
     out = os.path.join(ROOT, "site", new, "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    open(out, "w", encoding="utf-8").write(page)
+    open(out, "w", encoding="utf-8").write(american(page))
     print(f"papers: {name} -> site/{new}/index.html ({len(toc_links)} sections)")
 
 

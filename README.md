@@ -12,7 +12,7 @@ The planned 301s from lazarus-xbt.xyz are in `REDIRECTS.md`, not applied.
 
 | Path | What |
 |---|---|
-| `site/` | The pages, as deployed. Plain HTML, one stylesheet (`assets/site.css`), small vanilla scripts. No framework, nothing loaded from other sites. |
+| `site/` | The pages, as deployed. Plain HTML, one stylesheet (`assets/site.css`), small vanilla scripts. No framework; the only outside load is Cloudflare's cookieless Web Analytics beacon (allowed in the CSP in `site/_headers`). |
 | `site/assets/web.js` | The node web: buyers, shops and services joined by channels and links, with payments as pulses of light. The homepage's scroll scenes, and the quiet background on other pages. Still frame with `prefers-reduced-motion`, Save-Data or a low-power device. |
 | `site/assets/shops.js`, `site/assets/map.js` | The live pages: listings, and the network map. |
 | `site/assets/paper.css` | Figure styles for the whitepaper pages migrated from lazarus-xbt.xyz/stream/. |
@@ -72,7 +72,7 @@ A Worker can't reach a node on a home network, so a box with an XBT Lightning no
 channel graph out on a schedule. `scripts/publish_graph.py` (Python 3, standard library only) reads
 the graph from lnd/Lightning Fork (REST `/v1/graph` with a read-only macaroon, or `lncli
 describegraph`) or Core Lightning (`listnodes`, `listchannels`), keeps only public gossip (node keys,
-aliases, colours, channels and capacities; no addresses, no balances), and posts it to `/api/graph`.
+aliases, colors, channels and capacities; no addresses, no balances), and posts it to `/api/graph`.
 
 ```sh
 # a read-only macaroon is enough

@@ -52,6 +52,8 @@ for (const [sizeName, viewport, dpr] of SIZES) {
       await page.waitForTimeout(1000);
     }
     await page.screenshot({ path: `${out}/${name}-${sizeName}.png`, fullPage: name !== "home" && name !== "map" });
+    if (name === "about") { const h = await page.$("#support"); if (h) { await page.evaluate(() => { const e = document.getElementById("support"); scrollTo(0, e.getBoundingClientRect().top + scrollY - 90); }); await page.waitForTimeout(700); await page.screenshot({ path: `${out}/about-${sizeName}-support.png` }); } }
+    if (name === "map") { const shell = await page.$(".map-shell"); if (shell) { await shell.scrollIntoViewIfNeeded(); await page.waitForTimeout(800); await shell.screenshot({ path: `${out}/map-${sizeName}-canvas.png` }); } }
     if (name === "home") {
       // the homepage's scenes: one shot per chapter, as the web focuses on each part
       const phone = viewport.width < 900;

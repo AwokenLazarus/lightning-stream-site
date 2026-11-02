@@ -11,6 +11,7 @@ to stamp the shared header and footer (scripts/build.sh does both).
 """
 import html
 import os
+from american import american
 import re
 import sys
 
@@ -146,7 +147,7 @@ def main():
         toc=toc, body="\n\n".join(body), thanks=thanks,
         latest=latest_v, latest_date=nice_date(latest_d), count=len(releases))
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    open(OUT, "w", encoding="utf-8").write(page)
+    open(OUT, "w", encoding="utf-8").write(american(page))
     print(f"changelog: {len(releases)} versions, latest {latest_v} ({latest_d}) -> {os.path.relpath(OUT, ROOT)}")
 
 

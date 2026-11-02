@@ -10,10 +10,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=9f9deef2ab">
-<link rel="stylesheet" href="/assets/paper.css?v=9f9deef2ab">
-<script src="/assets/site.js?v=9f9deef2ab" defer></script>
-<script src="/assets/web.js?v=9f9deef2ab" defer></script>
+<link rel="stylesheet" href="/assets/site.css?v=ca760a9dc9">
+<link rel="stylesheet" href="/assets/paper.css?v=ca760a9dc9">
+<script src="/assets/site.js?v=ca760a9dc9" defer></script>
+<script src="/assets/web.js?v=ca760a9dc9" defer></script>
 </head>
 <body class="paper-page">
 <!-- chrome:header -->
@@ -50,7 +50,7 @@
       <dt>On mainnet</dt><dd>Since 26 October 2026, between our own nodes: a fresh install from the published packages bought films and AI answers from our shop, a node box of ours bought from a second shop of ours, and a rental of hashrate was paid, every charge matching the meter to the millisatoshi. On StartOS the app's node key, through Lightning Fork's grant, was tested on mainnet; a paid buy there has not run yet. See <a href="/whitepaper/tests/#mainnet">On mainnet</a>. Before 0.2.0, a round with real sats bought files, a web app over a direct link and over a relay, and AI answers from our demo shop Lightning Stream Genesis, exact to the millisatoshi; rented hashrate for 25 slices; and sent 315&nbsp;MB through a paid VPN exit. It found two faults in paying, a VPN exit that charged too little and a test slice of hashrate that ran unpaid, both now fixed (<a href="/whitepaper/tests/#real-sats">The 0.2.0 round</a>). Nobody outside the project has used it yet.</dd>
       <dt>Reviewed, not audited</dt><dd>Chris Guida reviewed the earlier design and its published code in October 2026, and then, in a second review that read the code without running it, the ticket design, the lottery and the tree as they stood on 13 October; the move onto Lightning and most of Draft 9 follow from his two reviews. Kyle Santiago read the design and pointed out the slot and dust limits the defaults are built around. In October 2026, machine-assisted reviews of the payment code found further faults, among them a way for another page on the same machine to start a payment, and bookkeeping that could undercount after a restart; all are fixed in 0.1.15. Nobody outside the project has reviewed the fixes, and there has been no independent audit. The win that pays itself waits for a cryptographer's reading. Treat it all as unaudited software.</dd>
       <dt>Next</dt><dd>A small test with people outside the project, by invitation, with amounts they can afford to lose; then a paid buy on StartOS, and the work under <a href="#next">Coming next</a>.</dd>
-      <dt>Trade-offs</dt><dd>Money moves a ticket at a time, and a dishonest shop can keep a ticket or two per answer it is sending, plus a small allowance per request, before it is caught and blocked; one that cheats inside that bound is not caught, which is why each shop has a daily cap. A web app over a relay on a slow path starts slowly: 15 to 25&nbsp;s for a 4K film in our lab. Unused held tickets are locked until cancelled or expired, and unspent prepaid credit stays with a seller until the buyer returns. A seller needs an lnd-family Lightning node with room to receive, online while it serves; a Core Lightning node cannot sell held tickets today. Paid by lottery, income and cost are uneven in the short run. The Lightning nodes on both sides hold hot keys. XBT's Lightning network is young and small, so a route may not exist; a direct channel to the shop always works.</dd>
+      <dt>Trade-offs</dt><dd>Money moves a ticket at a time, and a dishonest shop can keep a ticket or two per answer it is sending, plus a small allowance per request, before it is caught and blocked; one that cheats inside that bound is not caught, which is why each shop has a daily cap. A web app over a relay on a slow path starts slowly: 15 to 25&nbsp;s for a 4K film in our lab. Unused held tickets are locked until canceled or expired, and unspent prepaid credit stays with a seller until the buyer returns. A seller needs an lnd-family Lightning node with room to receive, online while it serves; a Core Lightning node cannot sell held tickets today. Paid by lottery, income and cost are uneven in the short run. The Lightning nodes on both sides hold hot keys. XBT's Lightning network is young and small, so a route may not exist; a direct channel to the shop always works.</dd>
     </dl>
 
     <h2 id="built"><span class="n">2</span>Released in 0.2.0</h2>
@@ -126,7 +126,7 @@
       <nav aria-label="Papers"><h2>Papers</h2><ul>
         <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
       <nav aria-label="Project"><h2>Project</h2><ul>
-        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li><li><a href="/about/#support">Donate</a></li></ul></nav>
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>

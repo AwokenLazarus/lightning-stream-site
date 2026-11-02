@@ -54,7 +54,7 @@ function footer() {
       <nav aria-label="Papers"><h2>Papers</h2><ul>
         <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
       <nav aria-label="Project"><h2>Project</h2><ul>
-        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li><li><a href="/about/#support">Donate</a></li></ul></nav>
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
