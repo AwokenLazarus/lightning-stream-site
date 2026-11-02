@@ -12,3 +12,7 @@ else
   echo "papers: source not found, keeping the pages in site/whitepaper/ as they are"
 fi
 node scripts/chrome.mjs
+# version every asset link by the assets' content, so a deploy never meets a cached old script or stylesheet
+V=$(cat site/assets/*.js site/assets/*.css | sha256sum | cut -c1-10)
+find site -name "*.html" -print0 | xargs -0 sed -i -E "s#(/assets/[a-z0-9_-]+\.(js|css))(\?v=[a-f0-9]+)?\"#\1?v=$V\"#g"
+echo "assets: links versioned v=$V"
