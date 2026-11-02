@@ -123,6 +123,8 @@ export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname.replace(/\/+$/, "");
+    // www.lightning-stream.com (and any www. host) goes to the bare domain, path and query kept
+    if (url.hostname.startsWith("www.")) { url.hostname = url.hostname.slice(4); return Response.redirect(url.toString(), 301); }
     if (!p.startsWith("/api")) return env.ASSETS ? env.ASSETS.fetch(req) : new Response("Not found", { status: 404 });
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, POST", "access-control-allow-headers": "authorization, content-type" } });
     try {
