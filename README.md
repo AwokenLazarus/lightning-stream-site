@@ -4,9 +4,9 @@ The website for Lightning Stream: buy and sell services over XBT Lightning, paid
 Static pages plus a small Worker that serves cached JSON under `/api/` for the live listings and the
 network map. Hosted on Cloudflare Pages, project `lightning-stream-site`.
 
-**Status: preview only.** Deployed to the `preview` branch:
-<https://preview.lightning-stream-site.pages.dev>. Nothing is attached to lightning-stream.com yet,
-and the Lazarus site is unchanged (see `REDIRECTS.md` for the planned 301s).
+**Status:** previews deploy to <https://preview.lightning-stream-site.pages.dev> (Pages marks
+previews `noindex` itself). Production (`--branch main`, lightning-stream.com and www) is the next step.
+The planned 301s from lazarus-xbt.xyz are in `REDIRECTS.md`, not applied.
 
 ## Layout
 
@@ -87,15 +87,14 @@ python3 publish_graph.py --lnd-rest https://127.0.0.1:8080 \
 `--out file.json` writes the snapshot without sending it. It is **not installed on any host**: which
 box runs it is Mike's choice. The env file needs `LS_SITE_URL` and `LS_GRAPH_TOKEN`.
 
-## Launch checklist (not done)
+## Launch checklist
 
-1. Deploy to production: `wrangler pages deploy --branch main`, and set `GRAPH_TOKEN` for production
-   (`wrangler pages secret put GRAPH_TOKEN --project-name lightning-stream-site`).
-2. Attach lightning-stream.com as the project's custom domain.
-3. Remove the `X-Robots-Tag: noindex` line from `site/_headers` and the `Disallow: /` in `site/robots.txt`;
-   add a sitemap.
-4. Point the graph publisher at the production URL.
-5. Apply `REDIRECTS.md` on lazarus-xbt.xyz, and update the links listed there.
+1. Production deploy: `wrangler pages deploy --branch main` (the production `GRAPH_TOKEN` secret is set).
+2. Custom domains on the Pages project: `lightning-stream.com`, and `www.lightning-stream.com`
+   redirecting to the apex.
+3. Enable the graph publisher's timer (installed on the Genesis node's host as
+   `ls-graph-publisher.timer`, posting to the production site every 15 minutes) and check its first post.
+4. After production is checked: apply `REDIRECTS.md` on lazarus-xbt.xyz, and update the links listed there.
 
 ## Content rules
 
