@@ -144,11 +144,12 @@
     n("NE1", "node", -640, -330, "its node"); e("E1", "NE1", "own"); e("NE1", "L5", "chan");
     e("B5", "R2", "relay"); e("R2", "E1", "relay"); e("E1", "NET", "exit");
     // 6. links and relays
-    n("R1", "relay", 0, -390, "relay"); e("B1", "R1", "relay"); e("R1", "S1", "relay");
+    // a shop reached directly, and a private shop reached only through a relay
+    n("R1", "relay", -110, -300, "relay"); e("B1", "R1", "relay"); e("R1", "S3", "relay");
     // 7. found on Nostr
     n("NR1", "nostr", -330, -700, "Nostr relay"); n("NR2", "nostr", 380, -720, "Nostr relay");
     ["S1", "S3", "E1"].forEach(function (s) { e(s, s === "E1" ? "NR1" : "NR2", "find"); });
-    e("S2", "NR2", "find"); e("H", "NR1", "find");
+    e("S2", "NR2", "find"); e("H", "NR1", "find"); e("B1", "NR2", "find");
     // make sure every fill channel touches something real
     E.forEach(function (ed) { if (N[ed.a] && N[ed.b]) { ed.na = N[ed.a]; ed.nb = N[ed.b]; } });
     E = E.filter(function (ed) { return ed.na && ed.nb; });
@@ -160,7 +161,7 @@
   var FLOWS = {
     pay: { path: ["B1", "NB1", "L5", "L0", "L1", "L6", "NS1", "S1"], type: "sats", every: 1500 },
     payData: { path: ["S1", "B1"], type: "data", every: 520 },
-    payRelay: { path: ["S1", "R1", "B1"], type: "data", every: 560 },
+    payRelay: { path: ["S3", "R1", "B1"], type: "data", every: 560 },
     media: { path: ["B2", "NB2", "L4", "L3", "L7", "NS2", "S2"], type: "sats", every: 1700 },
     mediaApp: { path: ["A1", "S2", "B2", "D1"], type: "data", every: 430 },
     mediaFiles: { path: ["FI", "S2", "B2", "D2"], type: "data", every: 650 },
@@ -175,7 +176,10 @@
     vpnBack: { path: ["NET", "E1", "R2", "B5", "D4"], type: "data", every: 640 },
     vpnPay: { path: ["B5", "NB5", "L5", "NE1", "E1"], type: "sats", every: 1700 },
     find1: { path: ["NR2", "S1"], type: "find", every: 2600 },
-    find2: { path: ["NR1", "E1"], type: "find", every: 2900 }
+    find2: { path: ["NR1", "E1"], type: "find", every: 2900 },
+    findShop: { path: ["S1", "NR2"], type: "find", every: 2700 },
+    findPriv: { path: ["S3", "NR2"], type: "find", every: 3100 },
+    findYou: { path: ["NR2", "B1"], type: "find", every: 2300 }
   };
 
   var SCENES = {
@@ -186,7 +190,10 @@
     ai: { focus: ["B4", "NB4", "L8", "L1", "NS3", "S3", "AI1", "AI2"], flows: ["ai", "aiTok", "aiTok2"], labels: ["B4", "S3", "AI1", "AI2"] },
     hash: { focus: ["M1", "M2", "M3", "H", "T", "GW", "P", "NT", "NH", "L9", "L4"], flows: ["hashWork", "hashWork2", "hashWork3", "hashPay"], labels: ["M1", "H", "T", "GW", "P"] },
     vpn: { focus: ["D3", "D4", "B5", "R2", "E1", "NET", "NB5", "NE1", "L5"], flows: ["vpnOut", "vpnBack", "vpnPay"], labels: ["B5", "R2", "E1", "NET", "D3", "D4"] },
-    relay: { focus: ["B1", "R1", "S1", "NR1", "NR2", "S3", "E1", "S2", "H"], flows: ["payRelay", "find1", "find2"], labels: ["B1", "R1", "S1", "NR1", "NR2"] },
+    // matches the section's text: a direct link where the routers allow it, a relay where they don't (and always
+    // for a private shop), and listings found on Nostr; nothing else lights up
+    relay: { focus: ["B1", "S1", "R1", "S3", "NR2"], flows: ["payData", "payRelay", "findShop", "findPriv", "findYou"], labels: ["B1", "S1", "R1", "S3", "NR2"],
+             names: { S1: "a shop, direct", S3: "a private shop", NR2: "Nostr relay" } },
     protect: { focus: ["B1", "NB1", "S1", "NS1", "L5", "L0", "L1", "L6"], flows: ["pay"], labels: ["B1", "S1"] }
   };
 
@@ -244,7 +251,8 @@
     this.scene = name; var sc = SCENES[name], N = this.w.N;
     var focus = sc.focus ? {} : null; (sc.focus || []).forEach(function (id) { focus[id] = 1; });
     var labels = {}; (sc.labels || []).forEach(function (id) { labels[id] = 1; });
-    Object.keys(N).forEach(function (id) { var n = N[id]; n.aT = !focus || focus[id] ? 1 : 0.13; n.laT = labels[id] ? 1 : 0; });
+    var names = sc.names || {};
+    Object.keys(N).forEach(function (id) { var n = N[id]; if (n.label0 === undefined) n.label0 = n.label; n.label = names[id] || n.label0; n.aT = !focus || focus[id] ? 1 : 0.13; n.laT = labels[id] ? 1 : 0; });
     var active = {}; sc.flows.forEach(function (f) { active[f] = 1; }); this.active = active;
     this.gAT = (sc.dim || 1) * (this.mode === "ambient" ? 0.75 : 1);
     this.fit(jump);
