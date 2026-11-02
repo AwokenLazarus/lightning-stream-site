@@ -170,7 +170,7 @@
     hashWork: { path: ["M1", "H", "T", "GW", "P"], type: "work", every: 700 },
     hashWork2: { path: ["M3", "H", "T", "GW"], type: "work", every: 900 },
     hashWork3: { path: ["M2", "H", "T", "GW"], type: "work", every: 1100 },
-    hashPay: { path: ["T", "NT", "L9", "L3", "NH", "H"], type: "sats", every: 1500 },
+    hashPay: { path: ["T", "NT", "L9", "L4", "NH", "H"], type: "sats", every: 1500 },
     vpnOut: { path: ["D3", "B5", "R2", "E1", "NET"], type: "data", every: 520 },
     vpnBack: { path: ["NET", "E1", "R2", "B5", "D4"], type: "data", every: 640 },
     vpnPay: { path: ["B5", "NB5", "L5", "NE1", "E1"], type: "sats", every: 1700 },
@@ -184,7 +184,7 @@
     pay: { focus: ["B1", "NB1", "L5", "L0", "L1", "L6", "NS1", "S1"], flows: ["pay", "payData"], labels: ["B1", "NB1", "S1", "NS1", "L0"] },
     media: { focus: ["B2", "D1", "D2", "NB2", "L4", "L3", "L7", "NS2", "S2", "A1", "FI"], flows: ["media", "mediaApp", "mediaFiles"], labels: ["B2", "S2", "A1", "FI", "D1", "D2"] },
     ai: { focus: ["B4", "NB4", "L8", "L1", "NS3", "S3", "AI1", "AI2"], flows: ["ai", "aiTok", "aiTok2"], labels: ["B4", "S3", "AI1", "AI2"] },
-    hash: { focus: ["M1", "M2", "M3", "H", "T", "GW", "P", "NT", "NH", "L9", "L3"], flows: ["hashWork", "hashWork2", "hashWork3", "hashPay"], labels: ["M1", "H", "T", "GW", "P"] },
+    hash: { focus: ["M1", "M2", "M3", "H", "T", "GW", "P", "NT", "NH", "L9", "L4"], flows: ["hashWork", "hashWork2", "hashWork3", "hashPay"], labels: ["M1", "H", "T", "GW", "P"] },
     vpn: { focus: ["D3", "D4", "B5", "R2", "E1", "NET", "NB5", "NE1", "L5"], flows: ["vpnOut", "vpnBack", "vpnPay"], labels: ["B5", "R2", "E1", "NET", "D3", "D4"] },
     relay: { focus: ["B1", "R1", "S1", "NR1", "NR2", "S3", "E1", "S2", "H"], flows: ["payRelay", "find1", "find2"], labels: ["B1", "R1", "S1", "NR1", "NR2"] },
     protect: { focus: ["B1", "NB1", "S1", "NS1", "L5", "L0", "L1", "L6"], flows: ["pay"], labels: ["B1", "S1"] }
