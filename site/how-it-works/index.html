@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How it works: Lightning Stream</title>
+<meta name="description" content="How Lightning Stream works: your app and theirs joined by an encrypted link, small tickets over ordinary XBT Lightning, signed receipts, held tickets, the lottery, relays, masked hashrate, and what a cheating shop can take.">
+<link rel="canonical" href="https://lightning-stream.com/how-it-works/">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+</head>
+<body class="hiw-page">
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/" aria-current="page">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/" aria-current="page">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+<main id="main">
+  <header class="page-hero">
+    <canvas class="web-canvas" data-web="ambient" data-scene="overview" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h1>Small tickets, <em>used up as you go.</em></h1>
+      <p class="lede">Not one Lightning payment per thing bought. Your app and the seller's app talk over an encrypted link; the money moves over ordinary XBT Lightning, a small ticket at a time; and shops are found on Nostr.</p>
+      <div class="legend" aria-label="Legend"><span><i class="lg-data"></i>data, encrypted</span><span><i class="lg-sats"></i>money (sats)</span><span><i class="lg-work"></i>mining work</span><span><i class="lg-find"></i>discovery</span><span><i class="lg-coming"></i>coming, not built</span></div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap">
+
+      <!-- 1 the map -->
+      <section class="split" aria-labelledby="map">
+        <div class="reveal">
+          <p class="eyebrow">At a glance</p>
+          <h2 id="map" class="anchor-h">Two apps, one link, and Lightning underneath.</h2>
+          <p><strong>When you buy,</strong> you find a shop on Nostr and allow it in spending rules you sign. Your app connects to the seller's app and pays small tickets from your own node as you use the service. The seller counts every byte, token or slice of work and signs a receipt.</p>
+          <p><strong>When you sell,</strong> you point your app at something you already run: a web app such as Jellyfin, a folder of files, an AI model, miners, or your internet connection as a VPN exit. Your app lists it on Nostr, meters every answer, and you are paid into your own node.</p>
+          <p class="muted small">The money moves only over Lightning, from your node to theirs. The link and the relays never carry money.</p>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 450" role="img" aria-labelledby="f1t f1d">
+            <title id="f1t">Lightning Stream at a glance</title>
+            <desc id="f1d">Your app and the seller's app are joined by an encrypted link, or a relay when they cannot connect directly. Sats move over Lightning from your node to theirs. Shops publish signed listings on Nostr relays, where buyers find them. Paying from a wallet over Nostr Wallet Connect is coming, not built.</desc>
+            <rect class="dg-box" x="185" y="20" width="270" height="56" rx="28"/>
+            <text class="dg-tb" x="320" y="45" text-anchor="middle">Nostr relays</text><text class="dg-ts" x="320" y="63" text-anchor="middle">signed listings: shops are found here</text>
+            <path class="dg-ln-n" d="M250 74 C220 110 160 120 130 150"/><path class="dg-ln-n" d="M390 74 C420 110 480 120 510 150"/>
+            <text class="dg-ts" x="150" y="112" text-anchor="end">find</text><text class="dg-ts" x="492" y="112">publish</text>
+            <rect class="dg-box-a" x="30" y="150" width="190" height="112" rx="20"/>
+            <text class="dg-tb" x="125" y="186" text-anchor="middle">Your app</text>
+            <text class="dg-ts" x="125" y="208" text-anchor="middle">wallet &middot; rules you sign</text>
+            <text class="dg-ts" x="125" y="240" text-anchor="middle">laptop &middot; phone &middot; TV &middot; AI apps</text>
+            <rect class="dg-box-v" x="420" y="150" width="190" height="112" rx="20"/>
+            <text class="dg-tb" x="515" y="186" text-anchor="middle">Their app</text>
+            <text class="dg-ts" x="515" y="208" text-anchor="middle">gateway &middot; meter &middot; receipts</text>
+            <text class="dg-ts" x="515" y="240" text-anchor="middle">web apps &middot; files &middot; AI</text>
+            <text class="dg-ts" x="515" y="254" text-anchor="middle">hashrate &middot; VPN exit</text>
+            <line class="dg-ln-a" x1="220" y1="192" x2="420" y2="192"/>
+            <path class="dg-ln-a dg-flow-a" d="M220 192 L420 192"/>
+            <rect class="dg-box" x="300" y="174" width="40" height="36" rx="9"/>
+            <path class="dg-ln-a" d="M313 191v-5a7 7 0 0 1 14 0v5"/><rect class="dg-fill-a" x="310" y="190" width="20" height="13" rx="2"/>
+            <text class="dg-ta" x="320" y="164" text-anchor="middle">encrypted link</text>
+            <path class="dg-ln-dash" d="M220 238 C270 290 370 290 420 238"/>
+            <circle class="dg-box-a" cx="320" cy="276" r="13"/><circle class="dg-fill-a" cx="320" cy="276" r="3"/>
+            <text class="dg-ts" x="320" y="306" text-anchor="middle">or a relay: it can't read the traffic</text>
+            <line class="dg-ln" x1="125" y1="262" x2="125" y2="368"/><line class="dg-ln" x1="515" y1="262" x2="515" y2="368"/>
+            <rect class="dg-box-dash" x="18" y="300" width="96" height="40" rx="10"/>
+            <text class="dg-ts" x="66" y="317" text-anchor="middle">a wallet (NWC)</text><text class="dg-ts" x="66" y="332" text-anchor="middle">coming</text>
+            <rect class="dg-box-v" x="30" y="352" width="580" height="76" rx="38"/>
+            <circle class="dg-fill-v" cx="125" cy="382" r="9"/><circle class="dg-fill-v" cx="515" cy="382" r="9"/>
+            <circle class="dg-fill-m" cx="235" cy="372" r="4"/><circle class="dg-fill-m" cx="300" cy="394" r="4"/><circle class="dg-fill-m" cx="360" cy="370" r="4"/><circle class="dg-fill-m" cx="420" cy="392" r="4"/>
+            <path class="dg-ln" d="M125 382 L235 372 L300 394 L360 370 L420 392 L515 382"/>
+            <path class="dg-ln-v dg-flow-v" d="M125 382 L235 372 L300 394 L360 370 L420 392 L515 382"/>
+            <text class="dg-ts" x="125" y="414" text-anchor="middle">your node</text><text class="dg-ts" x="515" y="414" text-anchor="middle">their node</text>
+            <text class="dg-tm" x="320" y="418" text-anchor="middle">Lightning: sats, as you use it</text>
+          </svg>
+          <figcaption><b>Data over the link, money over Lightning, discovery on Nostr.</b> Each carries only what it is good at.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 2 tickets -->
+      <section class="split" aria-labelledby="tickets">
+        <div class="reveal">
+          <p class="eyebrow">Tickets</p>
+          <h2 id="tickets" class="anchor-h">Paid as you use it.</h2>
+          <p>Pay a small ticket as the service starts. The seller draws it down, exactly, as it delivers. The next ticket is paid before the credit runs out, so no request waits for a payment.</p>
+          <ul class="facts">
+            <li>A ticket is an ordinary Lightning payment of under 1,000 sat: about 900 at today's shops.</li>
+            <li>A <strong>prepaid</strong> ticket is collected as it arrives; the seller serves from that credit and counts every request against it in millisatoshis. Most calls on mainnet use these.</li>
+            <li>The seller signs a receipt for every answer, bound to the request it paid for.</li>
+            <li>Credit left with a seller is spent first the next time.</li>
+          </ul>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 330" role="img" aria-labelledby="f2t f2d">
+            <title id="f2t">Tickets drawn down as the service is used</title>
+            <desc id="f2d">Ticket one, 900 sat, is used up; ticket two is being drawn down by bytes, tokens or slices; ticket three is paid before ticket two runs out. Every answer gets a signed receipt.</desc>
+            <text class="dg-th" x="40" y="44">WHILE IT RUNS</text>
+            <text class="dg-t" x="40" y="88">Ticket 1</text><text class="dg-tm" x="600" y="88" text-anchor="end">900 sat &middot; used</text>
+            <rect class="dg-cell-used" x="40" y="98" width="560" height="16" rx="8"/>
+            <text class="dg-t" x="40" y="148">Ticket 2</text><text class="dg-tm" x="600" y="148" text-anchor="end">being drawn down</text>
+            <rect class="dg-cell" x="40" y="158" width="560" height="16" rx="8"/><rect class="dg-cell-used" x="40" y="158" width="330" height="16" rx="8"/>
+            <text class="dg-t" x="40" y="208">Ticket 3</text><text class="dg-ta" x="600" y="208" text-anchor="end">paid before 2 runs out</text>
+            <rect class="dg-cell-off" x="40" y="218" width="560" height="16" rx="8"/>
+            <g class="dg-fill-g">
+              <circle cx="80" cy="262" r="4"/><circle cx="130" cy="262" r="4"/><circle cx="180" cy="262" r="4"/><circle cx="230" cy="262" r="4"/><circle cx="280" cy="262" r="4"/><circle cx="330" cy="262" r="4"/>
+            </g>
+            <text class="dg-tg" x="40" y="292">&#10003; a signed receipt for every answer</text>
+            <text class="dg-ts" x="40" y="314">bytes &middot; tokens &middot; seconds &middot; slices of work, metered to the millisatoshi</text>
+          </svg>
+          <figcaption><b>Only a ticket or two is out at a time.</b> They stay small because a ticket takes a payment slot on every channel it crosses.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 3 held tickets -->
+      <section class="split" aria-labelledby="held">
+        <div class="reveal">
+          <p class="eyebrow">Held tickets</p>
+          <h2 id="held" class="anchor-h">Locked along the route, released as you use it.</h2>
+          <p>Normally the seller picks the secret that unlocks a payment, so the money is the seller's the moment it arrives. With a <strong>held</strong> ticket the buyer picks the secret, so the payment sits committed along the route and nobody can take it until the buyer releases the secret.</p>
+          <ul class="facts">
+            <li>Built on hold invoices, which Lightning nodes already have.</li>
+            <li>Unused held tickets come back: the seller cancels them, or they expire and the money returns by itself.</li>
+            <li>The proof of payment is the seller's signed receipt, with the payment on your own node.</li>
+            <li>At mainnet's fee rates the wallet prepays rather than holding a ticket through a routing node.</li>
+          </ul>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 330" role="img" aria-labelledby="f3t f3d">
+            <title id="f3t">A held ticket</title>
+            <desc id="f3d">The buyer's wallet keeps the secret. Two tickets of 900 sat are locked along the route; routing nodes and the seller see only the hash. When the buyer releases one secret, the seller can collect that ticket but not the next. An unused ticket comes back.</desc>
+            <rect class="dg-box-a" x="20" y="40" width="150" height="80" rx="16"/><text class="dg-tb" x="95" y="74" text-anchor="middle">Your wallet</text><text class="dg-ts" x="95" y="96" text-anchor="middle">keeps the secret</text>
+            <rect class="dg-box" x="245" y="40" width="150" height="80" rx="16"/><text class="dg-tb" x="320" y="74" text-anchor="middle">Routing nodes</text><text class="dg-ts" x="320" y="96" text-anchor="middle">see only the hash</text>
+            <rect class="dg-box-v" x="470" y="40" width="150" height="80" rx="16"/><text class="dg-tb" x="545" y="74" text-anchor="middle">Seller</text><text class="dg-ts" x="545" y="96" text-anchor="middle">has only the hash</text>
+            <line class="dg-ln-v" x1="170" y1="160" x2="470" y2="160"/><line class="dg-ln-v" x1="170" y1="196" x2="470" y2="196"/>
+            <rect class="dg-cell" x="276" y="148" width="88" height="24" rx="12"/><text class="dg-tm" x="320" y="165" text-anchor="middle">locked 900</text>
+            <rect class="dg-cell" x="276" y="184" width="88" height="24" rx="12"/><text class="dg-tm" x="320" y="201" text-anchor="middle">locked 900</text>
+            <path class="dg-ln-a" d="M95 120 V240 H545 V120"/>
+            <text class="dg-ta" x="320" y="232" text-anchor="middle">you use it: release the secret</text>
+            <text class="dg-tg" x="612" y="268" text-anchor="end">seller collects this one</text>
+            <path class="dg-ln" d="M545 282 V300 H95 V282" stroke-dasharray="5 5"/>
+            <text class="dg-tg" x="320" y="318" text-anchor="middle">not used: it comes back to you</text>
+          </svg>
+          <figcaption><b>The seller can collect only what was released.</b> Held tickets are Joost Jager's hold invoices, used for what Hiroki Gondo's "stuckless payments" proposed.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 4 lottery -->
+      <section class="split" aria-labelledby="lottery">
+        <div class="reveal">
+          <p class="eyebrow">Smaller than a ticket</p>
+          <h2 id="lottery" class="anchor-h">A fair roll for tiny pieces.</h2>
+          <p>Some pieces are worth less than any payment worth sending: a tenth of a sat for one piece of a file shared by forty sellers. So roll a fair die for each piece. Most rolls pay nothing; now and then one wins and pays an amount worth sending. The odds make the average the price.</p>
+          <ul class="facts">
+            <li>The seller fixes its half of every roll before the session; the buyer adds its half after each piece arrives. Neither can steer a roll, and both can check it.</li>
+            <li>Exact on average, uneven in a short run, the way a miner's income is.</li>
+          </ul>
+          <p class="small"><span class="tag tag-volt">Built</span> run on a regtest with 100 sellers paid at once, not in the app's everyday path. <span class="tag tag-coming">Not built</span> a win that pays itself: not before a cryptographer has reviewed it.</p>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 330" role="img" aria-labelledby="f4t f4d">
+            <title id="f4t">The lottery</title>
+            <desc id="f4d">Each piece gets a roll made from a half the seller fixed beforehand and a half the buyer sends after the piece arrives. Most rolls pay nothing; one win pays 64 sat. At a tenth of a sat a piece, one piece in 640 wins, so the buyer pays the price on average.</desc>
+            <rect class="dg-box-v" x="30" y="30" width="170" height="60" rx="14"/><text class="dg-t" x="115" y="56" text-anchor="middle">Seller's half</text><text class="dg-ts" x="115" y="76" text-anchor="middle">fixed before</text>
+            <text class="dg-tb" x="230" y="66" text-anchor="middle">+</text>
+            <rect class="dg-box-a" x="260" y="30" width="170" height="60" rx="14"/><text class="dg-t" x="345" y="56" text-anchor="middle">Your half</text><text class="dg-ts" x="345" y="76" text-anchor="middle">after each piece</text>
+            <text class="dg-tb" x="460" y="66" text-anchor="middle">=</text>
+            <rect class="dg-box" x="490" y="30" width="120" height="60" rx="14"/><text class="dg-t" x="550" y="56" text-anchor="middle">The roll</text><text class="dg-ts" x="550" y="76" text-anchor="middle">both can check it</text>
+            <g>
+              <rect class="dg-cell-zero" x="30" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="104" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="178" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="252" y="130" width="62" height="44" rx="8"/>
+              <rect class="dg-cell-zero" x="326" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-win" x="400" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="474" y="130" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="548" y="130" width="62" height="44" rx="8"/>
+              <rect class="dg-cell-zero" x="30" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="104" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="178" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="252" y="186" width="62" height="44" rx="8"/>
+              <rect class="dg-cell-zero" x="326" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="400" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="474" y="186" width="62" height="44" rx="8"/><rect class="dg-cell-zero" x="548" y="186" width="62" height="44" rx="8"/>
+            </g>
+            <text class="dg-ts" x="61" y="157" text-anchor="middle">0</text><text class="dg-ts" x="135" y="157" text-anchor="middle">0</text><text class="dg-ts" x="209" y="157" text-anchor="middle">0</text><text class="dg-ts" x="283" y="157" text-anchor="middle">0</text><text class="dg-ts" x="357" y="157" text-anchor="middle">0</text>
+            <text class="dg-tdark" x="431" y="158" text-anchor="middle">64</text>
+            <text class="dg-ts" x="505" y="157" text-anchor="middle">0</text><text class="dg-ts" x="579" y="157" text-anchor="middle">0</text>
+            <text class="dg-ts" x="61" y="213" text-anchor="middle">0</text><text class="dg-ts" x="135" y="213" text-anchor="middle">0</text><text class="dg-ts" x="209" y="213" text-anchor="middle">0</text><text class="dg-ts" x="283" y="213" text-anchor="middle">0</text><text class="dg-ts" x="357" y="213" text-anchor="middle">0</text><text class="dg-ts" x="431" y="213" text-anchor="middle">0</text><text class="dg-ts" x="505" y="213" text-anchor="middle">0</text><text class="dg-ts" x="579" y="213" text-anchor="middle">0</text>
+            <text class="dg-tm" x="30" y="272">0.1 sat a piece &middot; a win pays 64 sat &middot; 1 piece in 640 wins</text>
+            <text class="dg-ts" x="30" y="298">On average the buyer pays the price: 640 &times; 0.1 sat = 64 sat.</text>
+          </svg>
+          <figcaption><b>Most rolls pay nothing.</b> The idea is old: David Wheeler's and Ronald Rivest's. In the form that is built, the buyer pays after a win with an ordinary Lightning payment, so nothing is locked.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 5 links and relays -->
+      <section class="split" aria-labelledby="links">
+        <div class="reveal">
+          <p class="eyebrow">Reaching a shop</p>
+          <h2 id="links" class="anchor-h">Named by its key. No web address needed.</h2>
+          <p>A buyer's app reaches a shop over an encrypted link straight to the seller's gateway, through both home routers where it can. The shop's Lightning node signs for each of its link keys, and the buyer's app checks that before it sends anything, so it knows it is talking to the shop it pays.</p>
+          <ul class="facts">
+            <li>Where the two ends can't connect directly, a relay carries the traffic. It is encrypted end to end: the relay never sees what is sent, and never carries money.</li>
+            <li>In private mode a shop uses relays only, so buyers never learn its address.</li>
+            <li>A shop serves on four link keys, each with its own relay connection: through a relay limited as ours is, one, two and four keys carried 46, 91 and 182&nbsp;Mbit/s.</li>
+            <li>The cost: a 4K film through a relay over a slow path started in 15 to 25&nbsp;s in our lab, against 1 to 1.5&nbsp;s straight from the server.</li>
+          </ul>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 330" role="img" aria-labelledby="f5t f5d">
+            <title id="f5t">Direct links, relays and private mode</title>
+            <desc id="f5d">Directly: your app connects straight to the shop over an encrypted link. Through a relay: the relay passes sealed packets it cannot read. Private mode: the shop uses relays only, so buyers never learn its address.</desc>
+            <text class="dg-th" x="30" y="40">DIRECT</text>
+            <rect class="dg-box-a" x="30" y="54" width="130" height="46" rx="12"/><text class="dg-t" x="95" y="83" text-anchor="middle">Your app</text>
+            <rect class="dg-box-v" x="480" y="54" width="130" height="46" rx="12"/><text class="dg-t" x="545" y="83" text-anchor="middle">The shop</text>
+            <path class="dg-ln-a dg-flow-a" d="M160 77 H480"/><text class="dg-ta" x="320" y="70" text-anchor="middle">encrypted, through both routers</text>
+            <text class="dg-th" x="30" y="148">THROUGH A RELAY</text>
+            <rect class="dg-box-a" x="30" y="162" width="130" height="46" rx="12"/><text class="dg-t" x="95" y="191" text-anchor="middle">Your app</text>
+            <rect class="dg-box-v" x="480" y="162" width="130" height="46" rx="12"/><text class="dg-t" x="545" y="191" text-anchor="middle">The shop</text>
+            <path class="dg-ln-a dg-flow-a" d="M160 185 H290"/><path class="dg-ln-a dg-flow-a" d="M350 185 H480"/>
+            <circle class="dg-box-a" cx="320" cy="185" r="26"/><text class="dg-ts" x="320" y="190" text-anchor="middle">relay</text>
+            <text class="dg-ts" x="320" y="232" text-anchor="middle">passes sealed packets; can't read or change them</text>
+            <text class="dg-th" x="30" y="270">PRIVATE MODE</text>
+            <text class="dg-t" x="30" y="300">Relays only:</text><text class="dg-ts" x="130" y="300">buyers never learn the shop's address.</text>
+          </svg>
+          <figcaption><b>A relay is built into the app,</b> off by default and free. <span class="tag tag-coming">Coming</span> paid relays, where a shop pays the relays it uses by the GB.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 6 hashrate -->
+      <section class="split" aria-labelledby="hashrate">
+        <div class="reveal">
+          <p class="eyebrow">Hashrate</p>
+          <h2 id="hashrate" class="anchor-h">Rented miners, masked jobs.</h2>
+          <p>A seller's miners work for your own gateway, the Stream Gateway (DATUM-compatible) that comes with the app, over an encrypted link. The hashtaker makes the jobs; the hashmaker runs no gateway.</p>
+          <ul class="facts">
+            <li>Every job is masked with a key the gateway holds, so a rented miner can't tell which share is a block and can't withhold one. The renter checks each job before its miners get it, and nothing is paid before the first job has been checked.</li>
+            <li>Both apps check every share's proof of work, and you pay as the work arrives, seconds at a time.</li>
+            <li>It mines solo, paid to your own address, or on Lazarus Pool, which takes jobs masked with your gateway's own key; a pool that doesn't is refused.</li>
+          </ul>
+        </div>
+        <figure class="diagram reveal reveal-d1">
+          <svg viewBox="0 0 640 330" role="img" aria-labelledby="f6t f6d">
+            <title id="f6t">Renting hashrate</title>
+            <desc id="f6d">Miners connect to the hashmaker's app on its own network. Over an encrypted link, masked jobs go to the miners and shares come back to the hashtaker's app, which passes them to its Stream Gateway, mining solo or on a pool. Tickets pay for the work as it arrives.</desc>
+            <rect class="dg-box-o" x="20" y="70" width="90" height="90" rx="14"/><text class="dg-t" x="65" y="112" text-anchor="middle">Miners</text><text class="dg-ts" x="65" y="132" text-anchor="middle">on its LAN</text>
+            <rect class="dg-box-v" x="150" y="70" width="120" height="90" rx="14"/><text class="dg-t" x="210" y="106" text-anchor="middle">Hashmaker's</text><text class="dg-t" x="210" y="126" text-anchor="middle">app</text><text class="dg-ts" x="210" y="146" text-anchor="middle">meter</text>
+            <rect class="dg-box-a" x="360" y="70" width="120" height="90" rx="14"/><text class="dg-t" x="420" y="106" text-anchor="middle">Hashtaker's</text><text class="dg-t" x="420" y="126" text-anchor="middle">app</text><text class="dg-ts" x="420" y="146" text-anchor="middle">meter &middot; tickets</text>
+            <rect class="dg-box-o" x="510" y="56" width="112" height="118" rx="14"/><text class="dg-t" x="566" y="92" text-anchor="middle">Stream</text><text class="dg-t" x="566" y="112" text-anchor="middle">Gateway</text><text class="dg-to" x="566" y="136" text-anchor="middle">masks jobs</text><text class="dg-ts" x="566" y="156" text-anchor="middle">solo or pool</text>
+            <line class="dg-ln-o" x1="110" y1="115" x2="150" y2="115"/><line class="dg-ln-o" x1="480" y1="115" x2="510" y2="115"/>
+            <path class="dg-ln-o dg-flow-v" d="M270 100 H360"/><path class="dg-ln-a dg-flow-a" d="M270 130 H360"/>
+            <text class="dg-to" x="315" y="90" text-anchor="middle">shares</text><text class="dg-ta" x="315" y="152" text-anchor="middle">masked jobs</text>
+            <text class="dg-ts" x="315" y="56" text-anchor="middle">encrypted link</text>
+            <path class="dg-ln-v dg-flow-v" d="M420 160 V230 H210 V160"/>
+            <text class="dg-tm" x="315" y="252" text-anchor="middle">tickets, as the work arrives</text>
+            <text class="dg-ts" x="320" y="290" text-anchor="middle">Never more paid for and not yet received than a minute of the miner's hashing,</text>
+            <text class="dg-ts" x="320" y="308" text-anchor="middle">or one share, one slice and one ticket if that is more, plus any start fee on the offer.</text>
+          </svg>
+          <figcaption><b>A hashtaker can buy a short paid test slice first,</b> and a hashmaker publishes a signed history of what it delivered. On armv7 the app has no Stream Gateway and rents nothing.</figcaption>
+        </figure>
+      </section>
+
+      <!-- 7 protections -->
+      <section class="section-gap" aria-labelledby="cheat">
+        <div class="band-head reveal">
+          <p class="eyebrow">If a shop cheats</p>
+          <h2 id="cheat" class="h-lg anchor-h">A small, stated amount. Then it's blocked.</h2>
+          <p class="lede">A shop that cheats can keep at most a ticket or two for each answer it is sending you, plus a small allowance for each request: up to 16&nbsp;MiB of data at its own price, an AI reply's quoted price, or a request priced by the second up to its limit.</p>
+        </div>
+        <div class="grid grid-4">
+          <div class="tile reveal"><h3>Never past the listing</h3><p>A price above the listing is refused before anything is paid. A file is never paid past its listed size.</p></div>
+          <div class="tile reveal reveal-d1"><h3>Caught, then blocked</h3><p>A shop that charges past the bound is blocked by its node, its receipt key and its address, until you lift the block with your approval key.</p></div>
+          <div class="tile reveal reveal-d2"><h3>Capped anyway</h3><p>One that cheats inside the bound is not caught, which is why your rules cap what any one shop is paid in a day and in a week.</p></div>
+          <div class="tile reveal reveal-d3"><h3>Locked, not lost</h3><p>Unused held tickets are locked for a few hours at most. The seller serves only from credit it was paid or a ticket it collected.</p></div>
+        </div>
+        <p class="muted small reveal"><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/TICKETS.md">TICKETS.md</a> states the bound exactly.</p>
+      </section>
+
+      <!-- 8 what stream adds -->
+      <section class="section-gap" aria-labelledby="adds">
+        <div class="band-head reveal">
+          <p class="eyebrow eyebrow-arc">What Stream adds</p>
+          <h2 id="adds" class="h-lg anchor-h">Built on Lightning, not beside it.</h2>
+          <p class="lede">Lightning's own routing, liquidity and nodes carry everything. Lightning Stream runs no network and no hub, and never holds anyone's money.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="tile reveal"><p class="eyebrow eyebrow-arc">Lightning alone</p><h3>One invoice, one payment</h3><p>For one thing, paid in full, before or after it arrives.</p></div>
+          <div class="tile reveal reveal-d1"><p class="eyebrow">Stream on Lightning</p><h3>Paid as it arrives</h3><p>Pay per byte, token, second or slice of work. A signed receipt for every answer. Rules you sign. Tickets refilled in time. A cap per seller.</p></div>
+        </div>
+        <div class="btn-row section-gap reveal"><a class="btn btn-volt" href="/whitepaper/">Read the whitepaper <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn" href="/whitepaper/design/">Design details</a><a class="btn" href="/download/">Download</a></div>
+      </section>
+
+    </div>
+  </div>
+</main>
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

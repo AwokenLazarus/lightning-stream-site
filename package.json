@@ -1,0 +1,17 @@
+{
+  "name": "lightning-stream-site",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "scripts/build.sh",
+    "test": "node --test worker/test/*.test.mjs",
+    "shots": "node scripts/shots.mjs"
+  },
+  "description": "lightning-stream.com: static site and /api Worker",
+  "devDependencies": {
+    "@noble/curves": "^1.9.7",
+    "@noble/hashes": "^1.8.0",
+    "playwright-core": "^1.48.2"
+  },
+  "type": "module",
+  "private": true
+}

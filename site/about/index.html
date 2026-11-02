@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About Lightning Stream</title>
+<meta name="description" content="What Lightning Stream is, where it stands (released, tested on mainnet between our own nodes, reviewed but not audited), its known limits, what comes next, and the people whose work it builds on.">
+<link rel="canonical" href="https://lightning-stream.com/about/">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+</head>
+<body>
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/" aria-current="page">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/" aria-current="page">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+<main id="main">
+  <header class="page-hero">
+    <canvas class="web-canvas" data-web="ambient" data-scene="overview" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1>Anyone with a node <em>can sell.</em></h1>
+      <p class="lede">Anyone who runs a Lightning node should be able to sell a service to the network (a film, an AI model, hashrate, an API, software of their own) and be paid for it piece by piece as it is delivered, by people and by AI agents alike.</p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap with-toc">
+      <aside class="toc" aria-label="On this page"><div class="toc-inner"><h2>On this page</h2><ol>
+        <li><a href="#what">What it is</a></li><li><a href="#status">Status</a></li><li><a href="#limits">Known limits</a></li>
+        <li><a href="#next">Coming next</a></li><li><a href="#credits">Credits</a></li><li><a href="#project">The project</a></li>
+      </ol></div></aside>
+
+      <div class="prose">
+        <h2 id="what">What it is</h2>
+        <p>Lightning Stream is one self-hosted app for buying and selling services over XBT Lightning, paid as they are used. It runs on Umbrel, StartOS and Linux, beside your own Knots-BLAKE2b node and Lightning Fork. XBT is Bitcoin on BLAKE2b proof of work.</p>
+        <p>The buyer pays a small ticket ahead, about 900 sat, and the seller counts what it delivers to the millisatoshi and signs a receipt for every answer. A shop is paid no more than its listing shows. It runs on ordinary XBT Lightning nodes, and never holds anyone's money: each person pays from, and is paid to, their own node. There are no accounts.</p>
+        <p class="pull">Pay as you use it, in small tickets the seller draws down exactly with a signed receipt for every answer.</p>
+
+        <h2 id="status">Status</h2>
+        <dl>
+          <dt>Released</dt>
+          <dd>Version 0.2.0, a public test release: in a community store for Umbrel, in a registry for StartOS, and as a Linux package. The <a href="/changelog/">changelog</a> has every version.</dd>
+          <dt>On XBT mainnet, between our own nodes</dt>
+          <dd>Since 26 October 2026 a fresh install from the published packages has bought films and AI answers from a shop of ours, a node box of ours has bought from a second shop, and a rental of hashrate has been paid, every charge matching the meter to the millisatoshi. On StartOS, the app's access to the node through Lightning Fork's grant was tested on mainnet; a paid buy on StartOS has not run yet. Nobody outside the project has used it yet. An invited test is next.</dd>
+          <dt>Reviewed, not audited</dt>
+          <dd>Chris Guida reviewed the design and the published code twice in October 2026. Kyle Santiago read the design. Machine-assisted reviews of the payment code found further faults; all are fixed in version 0.1.15. Nobody outside the project has reviewed the fixes, and there has been no independent audit. Treat it as unaudited software and use amounts you can afford to lose.</dd>
+        </dl>
+        <p><a href="/whitepaper/progress/">Progress and status</a> and <a href="/whitepaper/tests/">Tests and numbers</a> have the detail.</p>
+
+        <h2 id="limits">Known limits</h2>
+        <ul>
+          <li>Money moves a ticket at a time, and a dishonest shop can keep a ticket or two per answer it is sending, plus a small allowance per request, before it is caught and blocked. One that cheats inside that bound is not caught, which is why each shop has a daily cap.</li>
+          <li>A web app over a relay on a slow path starts slowly: 15 to 25&nbsp;s for a 4K film in our lab.</li>
+          <li>Unused held tickets are locked until cancelled or expired, for hours if a seller vanishes. Unspent prepaid credit stays with a seller until the buyer returns.</li>
+          <li>A seller needs an lnd-family Lightning node with room to receive, online while it serves; a Core Lightning node cannot sell held tickets today.</li>
+          <li>Paid by lottery, income and cost are uneven in the short run.</li>
+          <li>The Lightning nodes on both sides hold hot keys.</li>
+          <li>XBT's Lightning network is young and small, so a route may not exist; a direct channel to the shop always works.</li>
+          <li>Nothing on the chain ties a buyer to a seller, but nodes along a route see a run of similar payments to one seller.</li>
+          <li>No review or audit has covered the packaging and container images, the wallet's web interface, the seller gateway, the ticket book, or the lottery, among others.</li>
+        </ul>
+        <p><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">LIMITS.md</a> lists every stated limit, the open items, and what nobody has reviewed.</p>
+
+        <h2 id="next">Coming next</h2>
+        <p>None of this is released. The order is the agreed one; each item ships when it is built and checked.</p>
+        <ol>
+          <li><strong>Paid relays</strong>, in an update: a shop pays the relays that carry its traffic, by the GB. Relays stay free until then.</li>
+          <li><strong>Paying over Nostr Wallet Connect</strong>: buying from a wallet the buyer controls, instead of a Lightning node of one's own.</li>
+          <li><strong>AI sellers that are data vending machines on Nostr</strong> (NIP-90), as another source for the box's AI address.</li>
+          <li><strong>Blossom</strong>: media on a Blossom server, sold per MiB through a Stream gateway in front of it.</li>
+        </ol>
+        <p>Later ideas, not yet ordered: ranking and search on Browse; a guard that stops a hashrate rental whose work stops following the public chain; local links for TV and phone apps; remote miners reaching a DATUM Gateway without a port forward; ticket sizes that follow how fast a buyer spends; paid torrent seeding; and files checked piece by piece as they download.</p>
+        <p>Not built: the win that pays itself (not before a cryptographer has reviewed it), fair exchange on held tickets, and a seller on Core Lightning.</p>
+
+        <h2 id="credits">Credits</h2>
+        <p>Lightning Stream is a small addition to other people's work. XBT runs on Bitcoin Knots, maintained by Luke Dashjr, who wrote the BLAKE2b proof of work; the signature hash that keeps a payment from being replayed on the SHA-256 chain is Kyle Santiago's. Lightning on XBT is Paul Lamb's Lightning Fork, a fork of Lightning Labs' lnd, and PrivKey's Core Lightning fork. Paul also packages Knots-BLAKE2b and Lightning Fork for Umbrel and StartOS, and built the access grant the StartOS package uses. Hashrate rental is built around OCEAN's DATUM, and the Stream Gateway is CONVOY's datum_gateway (MIT) with a masking patch.</p>
+        <p>Chris Guida's two reviews are why Lightning Stream is built on Lightning, and they narrowed what it claims. Kyle Santiago pointed out the slot and dust limits the ticket defaults are built around. Kilombino named the hashmaker and the hashtaker and runs a relay the app uses. The mistakes that remain are ours.</p>
+        <p>Ideas and prior work, with references, are in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/REFERENCES.md">REFERENCES.md</a> and the <a href="/whitepaper/#references">whitepaper</a>; code and libraries from others in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</p>
+
+        <h2 id="project">The project</h2>
+        <p>Lightning Stream is developed in the open on <a href="https://github.com/AwokenLazarus/Lightning-Stream">GitHub</a>, licensed under either the Apache License 2.0 or the MIT license, at your option. Bugs and confusing screens go to its <a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">issues</a>.</p>
+        <p>This site reads public data only: sellers' signed listings from Nostr relays, and a snapshot of the public XBT Lightning channel graph. It sets no cookies and loads nothing from other sites. It is set in Inter (Rasmus Andersson), under the SIL Open Font License.</p>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

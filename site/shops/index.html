@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shops and services: Lightning Stream, live</title>
+<meta name="description" content="Lightning Stream shops, hashrate offers and VPN exits as their sellers list them on Nostr, read live and checked as the app checks them.">
+<link rel="canonical" href="https://lightning-stream.com/shops/">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+<script src="/assets/shops.js" defer></script>
+</head>
+<body>
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/" aria-current="page">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/" aria-current="page">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+<main id="main">
+  <header class="page-hero">
+    <canvas class="web-canvas" data-web="ambient" data-scene="media" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="eyebrow">Live &middot; from Nostr</p>
+      <h1>Shops and services, <em>as listed now.</em></h1>
+      <p class="lede">Sellers publish signed listings on Nostr relays. This page reads the relays the app reads by default, every few minutes, and checks each listing as the app does: the event's signature, the listing's signature, and the key that binds them.</p>
+      <div class="meta"><span class="tag tag-live">Live</span><span id="status">Loading the latest listings&hellip;</span></div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap">
+      <div class="notice reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4m0 3v.5"/></svg>
+        <div><p><strong>Unvetted.</strong> A signed listing proves which key published it, not who runs the shop or what it delivers. Prices are the sellers' own and can change: the app shows the current price before it pays, and never pays a shop more than its listing shows. This site lists what is published; it does not recommend any shop.</p></div>
+      </div>
+
+      <div class="section-gap">
+        <div class="filters" role="group" aria-label="Show">
+          <button class="chip" type="button" data-f="all" aria-pressed="true">All <span class="count" data-c="all"></span></button>
+          <button class="chip" type="button" data-f="app" aria-pressed="false"><span class="dot kind-app"></span>Web apps <span class="count" data-c="app"></span></button>
+          <button class="chip" type="button" data-f="files" aria-pressed="false"><span class="dot kind-files"></span>Files <span class="count" data-c="files"></span></button>
+          <button class="chip" type="button" data-f="ai" aria-pressed="false"><span class="dot kind-ai"></span>AI <span class="count" data-c="ai"></span></button>
+          <button class="chip" type="button" data-f="hashrate" aria-pressed="false"><span class="dot kind-hashrate"></span>Hashrate <span class="count" data-c="hashrate"></span></button>
+          <button class="chip" type="button" data-f="vpn" aria-pressed="false"><span class="dot kind-vpn"></span>VPN exits <span class="count" data-c="vpn"></span></button>
+          <button class="chip" type="button" data-f="relay" aria-pressed="false"><span class="dot kind-relay"></span>Relays <span class="count" data-c="relay"></span></button>
+          <button class="chip" type="button" data-stale aria-pressed="false">Include not seen lately <span class="count" data-c="stale"></span></button>
+        </div>
+        <div id="listings" class="listing-grid" aria-live="polite">
+          <noscript><div class="empty">This page needs JavaScript to read the live listings. The raw data is at <a href="/api/listings">/api/listings</a>.</div></noscript>
+        </div>
+      </div>
+
+      <section class="section-gap split" aria-labelledby="buy-h">
+        <div class="reveal">
+          <p class="eyebrow">Buying from a shop</p>
+          <h2 id="buy-h" class="anchor-h">Add it in your app, by its key.</h2>
+          <p>In Lightning Stream, open <strong>Services &rarr; Sellers</strong>, paste the shop's key (or find it by name under <em>Browse &rarr; Found on Nostr</em>), and press <strong>Allow this seller to be paid</strong>. The app checks with the seller, and you sign the change to your spending rules.</p>
+          <div class="btn-row"><a class="btn btn-volt" href="/guide/#buy">How buying works <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn" href="/guide/#sell">List your own shop</a></div>
+        </div>
+        <div class="reveal reveal-d1">
+          <p class="eyebrow eyebrow-arc">Where this comes from</p>
+          <p class="muted">Shops: Nostr kind 30402 events tagged <code>lightning-stream</code>. Hashrate: kind 30402 tagged <code>lightning-stream-hashrate</code>. VPN exits and Stream relays: kind 30078 tagged <code>lightning-stream-vpn-exit</code> and <code>lightning-stream-relay</code>. Read from the app's four default relays. Addresses a listing carries for direct connections are never shown here.</p>
+          <p class="muted small">Raw JSON: <a href="/api/listings">/api/listings</a></p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

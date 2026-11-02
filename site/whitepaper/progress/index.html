@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Progress and status: Lightning Stream</title>
+<meta name="description" content="Where Lightning Stream stands: what is built and what is not, what has run and where, what has been reviewed, and what comes next. Lightning Stream 0.2.0 is released for Umbrel, StartOS and Linux, and has been tested on XBT mainnet between our own nodes.">
+<link rel="canonical" href="https://lightning-stream.com/whitepaper/progress/">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/paper.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+</head>
+<body class="paper-page">
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/" aria-current="page">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/" aria-current="page">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+<main id="main">
+  <header class="page-hero">
+    <canvas class="web-canvas" data-web="ambient" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="eyebrow">Whitepaper · Progress and status</p>
+      <h1 class="paper-title">Progress and <em>status</em></h1>
+      <p class="lede">Where Lightning Stream stands: what is built and what is not, what has run and where, what has been reviewed, and what comes next. Lightning Stream 0.2.0 is released for Umbrel, StartOS and Linux, and has been tested on XBT mainnet between our own nodes.</p>
+      <p class="meta-note">This page accompanies Draft 12 of the Lightning Stream whitepaper, 31 October 2026, and version 0.2.0. <a href="/whitepaper/">Back to the whitepaper</a>.</p>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap with-toc">
+      <aside class="toc" aria-label="On this page"><div class="toc-inner">
+        <h2>On this page</h2><ol><li><a href="#status">Status and limits</a></li><li><a href="#built">Released in 0.2.0</a></li><li><a href="#next">Coming next</a></li><li><a href="#packages">Packages for node boxes</a></li><li><a href="#earlier">The earlier design</a></li><li><a href="#changes">Changes by draft</a></li></ol>
+        <h2 class="toc-sub">The papers</h2><ul><li><a href="/whitepaper/">The whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/" aria-current="page">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/changelog/">Changelog</a></li></ul>
+      </div></aside>
+      <article class="prose paper">
+
+    <h2 id="status"><span class="n">1</span>Status and limits</h2>
+    <dl>
+      <dt>Released</dt><dd>Version 0.2.0, 31 October 2026: one app for buying and selling, for Umbrel (a community store of ours), StartOS (our registry, <code>https://registry.lazarus-xbt.xyz</code>) and Linux (Docker Compose). The current version and every change are in the <a href="/changelog/">changelog</a>; <a href="/guide/">Try it</a> has the setup.</dd>
+      <dt>On mainnet</dt><dd>Since 26 October 2026, between our own nodes: a fresh install from the published packages bought films and AI answers from our shop, a node box of ours bought from a second shop of ours, and a rental of hashrate was paid, every charge matching the meter to the millisatoshi. On StartOS the app's node key, through Lightning Fork's grant, was tested on mainnet; a paid buy there has not run yet. See <a href="/whitepaper/tests/#mainnet">On mainnet</a>. Before 0.2.0, a round with real sats bought files, a web app over a direct link and over a relay, and AI answers from our demo shop Lightning Stream Genesis, exact to the millisatoshi; rented hashrate for 25 slices; and sent 315&nbsp;MB through a paid VPN exit. It found two faults in paying, a VPN exit that charged too little and a test slice of hashrate that ran unpaid, both now fixed (<a href="/whitepaper/tests/#real-sats">The 0.2.0 round</a>). Nobody outside the project has used it yet.</dd>
+      <dt>Reviewed, not audited</dt><dd>Chris Guida reviewed the earlier design and its published code in October 2026, and then, in a second review that read the code without running it, the ticket design, the lottery and the tree as they stood on 13 October; the move onto Lightning and most of Draft 9 follow from his two reviews. Kyle Santiago read the design and pointed out the slot and dust limits the defaults are built around. In October 2026, machine-assisted reviews of the payment code found further faults, among them a way for another page on the same machine to start a payment, and bookkeeping that could undercount after a restart; all are fixed in 0.1.15. Nobody outside the project has reviewed the fixes, and there has been no independent audit. The win that pays itself waits for a cryptographer's reading. Treat it all as unaudited software.</dd>
+      <dt>Next</dt><dd>A small test with people outside the project, by invitation, with amounts they can afford to lose; then a paid buy on StartOS, and the work under <a href="#next">Coming next</a>.</dd>
+      <dt>Trade-offs</dt><dd>Money moves a ticket at a time, and a dishonest shop can keep a ticket or two per answer it is sending, plus a small allowance per request, before it is caught and blocked; one that cheats inside that bound is not caught, which is why each shop has a daily cap. A web app over a relay on a slow path starts slowly: 15 to 25&nbsp;s for a 4K film in our lab. Unused held tickets are locked until cancelled or expired, and unspent prepaid credit stays with a seller until the buyer returns. A seller needs an lnd-family Lightning node with room to receive, online while it serves; a Core Lightning node cannot sell held tickets today. Paid by lottery, income and cost are uneven in the short run. The Lightning nodes on both sides hold hot keys. XBT's Lightning network is young and small, so a route may not exist; a direct channel to the shop always works.</dd>
+    </dl>
+
+    <h2 id="built"><span class="n">2</span>Released in 0.2.0</h2>
+    <dl>
+      <dt>In the app</dt><dd>
+        <ul>
+          <li><strong>The wallet and its spending rules:</strong> budgets, per-shop daily and weekly caps, an approval threshold, allowed sellers only, all signed by the owner with an approval key; safe starter rules; a confirmation before it pays with real money.</li>
+          <li><strong>Tickets:</strong> prepaid and held, metered to the millisatoshi, with a signed receipt for every answer, paid as you use it, and credit kept with a seller across restarts and address changes. Several requests to one seller run side by side in one session, each exactly accounted.</li>
+          <li><strong>Buyer protections:</strong> a shop is paid no more than its listing shows, for every service; a file is never paid past its listed size; an AI reply never past its quoted price; a shop caught over-charging is blocked until the owner lifts the block with the approval key; a shop that loses requests is held to what they could have cost; each shop has a daily cap. A busy service refuses new buyers before they pay.</li>
+          <li><strong>Services to sell and buy:</strong> a seller's own web app, such as Jellyfin with its full interface and an account for each buyer; Files, a shared folder sold per GB to download or open in your own player (Umbrel's Downloads, StartOS's File Browser, any folder on Linux); an AI model per token, with an OpenAI-compatible address on the buyer's box; hashrate, rented into the Stream Gateway (DATUM-compatible) that comes with the app, which masks every job so a rented miner can't withhold a block, mining solo or on Lazarus Pool and paid as the work arrives, with a paid test slice and a signed history; and VPN exits, by the GB, with exits checked for the country they claim. The built-in player is gone.</li>
+          <li><strong>Shops without a web address:</strong> a shop reached by its key alone over an encrypted link, vouched for by its Lightning node, with no domain, certificate or port forward; relays where the two ends cannot meet, which never see what they carry; a private mode that uses relays only; four link keys per shop so relayed buyers share several connections. A relay is built into the app, off by default and free.</li>
+          <li><strong>Agents:</strong> the same wallet over MCP, and the box's own AI address.</li>
+        </ul></dd>
+      <dt>Built, not in the app's everyday path</dt><dd>The lottery, in the form where the buyer pays after a win, run on a regtest with 100 sellers paid at once (<a href="/whitepaper/tests/#lottery-built">The lottery as built</a>). Pay with work, where a miner pays with pool shares.</dd>
+      <dt>Not built</dt><dd>The win that pays itself: not before a cryptographer has reviewed the argument it rests on. Fair exchange on held tickets. A seller's software for a Core Lightning node.</dd>
+    </dl>
+
+    <h2 id="next"><span class="n">3</span>Coming next</h2>
+    <p>None of this is released. The order is the one we have agreed; each item ships when it is built and checked.</p>
+    <ol>
+      <li><strong>Paid relays, in an update.</strong> A shop pays the relays that carry its traffic, by the GB. Relays stay free until then.</li>
+      <li><strong>Paying over Nostr Wallet Connect:</strong> buying from a wallet the buyer controls, instead of a Lightning node of one's own.</li>
+      <li><strong>AI sellers that are data vending machines</strong> on Nostr (NIP-90), as another source for the box's AI address.</li>
+      <li><strong>Blossom:</strong> media on a Blossom server, sold per MiB through a Stream gateway in front of it.</li>
+    </ol>
+    <p><strong>Later ideas</strong>, not yet ordered: ranking and search on Browse; a guard that stops a hashrate rental whose work stops following the public chain, against a majority attack; local links for TV and phone apps; remote miners reaching a DATUM Gateway without a port forward; ticket sizes that follow how fast a buyer spends; paid torrent seeding; and files checked piece by piece as they download.</p>
+
+    <h2 id="packages"><span class="n">4</span>Packages for node boxes</h2>
+    <p>Most people who run a Lightning node run it on a home box. Lightning Stream is one app on each: it buys, sells and rents hashrate, beside the box's own Knots-BLAKE2b and Lightning Fork, which come from Paul's store and registry. The images it runs are published on GitHub's container registry for three kinds of processor, and each package names its images by digest, so a box gets exactly the image that was checked.</p>
+    <dl>
+      <dt>Umbrel</dt><dd>From our community store. The app makes its own narrow keys on the box's node, so there is nothing to paste. An update keeps your keys, rules and settings.</dd>
+      <dt>StartOS</dt><dd>From our registry, with Lightning Fork from Paul's registry, <code>https://start9.paulscode.com/</code>. The app asks Lightning Fork for its own key through Lightning Fork's <em>Grant app access</em>, which Paul built: the owner approves it there, and can revoke it there. The key can pay and read, and nothing more. Selling still needs the shop's invoice keys pasted on the Sell page.</dd>
+      <dt>Linux</dt><dd>Docker Compose beside your own Knots and Lightning Fork, from the same images, with a guide in the source tree (<code>docs/LINUX.md</code>). On a Raspberry Pi 4 all eight of its containers started in about 10&nbsp;s and idled in 18&nbsp;MB of memory together, measured before a node was attached.</dd>
+      <dt>A shop without a web address</dt><dd>Since 0.2.0 a shop needs no https address: buyers reach it by its key over an encrypted link, through a relay where the two ends cannot meet. A shop can still use an https address with a publicly trusted certificate; a shop reached only over Tor cannot be paid yet.</dd>
+    </dl>
+
+    <h2 id="earlier"><span class="n">5</span>The earlier design</h2>
+    <p>The first version of Lightning Stream did not carry payments over Lightning. It used its own one-way payment channel on the chain: Jeremy Spilman's channel of 2013 <a href="/whitepaper/design/#ref-1">[1]</a>, in the <code>CHECKLOCKTIMEVERIFY</code> form that BIP&nbsp;65 gives as one of its examples <a href="/whitepaper/design/#ref-2">[2]</a>. The buyer locked coins once in an output on the chain, signed a slightly larger running total for every piece, and the seller settled once. To reach many sellers with one channel it added a hub, with each forwarded payment locked by an adaptor signature <a href="/whitepaper/design/#ref-16">[16]</a><a href="/whitepaper/design/#ref-17">[17]</a><a href="/whitepaper/design/#ref-18">[18]</a>. A hub that forwards payments it cannot take was not new either: TumbleBit <a href="/whitepaper/design/#ref-19">[19]</a> and A2L <a href="/whitepaper/design/#ref-20">[20]</a> are its ancestors.</p>
+    <p>Chris Guida's review of the published code (October 2026) found the hub the weakest part. One-way channels with no revocation give a hub nothing to fall back on when a channel closes or is replaced while a payment is in flight, and that is the problem Lightning's commitment protocol <a href="/whitepaper/design/#ref-3">[3]</a> was built to solve. The review advised using Lightning for what a network is good at, reaching many sellers, and keeping the direct channel as a fast path. We went further and moved the whole payment path onto Lightning.</p>
+    <dl>
+      <dt>The hub is retired</dt><dd>Its code, tests and packages have been removed from the tree, and they remain in its history, last at commit <code>0911cc0</code>. Lightning's own routing replaces it. The 59 stated limits that belonged to the hub, to the hub beside a Lightning node and to the routed client go with it.</dd>
+      <dt>The on-chain channel is removed</dt><dd>It was frozen on 11 October 2026, when the payment path moved onto Lightning, and nothing new was built on it after that. Once tickets ran end to end and the lottery was built, it was taken out of the tree, later in October 2026: tickets and the lottery do its job on Lightning, and the channel carried the open defects that were left. With it went its provider and its client, the wallet's channel rail, the light client that watched the chain for it, the fair exchange built on its states (<a href="/whitepaper/uses/#fair">Paying only for what checks out</a>), the flow in which a paid call waited for the owner's approval (<a href="/whitepaper/uses/#wallet">A wallet for agents</a>), and their tests, vectors and scripts. The code stays in the history, last at commit <code>1ad0c48</code>. The two Python reference repositories still hold the channel.</dd>
+      <dt>What the removal leaves behind</dt><dd>Three things. A wallet that was upgraded with channels on record cannot close or refund them with this version: it leaves their records and sealed keys untouched and says which revision settles them. The wallet pays sellers over Lightning only; its Umbrel and StartOS packages have since been redone to use the box's Lightning node (<a href="#packages">Packages</a>). And the channel's one remaining case, a seller who cannot run a Lightning node, is given up: such a seller has no rail here, and pay with work is the other way in. Nobody has reviewed the removal.</dd>
+      <dt>What the channel did that tickets do not</dt><dd>It settled each piece exactly, it left nothing in flight when a buyer stopped, and its seller needed no Lightning node. Tickets give those three up, as <a href="/whitepaper/design/#cost">What it gives and what it costs</a> says. What they bring is Lightning's routing in place of a hub, and no transaction on the chain for each buyer and seller.</dd>
+    </dl>
+    <p>An earlier draft of this paper had a section, "Beside Lightning", which argued that Lightning could not hold a buyer's coins under a lock for the length of a session. Hold invoices do that, for a ticket at a time. That section no longer describes Lightning Stream.</p>
+    <h2 id="changes"><span class="n">6</span>Changes by draft</h2>
+    <dl>
+      <dt>Draft 12, 31 October 2026</dt><dd>For version 0.2.0. The services are web apps, Files, AI, hashrate and VPN exits, and the built-in player is gone. Shops can be reached by key, through free relays. The buyer protections are stated in full, and <a href="/whitepaper/tests/">Tests and numbers</a> adds the load test, relay scaling, 4K and HDR, hashrate under load and the 0.2.0 round with real sats. This page now lists what comes next, in order.</dd>
+      <dt>Draft 11, 27 October 2026</dt><dd>The app is released, and these pages say so. The whitepaper is shorter, a new page, <a href="/guide/">Try it</a>, has the setup, and <a href="/whitepaper/tests/#mainnet">Tests and numbers</a> has the first runs of the released app on mainnet. Tickets are now about 900&nbsp;sat, so a ticket and its fee fit under the starter rules' approval line.</dd>
+      <dt>Draft 10, 22 October 2026</dt><dd>The whitepaper is cut to the idea, and the detail moved to four pages: design details, tests and numbers, this page, and uses. Nothing in the design or the code changed with it.</dd>
+      <dt>Draft 9, 18 October 2026</dt><dd>Answering a second outside review, with packages for node boxes. Most of what was new came from Chris Guida's second review: the claim of "no change to the node" is narrowed to the nodes it holds for (<a href="/whitepaper/#ticket">How a ticket works</a>); the costs are given at three fee rates, with a floor for held tickets that follows from them (<a href="/whitepaper/design/#fees">Fee rates</a>); a seller the owner has not named is paid a prepaid ticket first; the lottery's limits are tighter and its horizon is stated (<a href="/whitepaper/#lottery">The lottery</a>); the software refuses mainnet unless it is asked for; the evidence can be checked from outside; and there are packages for Umbrel and StartOS (<a href="#packages">Packages</a>).</dd>
+    </dl>
+
+    <p class="note"><a href="/whitepaper/">Back to the whitepaper</a> · Draft 12, 31 October 2026.</p>
+  
+      </article>
+    </div>
+  </div>
+</main>
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

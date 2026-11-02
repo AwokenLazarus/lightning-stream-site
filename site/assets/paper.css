@@ -1,0 +1,51 @@
+/* Figures and tables carried over from the earlier whitepaper pages (whitepaper, design, tests, progress, uses).
+   Their SVGs are styled by class, as before; only the palette is this site's. Adapted from stream.css. */
+.paper-page {
+  --brass: #ffd60a; --brass-dim: #b8960a; --brass-ink: #ffe766;
+  --ink: #f5f5f2; --muted: #a4a8b1; --faint: #80858f;
+  --line: rgba(255, 255, 255, 0.10); --line-strong: rgba(255, 255, 255, 0.24);
+  --bg-inset: #0a0b0f; --bg-card: #12141a;
+  --good: #6be3a4; --bad: #ff6b6b; --warn: #ffb648;
+  --serif: var(--sans);
+}
+.paper-page .note { color: var(--muted); font-size: 0.94rem; }
+.paper-page .refs { padding-left: 2.2em; font-size: 0.95rem; }
+.paper-page .refs li { overflow-wrap: anywhere; }
+.paper-page .prose-table { margin: 0; }
+.paper-page .table-wrap { margin-top: 1.2em; }
+.paper-page .callout { margin-top: 2em; }
+.paper-page .prose h2 { scroll-margin-top: calc(var(--head-h) + 16px); }
+.paper-page .fig { margin: 2rem 0 2.2rem; }
+.paper-page .fig svg { display: block; width: 100%; height: auto; background: var(--bg-inset); border: 1px solid var(--line); border-radius: var(--r); }
+.paper-page .fig figcaption { margin-top: 0.7rem; color: var(--muted); font-size: 0.92rem; }
+.paper-page .fig figcaption b { color: var(--ink); font-weight: 600; }
+
+.paper-page .fig .t { font: 400 13px var(--sans); fill: var(--ink); }
+.paper-page .fig .t-s { font: 400 11.5px var(--sans); fill: var(--muted); }
+.paper-page .fig .t-m { font: 500 11.5px var(--mono); fill: var(--brass); }
+.paper-page .fig .t-h { font: 600 10.5px var(--sans); letter-spacing: 0.14em; fill: var(--faint); }
+.paper-page .fig .t-b { font: 600 13px var(--sans); fill: var(--brass-ink); }
+.paper-page .fig .t-bad { font: 500 11.5px var(--mono); fill: var(--bad); }
+.paper-page .fig .t-good { font: 500 11.5px var(--mono); fill: var(--good); }
+
+.paper-page .fig .box { fill: var(--bg-card); stroke: var(--line-strong); stroke-width: 1; }
+.paper-page .fig .box-brass { fill: rgba(255,214,10,0.07); stroke: var(--brass-dim); stroke-width: 1; }
+.paper-page .fig .solid { fill: var(--brass); stroke: none; }
+.paper-page .fig .chunk { fill: rgba(255,214,10,0.15); stroke: var(--brass-dim); stroke-width: 1; }
+.paper-page .fig .chunk-bad { fill: rgba(255,107,107,0.16); stroke: var(--bad); stroke-width: 1; }
+.paper-page .fig .chunk-off { fill: none; stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+.paper-page .fig .ln { stroke: var(--line-strong); stroke-width: 1.2; fill: none; }
+.paper-page .fig .ln-brass { stroke: var(--brass); stroke-width: 1.6; fill: none; }
+.paper-page .fig .ln-dash { stroke: var(--faint); stroke-width: 1.2; fill: none; stroke-dasharray: 4 4; }
+.paper-page .fig .ln-bad { stroke: var(--bad); stroke-width: 1.4; fill: none; }
+.paper-page .fig .ln-good { stroke: var(--good); stroke-width: 1.4; fill: none; }
+.paper-page .fig .bar { fill: var(--brass); opacity: 0.85; }
+.paper-page .fig .bar-track { fill: none; stroke: var(--line); stroke-width: 1; }
+.paper-page .fig .arrow { fill: var(--line-strong); }
+.paper-page .fig .arrow-brass { fill: var(--brass); }
+.paper-page .fig .arrow-good { fill: var(--good); }
+
+.status { display: grid; gap: 0.6rem 1.4rem; grid-template-columns: max-content 1fr; margin: 1.2rem 0; }
+.status dt { font: 600 0.72rem/1.9 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.status dd { margin: 0; }
+@media (max-width: 34rem) { .status { grid-template-columns: 1fr; } .status dd { margin-bottom: 0.6rem; } }

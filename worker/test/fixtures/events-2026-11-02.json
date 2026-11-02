@@ -1,0 +1,260 @@
+[
+ {
+  "content": "**Lazarus Test Services**: sold by the piece over Lightning Stream, paid as it arrives.\n\n### Creative Commons films (video)\n\nPrice: 20 sat a MiB.\n\nItems:\n- Big Buck Bunny\n- Elephants Dream\n- Sintel\n\n### Local AI model (ai)\n\nPrice: 10 sat per 1,000 tokens.\n\n### Hashrate (hashrate)\n\nPrice: 40 sat a request.\n\nLicence: \n\nCredits: \n\nOpen it in a Lightning Stream app: https://stream.lazarus-xbt.xyz\n",
+  "created_at": 1793565091,
+  "id": "04b1e3731f7bf76d40043cd860e6bdc6f86d408ea850eaa6d9ad09a2d1c9e981",
+  "kind": 30402,
+  "pubkey": "dcfe7034728151a8b5fa7baa26ed521953e547ae6bdbba2cd1125e603f5e5b89",
+  "sig": "691221ebb00c3226290228e130c4567c5695d7e7f2ce9450cb8e25437b099ded9bf6fea74b9b7d46d80456ccfdf28c97c271c7ca2324a81f11a7eb9ef5979467",
+  "tags": [
+   [
+    "d",
+    "https://stream.lazarus-xbt.xyz"
+   ],
+   [
+    "title",
+    "Lazarus Test Services"
+   ],
+   [
+    "summary",
+    "Lightning Stream: video: 20 sat a MiB; ai: 10 sat per 1,000 tokens; hashrate: 40 sat a request"
+   ],
+   [
+    "published_at",
+    "1793565091"
+   ],
+   [
+    "t",
+    "lightning-stream"
+   ],
+   [
+    "r",
+    "https://stream.lazarus-xbt.xyz"
+   ],
+   [
+    "alt",
+    "Lightning Stream listing: Lazarus Test Services"
+   ],
+   [
+    "t",
+    "video"
+   ],
+   [
+    "t",
+    "ai"
+   ],
+   [
+    "t",
+    "hashrate"
+   ],
+   [
+    "price",
+    "20",
+    "SAT",
+    "MiB"
+   ],
+   [
+    "xbt402-listing",
+    "{\"version\":\"listing/1\",\"name\":\"Lazarus Test Services\",\"seller\":\"https://stream.lazarus-xbt.xyz\",\"receipt_key\":\"029288d9359f1f983a296d3d01024aa28e3b767a2d44831f186efdcd09fefbf020\",\"services\":[{\"name\":\"Creative Commons films\",\"kind\":\"video\",\"path\":\"/Videos/057627270372dfed4d8ea15fa9ab5f01/\",\"prices\":{\"byte_msat\":\"20000\",\"per_bytes\":\"1048576\"},\"items\":[{\"title\":\"Big Buck Bunny\",\"url\":\"https://stream.lazarus-xbt.xyz/Videos/057627270372dfed4d8ea15fa9ab5f01/stream?static=true\"},{\"title\":\"Elephants Dream\",\"url\":\"https://stream.lazarus-xbt.xyz/Videos/0f0967c6719ebc0951976655686df3bc/stream?static=true\"},{\"title\":\"Sintel\",\"url\":\"https://stream.lazarus-xbt.xyz/Videos/b9937d76e453d11b407d84f188e23ed1/stream?static=true\"}]},{\"name\":\"Local AI model\",\"kind\":\"ai\",\"path\":\"/ai/\",\"prices\":{\"per_1k_output_msat\":\"10000\"},\"items\":[]},{\"name\":\"Hashrate\",\"kind\":\"hashrate\",\"path\":\"/hashrate/\",\"prices\":{\"request_msat\":\"40000\"},\"items\":[]}],\"updated\":\"2026-10-29\",\"sig\":\"304402202bce417adc69f641b1b23bb54c4bb20bbde50c212bb0213721f8b6301a56a96a022074ad3d3b3ec07b400941f72f37713d42dcbc760d97740ad2ef110f6d8003b6d0\"}"
+   ],
+   [
+    "xbt402-bind",
+    "304402203ca5676349bc73de3f948bad18529b8430ef834e1fb2ba9f84140fef5915fb8f0220521c42af6fe7931305c8cd591c22ff43089a5d752eae7243475e96a4f4431854"
+   ]
+  ],
+  "_seen": [
+   "wss://relay.example"
+  ]
+ },
+ {
+  "content": "**Lazarus Test Services**: sold by the piece over Lightning Stream, paid as it arrives.\n\n### Creative Commons films (video)\n\nPrice: 20 sat a MiB.\n\nItems:\n- Big Buck Bunny\n- Elephants Dream\n- Sintel\n\n### Local AI model (ai)\n\nPrice: 10 sat per 1,000 tokens.\n\n### Hashrate (hashrate)\n\nPrice: 40 sat a request.\n\nLicence: \n\nCredits: \n\nOpen it in a Lightning Stream app: https://media.lazarus-xbt.xyz\n",
+  "created_at": 1793070198,
+  "id": "6ae90b9582c2393c41a3235345fd29c617cced7190783abb4ab5d9916efc054e",
+  "kind": 30402,
+  "pubkey": "dcfe7034728151a8b5fa7baa26ed521953e547ae6bdbba2cd1125e603f5e5b89",
+  "sig": "127e776ef9f4d63b6ac7e0511aed1b1617fdc6b5c7f1a75b248cfb286dc8621f15709a75a518f6834c4376d23400d0f11c7bbc311b5fa4d0cfa7b7b000281697",
+  "tags": [
+   [
+    "d",
+    "https://media.lazarus-xbt.xyz"
+   ],
+   [
+    "title",
+    "Lazarus Test Services"
+   ],
+   [
+    "summary",
+    "Lightning Stream: video: 20 sat a MiB; ai: 10 sat per 1,000 tokens; hashrate: 40 sat a request"
+   ],
+   [
+    "published_at",
+    "1793070198"
+   ],
+   [
+    "t",
+    "lightning-stream"
+   ],
+   [
+    "r",
+    "https://media.lazarus-xbt.xyz"
+   ],
+   [
+    "alt",
+    "Lightning Stream listing: Lazarus Test Services"
+   ],
+   [
+    "t",
+    "video"
+   ],
+   [
+    "t",
+    "ai"
+   ],
+   [
+    "t",
+    "hashrate"
+   ],
+   [
+    "price",
+    "20",
+    "SAT",
+    "MiB"
+   ],
+   [
+    "xbt402-listing",
+    "{\"version\":\"listing/1\",\"name\":\"Lazarus Test Services\",\"seller\":\"https://media.lazarus-xbt.xyz\",\"receipt_key\":\"029288d9359f1f983a296d3d01024aa28e3b767a2d44831f186efdcd09fefbf020\",\"services\":[{\"name\":\"Creative Commons films\",\"kind\":\"video\",\"path\":\"/Videos/057627270372dfed4d8ea15fa9ab5f01/\",\"prices\":{\"byte_msat\":\"20000\",\"per_bytes\":\"1048576\"},\"items\":[{\"title\":\"Big Buck Bunny\",\"url\":\"https://media.lazarus-xbt.xyz/Videos/057627270372dfed4d8ea15fa9ab5f01/stream?static=true\"},{\"title\":\"Elephants Dream\",\"url\":\"https://media.lazarus-xbt.xyz/Videos/0f0967c6719ebc0951976655686df3bc/stream?static=true\"},{\"title\":\"Sintel\",\"url\":\"https://media.lazarus-xbt.xyz/Videos/b9937d76e453d11b407d84f188e23ed1/stream?static=true\"}]},{\"name\":\"Local AI model\",\"kind\":\"ai\",\"path\":\"/ai/\",\"prices\":{\"per_1k_output_msat\":\"10000\"},\"items\":[]},{\"name\":\"Hashrate\",\"kind\":\"hashrate\",\"path\":\"/hashrate/\",\"prices\":{\"request_msat\":\"40000\"},\"items\":[]}],\"updated\":\"2026-10-26\",\"sig\":\"3045022100801bc985fe8b8024ccef7d68644f6f24eded6d750ac77c3c4a4a55d77d3eedd402205b73acf6dcb19477985aa411b9454e98765adc36c927bc9ea4ebec02e94aa5bf\"}"
+   ],
+   [
+    "xbt402-bind",
+    "3045022100dc0a7efac0525647a68e53fd1cb9072da91fe4a864edc0f74707c9b119819f11022036012a7c9518dcb98b66051c33d90ae8320332c0dff2c18e9bdbe58da8f537a8"
+   ]
+  ],
+  "_seen": [
+   "wss://relay.example"
+  ]
+ },
+ {
+  "content": "",
+  "created_at": 1793412797,
+  "id": "250c90a8a946279544bcafd878c1aaf0d7e3e7c1382826994368814c56f8a86d",
+  "kind": 30078,
+  "pubkey": "46c4349c4ee20a10a63ae1eddc7ef1907dd17f3895cc870e54815f262c32c20e",
+  "sig": "b46491f1e3105d3dd66a774c625bdcfde1e82a37325f5cccc536b963469d8336607c662dabf52f169a41f3aa1abc6ece21b6828c48106c8e29a8f26f03e4f089",
+  "tags": [
+   [
+    "d",
+    "lightning-stream-vpn-exit:81b90e5d31777fc0a405dc83d5219e9007ee5b80775ab99850db77247155340d"
+   ],
+   [
+    "t",
+    "lightning-stream-vpn-exit"
+   ],
+   [
+    "exit",
+    "81b90e5d31777fc0a405dc83d5219e9007ee5b80775ab99850db77247155340d"
+   ],
+   [
+    "link_sig",
+    "528992af2f4952d9b70fa742373347bec6da2c58188bb7539bc20e352dc0e2156ca74e199419f96fb8eb1a406d370af4aaf5a1e2acaf37d08928f6a4bac8ec0d"
+   ],
+   [
+    "region",
+    "SV"
+   ],
+   [
+    "kind",
+    "private"
+   ],
+   [
+    "logs",
+    "0"
+   ],
+   [
+    "two_hop",
+    "0"
+   ],
+   [
+    "price_msat_gb",
+    "1000000"
+   ],
+   [
+    "expiration",
+    "1794017597"
+   ],
+   [
+    "port",
+    "25"
+   ],
+   [
+    "relay",
+    "https://iroh.lazarus-xbt.xyz"
+   ],
+   [
+    "tunnel",
+    "http://nlrptzr6a7rpknsawltqzjro32v5ede2kqkeqb56pskj65fuisxa.shop.invalid/vpn/tunnel"
+   ]
+  ],
+  "_seen": [
+   "wss://relay.example"
+  ]
+ },
+ {
+  "content": "**StartOS packaging test**: sold by the piece over Lightning Stream, paid as it arrives.\n\nWhat: files\n\nPrice: 1000 sat a piece of 1000000000 bytes.\n\nItems:\n- hello-from-filebrowser.txt, 144 KB\n\nLicence: \n\nCredits: \n\nOpen it in a Lightning Stream app: http://khvvfvm52pczqmmmcmlsnodkpsun3t34ni2i2ivpu4oheshyyxxq.shop.invalid\n",
+  "created_at": 1793403621,
+  "id": "0eb746f6dd909760da583bef6348d57d46e121fbc258eefbe37c339982ffe78a",
+  "kind": 30402,
+  "pubkey": "51eb52d59dd3c598318c131726b86a7ca8ddcf7c6a348d22afa71c7248f8c5ef",
+  "sig": "4d3e0ecfaff455a43a9bcb7411ac8936d9d746d503a4ceed5995a6f6f7bd1d67fbc1129915c4a6d42f6dde0826dadee7785f2e720a064fb68742ece4501ac8e2",
+  "tags": [
+   [
+    "d",
+    "http://khvvfvm52pczqmmmcmlsnodkpsun3t34ni2i2ivpu4oheshyyxxq.shop.invalid"
+   ],
+   [
+    "title",
+    "StartOS packaging test"
+   ],
+   [
+    "summary",
+    "Lightning Stream: files: 1000 sat a piece of 1000000000 bytes"
+   ],
+   [
+    "published_at",
+    "1793403621"
+   ],
+   [
+    "t",
+    "lightning-stream"
+   ],
+   [
+    "r",
+    "http://khvvfvm52pczqmmmcmlsnodkpsun3t34ni2i2ivpu4oheshyyxxq.shop.invalid"
+   ],
+   [
+    "alt",
+    "Lightning Stream listing: StartOS packaging test"
+   ],
+   [
+    "t",
+    "files"
+   ],
+   [
+    "price",
+    "1000",
+    "SAT",
+    "piece of 1000000000 bytes"
+   ],
+   [
+    "xbt402-listing",
+    "{\"version\":\"listing/1\",\"name\":\"StartOS packaging test\",\"seller\":\"http://khvvfvm52pczqmmmcmlsnodkpsun3t34ni2i2ivpu4oheshyyxxq.shop.invalid\",\"receipt_key\":\"02401cb255e9dade36c389f243bb03154d914af0b3f4b7bc70598f17cb87b98bb4\",\"services\":[{\"name\":\"Files from File Browser\",\"kind\":\"files\",\"path\":\"/\",\"prices\":{\"byte_msat\":\"1000000\",\"per_bytes\":\"1000000000\"},\"items\":[{\"title\":\"hello-from-filebrowser.txt\",\"url\":\"http://khvvfvm52pczqmmmcmlsnodkpsun3t34ni2i2ivpu4oheshyyxxq.shop.invalid/hello-from-filebrowser.txt\",\"credit\":\"144 KB\"}]}],\"updated\":\"2026-10-30\",\"sig\":\"304402205a5069e5c9266ee0ec5c6cd7a8223175ae2d24e647818d6d4ca635d663ecada902202fbe20d16a5fe251778b14ccc21d8cc0fc5f2864f805d62cc422f0324a6f0d1a\"}"
+   ],
+   [
+    "xbt402-bind",
+    "304402202bd084d8dc1ba8830216531df54aeb84b891a0505babb07fc49137333b491f56022062efd16b8c5e115795a24b6531044383abf7d683ff2e9ea96144cf8daedec91e"
+   ]
+  ],
+  "_seen": [
+   "wss://relay.example"
+  ]
+ }
+]

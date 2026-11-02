@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uses: Lightning Stream</title>
+<meta name="description" content="The uses Lightning Stream was conceived for, and how far each has come. Each says plainly whether it is built, run only as a demo, designed, or only conceived. What is marked released is in the app for Umbrel, StartOS and Linux and runs on XBT mainnet; the rest ran on a regtest, a private test…">
+<link rel="canonical" href="https://lightning-stream.com/whitepaper/uses/">
+<meta name="theme-color" content="#050507">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/paper.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+</head>
+<body class="paper-page">
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/" aria-current="page">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/" aria-current="page">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+<main id="main">
+  <header class="page-hero">
+    <canvas class="web-canvas" data-web="ambient" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="eyebrow">Whitepaper · Uses</p>
+      <h1 class="paper-title">What it is <em>for</em></h1>
+      <p class="lede">The uses Lightning Stream was conceived for, and how far each has come. Each says plainly whether it is built, run only as a demo, designed, or only conceived. What is marked released is in the app for Umbrel, StartOS and Linux and runs on XBT mainnet; the rest ran on a regtest, a private test network of our own.</p>
+      <p class="meta-note">This page accompanies Draft 12 of the Lightning Stream whitepaper, 31 October 2026, and version 0.2.0. <a href="/whitepaper/">Back to the whitepaper</a>.</p>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap with-toc">
+      <aside class="toc" aria-label="On this page"><div class="toc-inner">
+        <h2>On this page</h2><ol><li><a href="#in-view">The uses in view</a></li><li><a href="#http">Paying over HTTP</a></li><li><a href="#fair">Paying only for what checks out</a></li><li><a href="#wallet">A wallet for agents</a></li></ol>
+        <h2 class="toc-sub">The papers</h2><ul><li><a href="/whitepaper/">The whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/" aria-current="page">Uses</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/changelog/">Changelog</a></li></ul>
+      </div></aside>
+      <article class="prose paper">
+
+    <h2 id="in-view"><span class="n">1</span>The uses in view</h2>
+    <dl>
+      <dt>A seller's own web app, paid as it is used</dt><dd><strong>Released in 0.2.0.</strong> A seller's whole web app, for example Jellyfin with its full interface and films up to 4K, opens inside the buyer's app with an account made for each buyer; video is paid per MiB and pages per request. Played on mainnet between our own nodes, over a direct link and over a relay; see <a href="/whitepaper/tests/#real-sats">the 0.2.0 round</a> and <a href="/whitepaper/tests/#hdr">4K and HDR</a>.</dd>
+      <dt>Files, per GB</dt><dd><strong>Released in 0.2.0.</strong> A shared folder (Umbrel's Downloads, StartOS's File Browser, any folder on Linux), sold per GB: a buyer downloads a file or opens it in a player of its own, and pays as it arrives, never past the file's listed size. The app has no player of its own. Bought on mainnet between our own nodes.</dd>
+      <dt>An AI model, paid per token</dt><dd><strong>Released.</strong> A shop sells answers per 1,000 tokens, counted token by token. Tested on mainnet between our own nodes.</dd>
+      <dt>Hashrate, masked and paid as it arrives</dt><dd><strong>Released.</strong> A <em>hashmaker</em> lists its miners and a <em>hashtaker</em> rents them into its own gateway, the Stream Gateway (DATUM-compatible), which comes with the app. Every job is masked with a key the gateway holds, so a rented miner can't tell which share is a block and can't withhold one. It mines solo to the hashtaker's own address, or on Lazarus Pool. Both sides check every share, and the hashtaker pays as the work arrives, seconds at a time. Names from Kilombino. Rentals have been paid on mainnet between our own nodes, the latest for 25 slices; in the lab 25 rentals at once each got 98 to 99% of their miners' work.</dd>
+      <dt>An API, a page or a file over HTTP</dt><dd><strong>Released.</strong> The gateway stands in front of any web service and meters an answer per request, per byte, per token or per second. See <a href="#http">Paying over HTTP</a>.</dd>
+      <dt>A VPN exit, by the GB</dt><dd><strong>Released in 0.2.0.</strong> A buyer's devices send their traffic out through another Stream user's internet connection, paid as it passes, with no account; an exit's country is checked, not believed. 315&nbsp;MB went through a paid exit on mainnet between our own nodes; a fault in its charge found there is being fixed.</dd>
+      <dt>A shop with no web address</dt><dd><strong>Released in 0.2.0.</strong> A home box sells without a domain, certificate or port forward: buyers reach it by its key over an encrypted link, through a free relay where needed, and in private mode never learn its address.</dd>
+      <dt>AI agents that pay</dt><dd><strong>Released.</strong> A wallet an agent asks to pay over MCP, which holds the keys and keeps to rules the owner signs. See <a href="#wallet">A wallet for agents</a>.</dd>
+      <dt>A swarm: many sellers at once</dt><dd><strong>Built, on a regtest</strong>, in the lottery's first form: 100 sellers paid at once from one 30-slot channel, where the 100 sellers were 100 gateways beside one seller node. See <a href="/whitepaper/design/#many">Many sellers at once</a>.</dd>
+      <dt>Content that can be checked piece by piece</dt><dd><strong>Designed, not built</strong> on tickets: the buyer checks each chunk against a signed manifest before it pays. See <a href="#fair">Paying only for what checks out</a>.</dd>
+      <dt>Coming next</dt><dd>Paid relays, in an update; then paying from a wallet over Nostr Wallet Connect, AI sellers that are Nostr data vending machines (NIP-90), and media on Blossom servers sold through a gateway. Later ideas: ranking and search on Browse, a guard that stops a hashtaker renting toward a majority of the network's hashrate, ticket sizes that follow how fast a buyer spends, and paid torrent seeding. None of these is released; <a href="/whitepaper/progress/#next">Coming next</a> has the order.</dd>
+    </dl>
+    <h2 id="http"><span class="n">2</span>Paying over HTTP</h2>
+    <p class="note"><strong>Status:</strong> released, and in use on XBT mainnet. The wire is a draft of our own.</p>
+    <p>The web has kept a status code for this since 1997: <code>402 Payment Required</code>, reserved for future use then and still <a href="/whitepaper/design/#ref-21">[21]</a>. The x402 standard, which Coinbase created and the x402 Foundation now keeps <a href="/whitepaper/design/#ref-22">[22]</a>, gives it a shape: the server answers with a price and terms, and the client retries with a payment in a header. Lightning Stream uses that shape. The wire and the receipts were first built for the earlier channel, which is no longer in the tree. For tickets the seller's 402 has an entry of its own in its list of accepted payments, and every request of a session carries a signature over the request with the session's key; a ticket's secret travels in a release of its own. Both sides of that entry are built and run on a regtest: the gateway offers ticket terms in its 402, and the wallet's pay tool reads them and pays. The lottery has an entry of its own beside it. Its terms carry the size of a win and the price of a piece, which together fix the odds, and the buyer's half of each roll travels in a small request of its own after the piece has arrived. The tree's <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/TICKETS.md" rel="noopener"><code>docs/TICKETS.md</code></a> writes both down as a draft. Upstream x402 clients do not know either entry, so only Lightning Stream clients can pay with tickets or by rolls.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 720 340" role="img" aria-labelledby="f3t">
+        <title id="f3t">One paid call with tickets: request, 402 with terms, two tickets locked, then a release carries one secret, and requests paid from the balance get data and a signed receipt.</title>
+        <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="arrow-brass" d="M0 0L10 5L0 10z"/></marker></defs>
+        <rect class="box-brass" x="40" y="16" width="150" height="40" rx="8"/>
+        <text class="t" x="115" y="41" text-anchor="middle">Buyer (an agent)</text>
+        <rect class="box-brass" x="430" y="16" width="150" height="40" rx="8"/>
+        <text class="t" x="505" y="41" text-anchor="middle">Seller (an API)</text>
+        <path class="ln-dash" d="M115 56V325"/>
+        <path class="ln-dash" d="M505 56V325"/>
+        <path class="ln-brass" d="M115 92H500" marker-end="url(#a3)"/>
+        <text class="t-m" x="130" y="84">GET /forecast</text>
+        <path class="ln" d="M505 136H120" marker-end="url(#a3)"/>
+        <text class="t-m" x="490" y="128" text-anchor="end">402 · price · seller's node · ticket terms</text>
+        <rect class="box" x="130" y="156" width="360" height="34" rx="6"/>
+        <text class="t-s" x="310" y="177" text-anchor="middle">first: 2 hashes sent, 2 hold invoices paid over Lightning</text>
+        <path class="ln-brass" d="M115 232H500" marker-end="url(#a3)"/>
+        <text class="t-m" x="130" y="224">release: the secret of one ticket</text>
+        <text class="t-s" x="130" y="250">then GET /forecast, paid from the balance</text>
+        <rect class="box" x="522" y="208" width="186" height="48" rx="6"/>
+        <text class="t-s" x="534" y="228">hash the secret, find its</text>
+        <text class="t-s" x="534" y="246">ticket, collect, serve</text>
+        <path class="ln-good" d="M505 300H120" marker-end="url(#a3)"/>
+        <text class="t-good" x="490" y="292" text-anchor="end">200 OK · data · receipt signed by seller</text>
+      </svg>
+      <figcaption><b>Figure 1.</b> The 402 step happens once, and two tickets are locked before the first paid request. After that the wallet releases the next secret whenever the balance runs out, requests are paid from the balance, and the wallet locks the next ticket in the background. This flow now runs on a regtest between the wallet and the gateway; for what was measured see <a href="/whitepaper/tests/#numbers">Numbers</a>.</figcaption>
+    </figure>
+
+    <p>Each receipt is signed by the seller and bound to the hash of the request it paid for. With tickets the receipt matters more than before, because it is the only proof of payment the buyer can show: the secret proves nothing. A client that does not check its receipts has no such proof. An answer lost on the way is paid for from the balance. A refusal of a request the seller could authenticate is signed too; two answers cannot be (a request out of order, and a session the seller has forgotten), and the wallet releases nothing on their word.</p>
+    <p>For a single call from a buyer with no session, an ordinary Lightning payment is the right tool, and a seller's 402 can offer that beside tickets. Two existing forms do this: x402's <code>exact</code> scheme for a Lightning invoice <a href="/whitepaper/design/#ref-22">[22]</a> and L402 <a href="/whitepaper/design/#ref-23">[23]</a>. The wallet reads such an entry as x402's <code>exact</code>. Upstream x402 has since defined <code>exact</code> on Lightning; its definition has not been checked against ours, no seller in the tree offers the entry, and it was not run in the lab.</p>
+    <p>On the wire this is x402 v2. Since October 2026 the chain is named by its standard name, its CAIP-2 id <a href="/whitepaper/design/#ref-24">[24]</a> in the <code>bip122</code> namespace, with <code>"layer": "lightning"</code> beside it to say that the payment is made over Lightning on that chain. Before, the entries used a name of ours, <code>lightning:</code>, which nobody else defines; the wallet and the gateway still read it for one release and write the new one. Because XBT and the SHA-256 chain share a genesis block, XBT mainnet is keyed to its fork block, 961,640, instead of genesis: <code>bip122:0000000000000050c1e5f69672f45929</code>. The scheme names, <code>ticket</code> and <code>lottery</code>, and the asset name are still ours. XBT is Bitcoin on BLAKE2b proof of work, and up to that block it has the same history as the SHA-256 chain, so its Lightning invoices look alike on both. What marks an XBT Lightning node, invoice or offer is feature bit 512, a convention of the two XBT Lightning forks <a href="/whitepaper/design/#ref-61">[61]</a><a href="/whitepaper/design/#ref-63">[63]</a> and not of ours. The wallet checks it on everything it pays, and it pays only through channels whose funding it can prove exists on XBT alone.</p>
+    <h2 id="fair"><span class="n">3</span>Paying only for what checks out</h2>
+    <p class="note"><strong>Status:</strong> built and tested on the earlier channel, which is removed; on tickets designed and not built.</p>
+    <p>Paying per piece only helps if a bad piece can be caught. For content that exists before it is sold, such as a file, a dataset or a recorded stream, the seller first signs a <em>manifest</em>: the Merkle root <a href="/whitepaper/design/#ref-32">[32]</a> of every chunk it promises to send. Then the stream begins.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 720 210" role="img" aria-labelledby="f4t">
+        <title id="f4t">Chunks are checked against the signed manifest and a ticket is released for each; a chunk that fails its proof is not paid and the stream stops.</title>
+        <rect class="box-brass" x="20" y="20" width="180" height="60" rx="8"/>
+        <text class="t" x="36" y="45">Signed manifest</text>
+        <text class="t-m" x="36" y="66">root = H(chunk 1…8)</text>
+        <path class="ln-dash" d="M110 80V130H222"/>
+        <text class="t-s" x="232" y="100">Each chunk arrives with a proof. Check it, then release a ticket for it.</text>
+        <rect class="chunk" x="232" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk" x="290" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk" x="348" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk" x="406" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk-bad" x="464" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk-off" x="522" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk-off" x="580" y="112" width="50" height="38" rx="5"/>
+        <rect class="chunk-off" x="638" y="112" width="50" height="38" rx="5"/>
+        <text class="t-m" x="257" y="136" text-anchor="middle">1</text>
+        <text class="t-m" x="315" y="136" text-anchor="middle">2</text>
+        <text class="t-m" x="373" y="136" text-anchor="middle">3</text>
+        <text class="t-m" x="431" y="136" text-anchor="middle">4</text>
+        <text class="t-bad" x="489" y="136" text-anchor="middle">5</text>
+        <text class="t-s" x="547" y="136" text-anchor="middle">6</text>
+        <text class="t-s" x="605" y="136" text-anchor="middle">7</text>
+        <text class="t-s" x="663" y="136" text-anchor="middle">8</text>
+        <text class="t-good" x="344" y="172" text-anchor="middle">verified · ticket released</text>
+        <text class="t-bad" x="489" y="172" text-anchor="middle">bad proof</text>
+        <text class="t-s" x="605" y="172" text-anchor="middle">never paid</text>
+        <text class="t-s" x="232" y="198">The seller risks one chunk. A chunk that fails its proof is not paid for.</text>
+      </svg>
+      <figcaption><b>Figure 2.</b> Streamed fair exchange, as designed for tickets. A seller that tampers with chunk 5 is paid for chunks 1 to 4, which it delivered, and nothing after. This ran on the earlier channel; on tickets it is not built.</figcaption>
+    </figure>
+
+    <p>This is where the order of a ticket turns round: the buyer checks a chunk first and releases its ticket second. The last chunk can be sold the opposite way, as an ordinary Lightning payment to a hash the seller chose, so that its key arrives only with the payment; selling a key through a hash lock goes back to Gregory Maxwell's contingent payment of 2011 <a href="/whitepaper/design/#ref-31">[31]</a>. Fair exchange was built and tested on the earlier channel, and it left the tree with the channel (<a href="/whitepaper/progress/#earlier">The earlier design</a>): chunks proved against a signed manifest, with a hash-locked last one, can no longer be bought with this code. On tickets it is designed, and simpler than it was, and the draft wire has a setting for it, but it is not built: the wallet does not buy content that way. The lottery has a first piece of it: where the wallet is given the hash of a piece, it sends its half of the roll only for a piece that matched. An agent cannot pass those hashes through the pay tool yet.</p>
+    <p>This only works for fixed content. Nobody can commit to the Merkle root of a model's answer before the answer exists. For generated output, paying as it arrives still keeps what the buyer can lose small and stated, but it cannot prove that a piece is any good.</p>
+    <h2 id="wallet"><span class="n">4</span>A wallet for agents</h2>
+    <p class="note"><strong>Status:</strong> released, against Lightning Fork nodes; tested on mainnet between our own nodes.</p>
+    <p>An AI model should be able to spend, but never to hold a key: a model can be tricked by what it reads. So the agent never signs. It asks a wallet to pay, and the wallet decides.</p>
+
+    <figure class="fig">
+      <svg viewBox="0 0 720 220" role="img" aria-labelledby="f5t">
+        <title id="f5t">The agent asks the policy wallet to pay over MCP; the wallet holds the keys, enforces the owner's signed policy and pays through the owner's Lightning node.</title>
+        <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="arrow-brass" d="M0 0L10 5L0 10z"/></marker></defs>
+        <rect class="box" x="20" y="80" width="140" height="64" rx="8"/>
+        <text class="t" x="36" y="106">AI agent</text>
+        <text class="t-s" x="36" y="126">asks; cannot sign</text>
+        <path class="ln-brass" d="M160 112H214" marker-end="url(#a5)"/>
+        <text class="t-m" x="187" y="104" text-anchor="middle">MCP</text>
+        <rect class="box-brass" x="220" y="30" width="250" height="164" rx="8"/>
+        <text class="t" x="238" y="58">Policy wallet</text>
+        <text class="t-s" x="238" y="84">holds the keys and the ticket secrets</text>
+        <text class="t-s" x="238" y="106">daily budget · per-seller caps</text>
+        <text class="t-s" x="238" y="128">allowed sellers only</text>
+        <text class="t-s" x="238" y="150">human approval, single payments only</text>
+        <text class="t-s" x="238" y="172">tamper-evident log of what it released</text>
+        <rect class="box" x="530" y="20" width="170" height="64" rx="8"/>
+        <text class="t" x="546" y="46">Owner</text>
+        <text class="t-s" x="546" y="66">signs the policy</text>
+        <path class="ln" d="M530 60H476" marker-end="url(#a5)"/>
+        <rect class="box" x="530" y="136" width="170" height="64" rx="8"/>
+        <text class="t" x="546" y="162">Owner's Lightning node</text>
+        <text class="t-s" x="546" y="182">invoices · offers · tickets</text>
+        <path class="ln-brass" d="M470 168H524" marker-end="url(#a5)"/>
+      </svg>
+      <figcaption><b>Figure 3.</b> The model sees tools such as <i>quote</i>, <i>pay</i> and <i>balance</i>. The wallet is built so that an agent held to those tools, even a prompt-injected one, can spend only what the policy allows, with the exceptions listed below.</figcaption>
+    </figure>
+
+    <p>The wallet speaks MCP, the Model Context Protocol that Anthropic published in 2024 <a href="/whitepaper/design/#ref-26">[26]</a> and that AI agents already use for tools, so any agent that can call a tool can pay. It pays through the owner's own Lightning node: XBT Lightning invoices (BOLT&nbsp;11) and offers (BOLT&nbsp;12) <a href="/whitepaper/design/#ref-4">[4]</a>, and, on a regtest, stream tickets and wins in the lottery through the same pay tool. A single payment the agent asks for by itself, a Lightning invoice or a payment on the chain, waits for the owner's signature from another device when it is above the owner's threshold. A paid call to a seller does not ask a person: ticket and lottery payments are bounded by the budget of the task and by the caps, and never wait for a human. The flow in which a paid call waited for the owner's approval belonged to the earlier channel and went with it (<a href="/whitepaper/progress/#earlier">The earlier design</a>). The policy itself is signed by the owner, so the agent cannot rewrite it.</p>
+    <p>For tickets the wallet has a ticket book. The secrets are made inside the wallet's signer, and the agent never sees one before it is spent. Each ticket is counted twice: against a cap on what may be locked when it is locked, and against the budgets when its secret leaves. A released secret is written down before it leaves the signer, so a crash cannot under-count what was spent. Routing fees are counted as spending. The ticket book is built, in the wallet's signer, and runs on a regtest against Lightning Fork nodes. It is tied to the agent's pay tool, so an agent buys a service with tickets there in one call. It holds 2 tickets with a seller the owner named and 1 with one it did not, the latter only after a prepaid ticket (<a href="/whitepaper/design/#strangers">A seller the owner has not named</a>), and checks a channel's slots, its dust limit and the floor of <a href="/whitepaper/design/#fees">Fee rates</a> before a lock.</p>
+    <p id="safety"><strong>Real money only when asked for, and only to public sellers over https.</strong> The outside review found that "test networks only" was a sentence in the documents and not a guard in the code. Now it is a guard. On mainnet the wallet pays nothing until its owner confirms, in so many words, that it may pay with real money: in the app that is <em>Settings → Your node → Pay with real money</em>, straight after the spending rules are signed. Until then Home does not say the app is ready. The safe starter rules allow 2,000&nbsp;sat a payment, 10,000 a day, 30,000 a week and 10,000 a seller, and ask the owner above 1,000; a cap is a hard cap, routing fees included. This guards against paying by omission and does no more: it makes no part of the software audited. Separately, the wallet sends nothing to a seller the owner has not named unless its address is https and every address its host has is on the public internet, so not a private, loopback or reserved one. A host whose address changes between the check and the connection (DNS rebinding) is not caught by it. A shop reached by its key has no host to check: its Lightning node must vouch for the link before the wallet sends anything.</p>
+    <p><strong>Never more than the listing.</strong> Since 0.2.0 the price in a shop's signed listing is the most the wallet pays it; a shop that asks more is refused before anything is paid. A shop caught over-charging is blocked until the owner lifts the block with a message signed by the approval key, and each shop has a daily cap. An agent's calls are held to all of it.</p>
+    <p>For the lottery the same signer does the rolling. It makes the buyer's half of each roll from its own random source, checks the seller's half against what the seller fixed before the session, and works out every roll itself. It pays only a win it found, only by an invoice that names the seller's node and the agreed size of a win, and only once. The payment is written down as spent before it leaves, and what is booked is what the owner's node paid, with its routing fee. The owner's policy sets the largest win, how often a piece may win, and how many wins a seller the owner has not named may be paid.</p>
+    <p>The scope of the wallet's claim is narrow. It covers an agent whose only way to the wallet is the MCP tools. Software that can open the wallet's signer socket directly is outside it, so the socket must stay out of the agent's reach. The policy binds only what goes through the wallet: anyone who holds a broader credential for the Lightning node can spend past it. The policy also limits how much an allowed seller can be paid, not what else that seller does. And the outside review found faults in this very part, the wallet's budget accounting; see <a href="/whitepaper/progress/#status">Status</a> for where that stands. One rule that came out of those fixes carries over to tickets unchanged: the wallet books what it released, never a number the seller sends.</p>
+
+    <p class="note"><a href="/whitepaper/">Back to the whitepaper</a> · Draft 12, 31 October 2026.</p>
+  
+      </article>
+    </div>
+  </div>
+</main>
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

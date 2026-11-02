@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lightning Stream: pay as it arrives</title>
+<meta name="description" content="Buy and sell services over XBT Lightning, paid as you use them: web apps, files, AI models, hashrate and VPN exits. No accounts, no custody. For Umbrel, StartOS and Linux.">
+<link rel="canonical" href="https://lightning-stream.com/">
+<meta name="theme-color" content="#050507">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lightning Stream: pay as it arrives">
+<meta property="og:description" content="Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.">
+<meta property="og:url" content="https://lightning-stream.com/">
+<meta property="og:image" content="https://lightning-stream.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/site.js" defer></script>
+<script src="/assets/web.js" defer></script>
+<script src="/assets/live.js" defer></script>
+</head>
+<body class="home">
+<canvas class="web-fixed web-static" data-web="home" data-scene="overview" aria-hidden="true"></canvas>
+<!-- chrome:header -->
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
+    <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.0</a></nav></details>
+  </div>
+</header>
+<!-- /chrome:header -->
+
+<main id="main">
+  <section class="hero" data-scene="overview" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero-inner">
+        <p class="eyebrow">Lightning Stream 0.2.0 &middot; Umbrel, StartOS, Linux</p>
+        <h1 id="hero-title" class="display">Pay as it <span class="glow-text">arrives.</span></h1>
+        <p class="lede">Buy and sell services over XBT Lightning, paid as you use them: a seller's web app or files by the megabyte, an AI model by the token, hashrate by the slice of work, a VPN exit by the gigabyte. No accounts. No custody.</p>
+        <div class="btn-row">
+          <a class="btn btn-volt" href="/download/">Download 0.2.0 <span class="arr" aria-hidden="true">&rarr;</span></a>
+          <a class="btn" href="/how-it-works/">See how it works</a>
+        </div>
+        <div class="hero-note">
+          <span class="tag tag-warn">Early software</span>
+          <span>Tested on XBT mainnet between our own nodes. Not audited: use small amounts you can afford to lose.</span>
+        </div>
+      </div>
+    </div>
+    <p class="scroll-cue" aria-hidden="true">Scroll</p>
+  </section>
+
+  <section class="statement" data-scene="overview" aria-label="The idea">
+    <div class="wrap">
+      <p class="h-xl reveal">Lightning made payments fast. Stream tickets make them <span class="glow-text">continuous.</span></p>
+      <p class="lede sub reveal reveal-d1">Pay a small ticket as the service starts. The seller draws it down, exactly, as it delivers, and signs a receipt for every answer. The next ticket is paid before the credit runs out.</p>
+    </div>
+  </section>
+
+  <div class="chapters">
+    <section class="chapter" data-scene="pay" aria-labelledby="ch-pay">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">01</span> Tickets</p>
+          <h2 id="ch-pay">A buyer pays a shop, a ticket at a time.</h2>
+          <p>A ticket is an ordinary Lightning payment of about 900 sat. The seller counts what it delivers to the millisatoshi and signs a receipt for every answer. A held ticket that is never used comes back, and credit left over is spent first the next time.</p>
+          <ul class="facts">
+            <li>Paid from your own node, within spending rules you sign.</li>
+            <li>No request waits for a payment: the next ticket is ready in the background.</li>
+            <li>Lightning's own routing, channels and nodes carry the money. Stream adds no new kind of channel.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/how-it-works/#tickets">How tickets work <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-scene="media" data-accent="app" aria-labelledby="ch-media">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">02</span> Web apps and files</p>
+          <h2 id="ch-media">Your web apps and files, sold by the megabyte.</h2>
+          <p>Sell a whole web app, for example Jellyfin with its full interface and films up to 4K, opened inside the buyer's app with an account made for each buyer. Or share a folder: buyers download a file or open it in their own player, and pay per GB as it arrives.</p>
+          <ul class="facts">
+            <li>Video priced per MiB, pages per request, files per GB.</li>
+            <li>A file is never paid past the size its listing shows.</li>
+            <li>A 4K film started within about 1.5&nbsp;s of the same film with no Stream in the path.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/guide/#sell">Sell your own <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn btn-sm" href="/guide/#buy">Buying</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-scene="ai" data-accent="ai" aria-labelledby="ch-ai">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">03</span> AI</p>
+          <h2 id="ch-ai">AI models, paid by the token.</h2>
+          <p>Your box gets an OpenAI-compatible address on your own network. Any AI app or agent that speaks that API uses the models of the sellers you allowed, paid per token as the answer arrives, each program with its own key and limit.</p>
+          <ul class="facts">
+            <li>It picks the cheapest seller that answers, and moves on if one fails before answering.</li>
+            <li>A reply is never paid past its quoted price.</li>
+            <li>Agents pay through the same wallet over MCP, and never hold a key.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/guide/#ai">Set up AI <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-scene="hash" data-accent="hash" aria-labelledby="ch-hash">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">04</span> Hashrate</p>
+          <h2 id="ch-hash">Hashrate, rented with masked jobs.</h2>
+          <p>A hashmaker lists its miners; a hashtaker rents them into its own gateway, the Stream Gateway that comes with the app. Every job is masked with a key the gateway holds, so a rented miner can't tell which share is a block and can't withhold one.</p>
+          <ul class="facts">
+            <li>Both sides check every share's proof of work.</li>
+            <li>Paid as the work arrives, seconds at a time: never more paid for and not yet received than a minute of the miner's hashing (or one share, one slice and one ticket, if that is more), plus any start fee shown on the offer.</li>
+            <li>Mine solo to your own address, or pool mining on Lazarus Pool.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/guide/#hashrate">Rent, or rent out <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-scene="vpn" data-accent="vpn" aria-labelledby="ch-vpn">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">05</span> VPN exits</p>
+          <h2 id="ch-vpn">A VPN exit, paid by the gigabyte.</h2>
+          <p>Send a phone's, a laptop's or a whole home's traffic out through another Stream user's internet connection, in the country you choose, with no account. An exit's country is checked, not believed.</p>
+          <ul class="facts">
+            <li>If no exit fits a device's rules, its traffic stops. It never falls back to your own connection.</li>
+            <li>Private exits are the default: your app resolves names over encrypted DNS, so the exit never sees a DNS question.</li>
+            <li>A tunnel pays about one and a half tickets ahead at most.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/guide/#vpn">Use or sell an exit <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" data-scene="relay" data-accent="relay" aria-labelledby="ch-relay">
+      <div class="wrap">
+        <div class="card reveal">
+          <p class="kicker"><span class="num">06</span> Links and relays</p>
+          <h2 id="ch-relay">No domain. No port forward.</h2>
+          <p>A shop is named by its key. Buyers reach it over an encrypted link, straight through both home routers where they can. Where they can't, a relay carries the traffic without being able to read it. In private mode a shop uses relays only, so buyers never learn its address.</p>
+          <ul class="facts">
+            <li>Shops publish signed listings on Nostr, so buyers find them without a directory.</li>
+            <li>A relay is built into the app, off by default, and free.</li>
+            <li>Paid relays, where a shop pays the relays it uses by the GB: <span class="tag tag-coming">Coming</span></li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-sm" href="/shops/">Browse live shops <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn btn-sm" href="/guide/#relay">Run a relay</a></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="protect-title">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <p class="eyebrow">Protections</p>
+        <h2 id="protect-title" class="h-lg">What a shop can, and can't, take.</h2>
+        <p class="lede">A buyer can lose only a small, stated amount to a seller that cheats, and that seller is then blocked. The exact bound is written down in the design notes.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/><path d="m15 15 5 5m0-5-5 5"/></svg></div><h3>Never more than the listing</h3><p>The price in a shop's signed listing is the most your wallet pays it, for web apps, files, AI, hashrate and VPN exits. A shop that asks more is refused before anything is paid.</p></div>
+        <div class="tile reveal reveal-d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="m6.5 6.5 11 11"/></svg></div><h3>A cheat is caught and blocked</h3><p>A dishonest shop can keep at most a ticket or two for each answer it is sending, plus a small allowance per request. One that charges past that is blocked until you lift the block with your approval key.</p></div>
+        <div class="tile reveal reveal-d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M10 13l2 2 4-4"/></svg></div><h3>Rules you sign</h3><p>Budgets, caps per shop, allowed sellers only, and an approval above a threshold. The safe starter rules allow 2,000 sat a payment, 10,000 a day and 30,000 a week, and ask you above 1,000.</p></div>
+        <div class="tile reveal"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/></svg></div><h3>No custody</h3><p>Lightning Stream never holds anyone's money. Each person pays from, and is paid to, their own node. The links and the relays never carry money.</p></div>
+        <div class="tile reveal reveal-d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></svg></div><h3>Real money only when asked</h3><p>On mainnet the wallet pays nothing until you confirm, in so many words, that it may pay with real money.</p></div>
+        <div class="tile reveal reveal-d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd60a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg></div><h3>Its own books</h3><p>It counts what your own node paid, routing fees included, never a number a seller sends. A cap is a hard cap. Each shop also has a daily cap.</p></div>
+      </div>
+      <div class="btn-row reveal"><a class="btn" href="/whitepaper/">Read the whitepaper <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn" href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/TICKETS.md">The exact bound (TICKETS.md)</a></div>
+    </div>
+  </section>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="proof-title">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <p class="eyebrow eyebrow-arc">On XBT mainnet</p>
+        <h2 id="proof-title" class="h-lg">Counted to the millisatoshi.</h2>
+        <p class="lede">A round with real sats on 30 and 31 October 2026, between our own nodes, before the 0.2.0 release.</p>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat"><div class="big">3,600<small>sat</small></div><p>paid by a buyer of ours to the demo shop, Lightning Stream Genesis, in four tickets: files, its web app over a direct link and over a relay, and AI answers. Both nodes and the wallet's books agreed to the millisatoshi.</p></div>
+        <div class="stat"><div class="big">202<small>shares</small></div><p>accepted, none rejected, in a 15-minute hashrate rental that paid 1,000 sat for 25 slices.</p></div>
+        <div class="stat"><div class="big">315<small>MB</small></div><p>through a paid VPN exit. The round found two faults in paying, an exit that charged too little and a test slice that ran unpaid; both are fixed in 0.2.0.</p></div>
+      </div>
+      <p class="muted small reveal">Nobody outside the project has used it yet. <a href="/whitepaper/tests/">Tests and numbers</a> has every figure.</p>
+    </div>
+  </section>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="live-title">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <p class="eyebrow">Live</p>
+        <h2 id="live-title" class="h-lg">The network, as it is now.</h2>
+        <p class="lede">Shops publish signed listings on Nostr relays. This site reads them, and a snapshot of the public XBT Lightning channel graph, and shows both.</p>
+      </div>
+      <div class="live-row">
+        <a class="live-card reveal" href="/shops/">
+          <canvas class="web-canvas" data-web="card" data-scene="media" aria-hidden="true"></canvas>
+          <span class="tag tag-live">Live</span>
+          <h3>Shops and services</h3>
+          <p>Web apps, files, AI models, hashrate and VPN exits, as their sellers list them.</p>
+          <div class="figs"><span><span class="fig-n" data-live="shops">&ndash;</span><span class="fig-l">shops</span></span><span><span class="fig-n" data-live="services">&ndash;</span><span class="fig-l">services</span></span><span><span class="fig-n" data-live="exits">&ndash;</span><span class="fig-l">VPN exits</span></span></div>
+        </a>
+        <a class="live-card reveal reveal-d1" href="/map/">
+          <canvas class="web-canvas" data-web="card" data-scene="pay" aria-hidden="true"></canvas>
+          <span class="tag tag-live">Live</span>
+          <h3>Network map</h3>
+          <p>XBT Lightning's public channel graph, with Stream's shops, relays and exits on top.</p>
+          <div class="figs"><span><span class="fig-n" data-live="nodes">&ndash;</span><span class="fig-l">nodes</span></span><span><span class="fig-n" data-live="channels">&ndash;</span><span class="fig-l">channels</span></span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="install-title">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <p class="eyebrow">Install</p>
+        <h2 id="install-title" class="h-lg">Runs on the node you already have.</h2>
+        <p class="lede">You need a synced Knots-BLAKE2b node, Lightning Fork beside it, and a small channel on XBT Lightning. One app buys, sells and rents hashrate.</p>
+      </div>
+      <div class="grid grid-3 platforms">
+        <a class="tile reveal" href="/download/#umbrel"><span class="plat-mark">UMBREL</span><h3>Community app store</h3><p>Add the Lightning Stream store and install. The app makes its own narrow keys on your node: nothing to paste.</p><span class="go">Install on Umbrel &rarr;</span></a>
+        <a class="tile reveal reveal-d1" href="/download/#startos"><span class="plat-mark">STARTOS</span><h3>Its own registry</h3><p>Add the registry, install, then approve Lightning Fork's <em>Grant app access</em> task. The key can pay and read, nothing more.</p><span class="go">Install on StartOS &rarr;</span></a>
+        <a class="tile reveal reveal-d2" href="/download/#linux"><span class="plat-mark">LINUX</span><h3>Docker Compose</h3><p>Beside your own Knots and Lightning Fork, from the same images, pinned by digest. For x86_64, arm64 and armv7.</p><span class="go">Install on Linux &rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="next-title">
+    <div class="wrap">
+      <div class="band-head reveal">
+        <p class="eyebrow eyebrow-arc">Coming next</p>
+        <h2 id="next-title" class="h-lg">Not built yet, in this order.</h2>
+        <p class="lede">None of these is released. Each ships when it is built and checked.</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="tile tile-coming reveal"><span class="tag tag-coming">Coming</span><h3>Paid relays</h3><p>A shop pays the relays that carry its traffic, by the GB. Relays stay free until then.</p></div>
+        <div class="tile tile-coming reveal reveal-d1"><span class="tag tag-coming">Coming</span><h3>Nostr Wallet Connect</h3><p>Buying from a wallet you control, instead of a Lightning node of your own.</p></div>
+        <div class="tile tile-coming reveal reveal-d2"><span class="tag tag-coming">Coming</span><h3>AI sellers on Nostr</h3><p>Data vending machines (NIP-90), as another source for your box's AI address.</p></div>
+        <div class="tile tile-coming reveal reveal-d3"><span class="tag tag-coming">Coming</span><h3>Blossom media</h3><p>Media on a Blossom server, sold per MiB through a Stream gateway in front of it.</p></div>
+      </div>
+      <p class="muted small reveal"><a href="/whitepaper/progress/#next">Progress and status</a> has the later ideas too.</p>
+    </div>
+  </section>
+
+  <section class="band band-solid" data-scene="dim" aria-labelledby="try-title">
+    <div class="wrap wrap-narrow">
+      <div class="reveal">
+        <h2 id="try-title" class="h-xl">Try it on your own node.</h2>
+        <p class="lede">Install the app, sign the safe starter rules, confirm that it may pay with real money, and allow a seller. Our demo shop, <strong>Lightning Stream Genesis</strong>, sells films, files and a small AI model. Paste its key under Services &rarr; Sellers:</p>
+        <div class="copy"><code>npub1kqdrfmfg6mg52sy3ehu4vv7m3fjpa0830rhjdmvqrf09u3t3724q8cwr6a</code><button type="button" hidden>Copy</button></div>
+        <div class="btn-row"><a class="btn btn-volt" href="/download/">Download 0.2.0 <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn" href="/guide/">Read the guide</a></div>
+      </div>
+      <div class="notice reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4m0 3v.5"/></svg>
+        <div><p><strong>Small amounts only.</strong> Lightning Stream is early software. It has had design and code reviews, not an independent audit, and software can have faults. Put in only what you can afford to lose.</p><p><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">LIMITS.md</a> lists every stated limit, and what nobody has reviewed.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- chrome:footer -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
+        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
+      <nav aria-label="Live"><h2>Live</h2><ul>
+        <li><a href="/shops/">Shops and services</a></li><li><a href="/map/">Network map</a></li></ul></nav>
+      <nav aria-label="Papers"><h2>Papers</h2><ul>
+        <li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/whitepaper/design/">Design details</a></li><li><a href="/whitepaper/tests/">Tests and numbers</a></li><li><a href="/whitepaper/progress/">Progress and status</a></li><li><a href="/whitepaper/uses/">Uses</a></li></ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about/">About</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream">Source on GitHub</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/issues">Report an issue</a></li><li><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/LIMITS.md">Known limits</a></li></ul></nav>
+    </div>
+    <div class="foot-base">
+      <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
+      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+    </div>
+  </div>
+</footer>
+<!-- /chrome:footer -->
+</body>
+</html>

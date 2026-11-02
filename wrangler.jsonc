@@ -1,0 +1,18 @@
+{
+  // lightning-stream-site: Cloudflare Pages project. Static pages in site/; the /api/ Worker in worker/,
+  // bundled from site/_worker.js (advanced mode) and invoked for /api/* only (site/_routes.json).
+  // Deployed to the preview branch only so far; no custom domain, DNS record or route is attached.
+  "name": "lightning-stream-site",
+  "pages_build_output_dir": "./site",
+  "compatibility_date": "2026-09-20",
+  "compatibility_flags": ["nodejs_compat"],
+  // production (branch main): not deployed yet
+  "kv_namespaces": [{ "binding": "DATA", "id": "9c356951bb3e46509c105291b2907a20" }],
+  "vars": { "NOSTR_RELAYS": "wss://relay.lazarus-xbt.xyz,wss://relay.kilombino.com,wss://relay.damus.io,wss://nos.lol", "HIDE_PUBKEYS": "" },
+  "env": {
+    "preview": {
+      "kv_namespaces": [{ "binding": "DATA", "id": "fb1d5d6135ac4eb19ff2db84a7372071" }],
+      "vars": { "NOSTR_RELAYS": "wss://relay.lazarus-xbt.xyz,wss://relay.kilombino.com,wss://relay.damus.io,wss://nos.lol", "HIDE_PUBKEYS": "" }
+    }
+  }
+}
