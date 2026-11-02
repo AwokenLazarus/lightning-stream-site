@@ -370,6 +370,13 @@
   var webs = [];
   function init() {
     document.documentElement.classList.add("js");
+    // The web is decoration: start it once the page has painted and the browser is idle, so it never delays the
+    // first paint or a click; a prerendered page starts it only when it is actually shown.
+    if (document.prerendering) { document.addEventListener("prerenderingchange", function () { idle(start); }, { once: true }); return; }
+    idle(start);
+  }
+  function idle(f) { if (window.requestIdleCallback) requestIdleCallback(f, { timeout: 500 }); else setTimeout(f, 50); }
+  function start() {
     var list = document.querySelectorAll("canvas[data-web]");
     for (var i = 0; i < list.length; i++) webs.push(new Web(list[i]));
     var home = webs.filter(function (w) { return w.mode === "home"; })[0];

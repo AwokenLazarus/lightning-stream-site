@@ -118,6 +118,33 @@ async function postGraph(req, env) {
   return json({ ok: true, ...summary(g) }, 200, "no-store");
 }
 
+/* ---------- pages: served from the edge cache ----------
+   Every path comes through this Worker (for the www redirect above), and a Worker's responses are not cached by
+   Cloudflare on their own, so pages are kept in the edge cache here (Cache API). The key carries the deployment,
+   so a new deploy is served at once and never mixed with the last one's pages. Browsers keep a page a minute and
+   may show it while they check it again. Only GET/HEAD 200s are kept; anything else passes straight through. */
+export const PAGE_CACHE = "public, max-age=60, s-maxage=300, stale-while-revalidate=86400";
+async function page(req, env, ctx) {
+  if (!env.ASSETS) return new Response("Not found", { status: 404 });
+  if (req.method !== "GET" && req.method !== "HEAD") return env.ASSETS.fetch(req);
+  const deploy = env.CF_PAGES_URL || env.CF_PAGES_COMMIT_SHA || "";
+  const url = new URL(req.url);
+  const key = new Request(`${url.origin}${url.pathname}?__deploy=${encodeURIComponent(deploy)}`, { method: "GET" });
+  const cache = typeof caches !== "undefined" ? caches.default : null;
+  if (cache) {
+    const hit = await cache.match(key).catch(() => null);
+    if (hit) { const h = new Response(hit.body, hit); h.headers.set("x-page-cache", "hit"); return req.method === "HEAD" ? new Response(null, h) : h; }
+  }
+  const res = await env.ASSETS.fetch(req);
+  const type = res.headers.get("content-type") || "";
+  if (res.status !== 200 || !type.startsWith("text/html")) return res;
+  const out = new Response(res.body, res);
+  out.headers.set("cache-control", PAGE_CACHE);
+  out.headers.set("x-page-cache", "miss");
+  if (cache && req.method === "GET") ctx.waitUntil(cache.put(key, out.clone()).catch(() => {}));
+  return out;
+}
+
 /* ---------- router ---------- */
 export default {
   async fetch(req, env, ctx) {
@@ -125,7 +152,7 @@ export default {
     const p = url.pathname.replace(/\/+$/, "");
     // www.lightning-stream.com (and any www. host) goes to the bare domain, path and query kept
     if (url.hostname.startsWith("www.")) { url.hostname = url.hostname.slice(4); return Response.redirect(url.toString(), 301); }
-    if (!p.startsWith("/api")) return env.ASSETS ? env.ASSETS.fetch(req) : new Response("Not found", { status: 404 });
+    if (!p.startsWith("/api")) return page(req, env, ctx);
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, POST", "access-control-allow-headers": "authorization, content-type" } });
     try {
       if (p === "/api/graph" && req.method === "POST") return await postGraph(req, env);

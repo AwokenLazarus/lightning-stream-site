@@ -66,6 +66,20 @@ is set separately for production and for previews; the operator keeps both value
 
 `HIDE_PUBKEYS` (comma-separated hex Nostr keys) hides those authors' events; empty by default.
 
+## Speed
+
+- **Pages from the edge cache.** Every path passes through the Worker (it 301s www to the bare domain), and a
+  Worker's responses aren't cached on their own, so the Worker keeps pages in Cloudflare's edge cache itself
+  (Cache API, keyed by deployment: a new deploy is served at once). Pages carry
+  `Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=86400`; `x-page-cache: hit|miss`
+  says which. Assets are versioned by content and cached long.
+- **Speculation Rules** (stamped by `scripts/chrome.mjs`, allowed in the CSP by hash): pages are prepared when a
+  person hovers or presses on a link (main navigation and buttons: prerender; other links: prefetch). Browsers
+  without them prefetch on pointer-down, touch or a short hover (`assets/site.js`).
+- **The background web starts when the browser is idle**, and a prerendered page starts it only when shown.
+- `node scripts/perf.mjs <url> [rounds]` (optionally `LATENCY=150`, `HOVER=0`) clicks through the main navigation
+  and reports TTFB, first paint and click-to-paint per page.
+
 ## The graph publisher
 
 A Worker can't reach a node on a home network, so a box with an XBT Lightning node pushes the public

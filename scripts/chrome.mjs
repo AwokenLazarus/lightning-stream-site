@@ -4,6 +4,7 @@
 // and marks the current section in the navigation. Run after editing the header or footer here:
 //   node scripts/chrome.mjs
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -22,10 +23,22 @@ const NAV = [
 
 export const mark = (id = "ls-g") => `<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#${id})"/></svg>`;
 
+// Speculation Rules: the browser fetches (prefetch) or fully prepares (prerender) a page when a person shows
+// intent (hovering a link for a moment, or pressing on it), so the click shows it at once. The main navigation and
+// the buttons are prerendered; any other link on the site is prefetched. /api/ is never touched.
+// The script is inline, so its hash goes into the CSP in site/_headers (written below).
+const RULES = JSON.stringify({
+  prerender: [{ where: { and: [{ href_matches: "/*" }, { not: { href_matches: "/api/*" } }, { selector_matches: ".nav a, .menu-panel a, a.brand, a.btn" }] }, eagerness: "moderate" }],
+  prefetch: [{ where: { and: [{ href_matches: "/*" }, { not: { href_matches: "/api/*" } }] }, eagerness: "moderate" }],
+});
+export const SPECULATION = `<script type="speculationrules">${RULES}</script>`;
+export const SPECULATION_HASH = "sha256-" + createHash("sha256").update(RULES).digest("base64");
+
 function header(path) {
   const cur = (href) => (href === "/" ? path === "/" : path.startsWith(href)) ? ' aria-current="page"' : "";
   const items = NAV.map(([h, t]) => `<li><a href="${h}"${cur(h)}>${t}</a></li>`).join("");
   return `<!-- chrome:header -->
+${SPECULATION}
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
   <div class="wrap">
@@ -89,4 +102,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     if (after !== before) { writeFileSync(file, after); n++; }
   }
   console.log(`chrome: stamped ${n} page(s)`);
+  // the CSP allows exactly this inline script, by its hash
+  const hp = join(root, "_headers"), h = readFileSync(hp, "utf8");
+  const h2 = h.replace(/script-src 'self'( 'sha256-[A-Za-z0-9+/=]+')?/, `script-src 'self' '${SPECULATION_HASH}'`);
+  if (h2 !== h) { writeFileSync(hp, h2); console.log("chrome: CSP allows the speculation rules by hash"); }
 }

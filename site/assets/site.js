@@ -6,6 +6,22 @@
 
   function ready(f) { if (d.readyState === "loading") d.addEventListener("DOMContentLoaded", f); else f(); }
 
+  // Browsers without Speculation Rules: fetch a page as soon as a person presses on (or hovers over) its link,
+  // so it is ready, or nearly, when the click lands.
+  var spec = window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules");
+  if (!spec) {
+    var asked = {}, hoverT = null;
+    var want = function (e) {
+      var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a || a.origin !== location.origin || a.pathname.indexOf("/api/") === 0 || a.pathname === location.pathname || asked[a.pathname]) return;
+      asked[a.pathname] = 1;
+      var l = d.createElement("link"); l.rel = "prefetch"; l.href = a.pathname; d.head.appendChild(l);
+    };
+    d.addEventListener("pointerdown", want, { passive: true });
+    d.addEventListener("touchstart", want, { passive: true });
+    d.addEventListener("mouseover", function (e) { clearTimeout(hoverT); hoverT = setTimeout(function () { want(e); }, 80); }, { passive: true });
+  }
+
   ready(function () {
     // reveal blocks as they come into view
     var rv = d.querySelectorAll(".reveal");
