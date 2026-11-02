@@ -84,7 +84,7 @@ def migrate(name, new, eyebrow, short):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{html.escape(short if short != "Whitepaper" else title)}: Lightning Stream</title>
+<title>{html.escape(short)}: Lightning Stream, peer-to-peer services on Bitcoin Lightning</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="https://lightning-stream.com/{new}/">
 <meta name="theme-color" content="#050507">

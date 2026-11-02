@@ -58,7 +58,7 @@ function footer() {
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="/">${mark("ls-g2")}<span>Lightning Stream</span></a>
-        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+        <p>Peer-to-peer streaming and payments for services, on Lightning, on top of Bitcoin. Paid as you use them. No accounts, no custody.</p>
       </div>
       <nav aria-label="Product"><h2>Product</h2><ul>
         <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
@@ -71,7 +71,7 @@ function footer() {
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
-      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; ${y} Lightning Stream contributors.</p>
+      <p>XBT is Bitcoin: its ticker on the BLAKE2b proof-of-work chain. Code under MIT or Apache-2.0. &copy; ${y} Lightning Stream contributors.</p>
     </div>
   </div>
 </footer>

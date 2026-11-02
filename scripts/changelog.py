@@ -160,7 +160,7 @@ TEMPLATE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Changelog: Lightning Stream</title>
+<title>Changelog: Lightning Stream, peer-to-peer services on Bitcoin Lightning</title>
 <meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: {latest}, {latest_date}.">
 <link rel="canonical" href="https://lightning-stream.com/changelog/">
 <meta name="theme-color" content="#050507">

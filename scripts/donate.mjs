@@ -25,14 +25,14 @@ function bech32ok(a) {
 if (!bech32ok(ADDRESS)) { console.error("donate: the address's checksum fails; not building"); process.exit(1); }
 
 const svg = (await QRCode.toString(ADDRESS, { type: "svg", errorCorrectionLevel: "M", margin: 2, color: { dark: "#000000", light: "#ffffff" } }))
-  .replace("<svg ", `<svg role="img" aria-label="QR code of the XBT donation address" class="qr" `);
+  .replace("<svg ", `<svg role="img" aria-label="QR code of the Bitcoin (XBT) donation address" class="qr" `);
 const block = `<!-- donate -->
         <div class="donate">
           <figure class="donate-qr">${svg}</figure>
           <div class="donate-addr">
-            <p class="muted small">XBT address</p>
+            <p class="muted small">Bitcoin (XBT) address</p>
             <div class="copy"><code>${ADDRESS}</code><button type="button" hidden>Copy</button></div>
-            <p class="muted small">The QR code holds the plain address. Send XBT, Bitcoin on BLAKE2b.</p>
+            <p class="muted small">The QR code holds the plain address. Send Bitcoin (XBT) from a wallet on the BLAKE2b chain, not the SHA-256 chain.</p>
           </div>
         </div>
         <!-- /donate -->`;

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Guide: buy and sell with Lightning Stream</title>
-<meta name="description" content="How to start with Lightning Stream 0.2.6: first steps, buying web apps, files, AI, hashrate and VPN exits, selling your own, the AI address for your programs, and running a relay.">
+<title>Guide: buy and sell with Lightning Stream on Bitcoin Lightning</title>
+<meta name="description" content="How to start with Lightning Stream 0.2.6, peer to peer over Bitcoin (XBT) Lightning: first steps, buying web apps, files, AI, hashrate and VPN exits, selling your own, the AI address for your programs, and running a relay.">
 <link rel="canonical" href="https://lightning-stream.com/guide/">
 <meta name="theme-color" content="#050507">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -32,7 +32,7 @@
     <div class="wrap">
       <p class="eyebrow">Guide</p>
       <h1>Buy, sell, <em>and run a relay.</em></h1>
-      <p class="lede">Everything is paid as you use it, in small tickets from your own node, within the rules you signed. This guide covers the first steps, each kind of service, selling your own, and the extras.</p>
+      <p class="lede">Everything is paid as you use it, in small Bitcoin (XBT) Lightning tickets from your own node, within the rules you signed. This guide covers the first steps, each kind of service, selling your own, and the extras.</p>
       <div class="meta"><span class="tag tag-volt">For 0.2.6</span><span>Haven't installed yet? <a href="/download/">Download</a> first.</span></div>
     </div>
   </header>
@@ -110,7 +110,7 @@
         <p>The two sides are named after the direction of the hash: the <strong>hashmaker</strong> brings the miners and publishes a signed listing; the <strong>hashtaker</strong> takes a listing and points the work at its own gateway. (Names from Kilombino.)</p>
         <h3>Renting miners (hashtaker)</h3>
         <ol class="steps">
-          <li><strong>Buy &rarr; Hashrate.</strong> Under <em>Your gateway</em>, choose solo and your XBT payout address (the default), or Lazarus Pool. Check that it says <em>Ready to rent</em>: the Stream Gateway answers and its jobs are masked. The Stream Gateway comes with Lightning Stream: you don't need a separate DATUM app, and Umbrel's own DATUM Gateway app (made for Bitcoin) won't work here. If an offer's <em>Rent</em> is off, the box under it says why; your own box's offer can't be rented from that box.</li>
+          <li><strong>Buy &rarr; Hashrate.</strong> Under <em>Your gateway</em>, choose solo and your Bitcoin (XBT) payout address (the default), or Lazarus Pool. Check that it says <em>Ready to rent</em>: the Stream Gateway answers and its jobs are masked. The Stream Gateway comes with Lightning Stream: you don't need a separate DATUM app, and Umbrel's own DATUM Gateway app (made for the SHA-256 chain) won't work here. If an offer's <em>Rent</em> is off, the box under it says why; your own box's offer can't be rented from that box.</li>
           <li><strong>Miners for rent</strong> lists the offers hashmakers publish on Nostr. For a hashmaker you haven't paid before, press <em>Allow this hashmaker to be paid</em> and sign.</li>
           <li>Choose the machines, how long, and the most the rental may cost, then press <strong>Rent</strong>. You can buy a short paid test slice first.</li>
         </ol>
@@ -151,7 +151,7 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g2)"/></svg><span>Lightning Stream</span></a>
-        <p>Buy and sell services over XBT Lightning, paid as you use them. No accounts, no custody.</p>
+        <p>Peer-to-peer streaming and payments for services, on Lightning, on top of Bitcoin. Paid as you use them. No accounts, no custody.</p>
       </div>
       <nav aria-label="Product"><h2>Product</h2><ul>
         <li><a href="/download/">Download</a></li><li><a href="/guide/">Guide</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/changelog/">Changelog</a></li></ul></nav>
@@ -164,7 +164,7 @@
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
-      <p>XBT is Bitcoin on BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+      <p>XBT is Bitcoin: its ticker on the BLAKE2b proof-of-work chain. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
     </div>
   </div>
 </footer>
