@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Changelog: Lightning Stream, peer-to-peer services on Bitcoin Lightning</title>
-<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.8, 3 November 2026.">
+<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.9, 3 November 2026.">
 <link rel="canonical" href="https://lightning-stream.com/changelog/">
 <meta name="theme-color" content="#050507">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -22,7 +22,7 @@
   <div class="wrap">
     <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
     <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
-    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.8</a></nav></details>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.9</a></nav></details>
   </div>
 </header>
 <!-- /chrome:header -->
@@ -34,12 +34,13 @@
       <h1>Every version, newest first.</h1>
       <div class="lede"><p>Lightning Stream versions, newest first. One version number covers the Umbrel app, the StartOS package (from 0.1.14) and the Linux package (from 0.1.12). Dates are UTC.</p>
 <p>Lightning Stream is early software. It runs on mainnet; use small amounts.</p></div>
-      <div class="meta"><span class="tag tag-volt">Latest: 0.2.8</span><span>3 November 2026</span><span>29 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
+      <div class="meta"><span class="tag tag-volt">Latest: 0.2.9</span><span>3 November 2026</span><span>30 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
     </div>
   </header>
   <div class="page-body">
     <div class="wrap with-toc">
       <aside class="toc" aria-label="Versions"><div class="toc-inner"><h2>Versions</h2><ol>
+<li><a href="#v0-2-9">0.2.9 <span class="muted">&middot; 3 November 2026</span></a></li>
 <li><a href="#v0-2-8">0.2.8 <span class="muted">&middot; 3 November 2026</span></a></li>
 <li><a href="#v0-2-7">0.2.7 <span class="muted">&middot; 3 November 2026</span></a></li>
 <li><a href="#v0-2-6">0.2.6 <span class="muted">&middot; 2 November 2026</span></a></li>
@@ -71,8 +72,14 @@
 <li><a href="#v0-1-0">0.1.0 <span class="muted">&middot; 26 October 2026</span></a></li>
       </ol></div></aside>
       <div>
+<article class="release" id="v0-2-9" aria-labelledby="v0-2-9-h">
+<div class="release-head"><h2 id="v0-2-9-h">0.2.9</h2><time datetime="2026-11-03">3 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="prose"><p>Renting hashrate works with the published images. Only the hashrate image changes.</p>
+<ul><li><strong>A rental starts.</strong> The rental component was built without features it needs: the published image was built on its own, while every test built it together with the other components, and that joint build turned on features the image lacked. With the published image a rental closed as soon as it started ("could not start: link i/o: failed to fill whole buffer"), and the hashrate seller never saw it. The component now declares the feature itself, so the image is built as the tests build it, and the Linux package's test passes with it.</li><li><strong>The release checks each image's build.</strong> Before images are published, a check now compares the features each image's own build gets with those the tests get, and stops on a difference nobody has looked at. The Linux package's test also builds each component the way the published image is built.</li></ul></div>
+</article>
+
 <article class="release" id="v0-2-8" aria-labelledby="v0-2-8-h">
-<div class="release-head"><h2 id="v0-2-8-h">0.2.8</h2><time datetime="2026-11-03">3 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="release-head"><h2 id="v0-2-8-h">0.2.8</h2><time datetime="2026-11-03">3 November 2026</time></div>
 <div class="prose"><p>Four small fixes to the wallet UI, from a hands-on run of 0.2.7. Only the wallet UI changes.</p>
 <ul><li><strong>The Stop says the credit is shared.</strong> A visit's Stop said "This visit used 680 sat of your credit with the shop", while the visit bar says that credit is shared with your other uses of the shop. Now the Stop says so too: "This visit used 680 sat of your credit with the shop (shared with your other uses of it)". Where it also says the credit left, it says it once.</li><li><strong>A limit refusal says the payment would pass the limit.</strong> A payment refused by one of your spending rules' limits said the limit "is reached", though spending was often still under it: about 9,703 of 10,000 sat used, and a 625 sat ticket would have made 10,328. Now the page says, for example, "Today's limit for paid services would be passed" and "This payment would pass the most your spending rules let the app pay shops in 24 hours (10,000 sat)". This covers the limits for one shop (24 hours and 7 days), for paid services, and the daily and weekly spending caps. Each still names its field on the Spending rules page and links there.</li><li><strong>A player link's <code>HEAD</code> gives the file's size.</strong> Some players ask <code>HEAD</code> first to learn a file's size, and a player link's <code>HEAD</code> sent no <code>Content-Length</code>. Now it sends the size where it is known: from the link's service, where its listing gives the size in exact bytes, or else from the shop's answer to an earlier request through the link. It still asks the shop nothing and pays nothing. Where the size is not known yet, it answers as before.</li><li><strong>"Publish without buyer accounts anyway" shows only where it applies.</strong> On the Sell page the box showed on every service's form, even with buyer accounts on or a guest login set. Now it shows only for a media server that has neither, and it shows or hides as you fill in the form.</li></ul></div>
 </article>
