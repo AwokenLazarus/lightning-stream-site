@@ -71,7 +71,7 @@ function footer() {
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
-      <p>XBT is Bitcoin: its ticker on the BLAKE2b proof-of-work chain. Code under MIT or Apache-2.0. &copy; ${y} Lightning Stream contributors.</p>
+      <p>XBT is Bitcoin&rsquo;s ticker. Bitcoin is secured by BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; ${y} Lightning Stream contributors.</p>
     </div>
   </div>
 </footer>

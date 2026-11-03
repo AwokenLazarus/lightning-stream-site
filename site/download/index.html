@@ -51,7 +51,7 @@
         </div>
         <div class="grid grid-3">
           <div class="tile reveal"><span class="plat-mark">1 &middot; NODE</span><h3>A synced Bitcoin (XBT) node</h3><p>Bitcoin Knots with BLAKE2b proof of work (Knots-BLAKE2b), fully synced. A first sync from nothing takes days, and Lightning Fork waits until the node is past block 961,640, the first BLAKE2b block.</p></div>
-          <div class="tile reveal reveal-d1"><span class="plat-mark">2 &middot; LIGHTNING</span><h3>Lightning Fork beside it</h3><p>Paul Lamb's Lightning Fork, lnd for Bitcoin on the BLAKE2b chain. A seller needs an lnd-family node with room to receive; a Core Lightning node can buy and route, but cannot sell held tickets today.</p></div>
+          <div class="tile reveal reveal-d1"><span class="plat-mark">2 &middot; LIGHTNING</span><h3>Lightning Fork beside it</h3><p>Paul Lamb's Lightning Fork, lnd for Bitcoin (XBT), on BLAKE2b proof of work. A seller needs an lnd-family node with room to receive; a Core Lightning node can buy and route, but cannot sell held tickets today.</p></div>
           <div class="tile reveal reveal-d2"><span class="plat-mark">3 &middot; CHANNEL</span><h3>A small channel</h3><p>A funded channel on Bitcoin Lightning, with a route to the shop you buy from. <a href="#channel">Get a channel</a> says how.</p></div>
         </div>
       </section>
@@ -213,7 +213,7 @@ cargo build --release -p xbt-signer -p xbt-wallet-mcp -p xbt-wallet-ui</code></p
     </div>
     <div class="foot-base">
       <p>Early, unaudited software. Use small amounts you can afford to lose.</p>
-      <p>XBT is Bitcoin: its ticker on the BLAKE2b proof-of-work chain. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
+      <p>XBT is Bitcoin&rsquo;s ticker. Bitcoin is secured by BLAKE2b proof of work. Code under MIT or Apache-2.0. &copy; 2026 Lightning Stream contributors.</p>
     </div>
   </div>
 </footer>
