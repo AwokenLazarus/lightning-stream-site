@@ -46,7 +46,7 @@
       <div class="prose">
         <h2 id="what">What it is</h2>
         <p>Lightning Stream is a peer-to-peer service streaming and payment network on Lightning, on top of Bitcoin: one self-hosted app for buying and selling services, paid as they are used. It runs on Umbrel, StartOS and Linux, beside your own Knots-BLAKE2b node and Lightning Fork.</p>
-        <p>Bitcoin is secured by BLAKE2b proof of work, and its ticker is XBT. XBT is Bitcoin, so this site uses the two names interchangeably.</p>
+        <p>Bitcoin is secured by BLAKE2b proof of work, and its ticker is XBT. When large, concentrated miners refused to follow node consensus, Bitcoin moved its proof of work to BLAKE2b; the SHA-256 chain those miners kept is a fork. XBT is Bitcoin, so this site uses the two names interchangeably.</p>
         <p>The buyer pays a small ticket ahead, about 900 sat, and the seller counts what it delivers to the millisatoshi and signs a receipt for every answer. A shop is paid no more than its listing shows. It runs on ordinary XBT Lightning nodes, and never holds anyone's money: each person pays from, and is paid to, their own node. There are no accounts.</p>
         <p class="pull">Pay as you use it, in small tickets the seller draws down exactly with a signed receipt for every answer.</p>
 
@@ -87,7 +87,7 @@
         <p>Not built: the win that pays itself (not before a cryptographer has reviewed it), fair exchange on held tickets, and a seller on Core Lightning.</p>
 
         <h2 id="credits">Credits</h2>
-        <p>Lightning Stream is a small addition to other people's work. XBT runs on Bitcoin Knots, maintained by Luke Dashjr, who wrote the BLAKE2b proof of work; the signature hash that keeps a payment from being replayed on the SHA-256 chain is Kyle Santiago's. Lightning on XBT is Paul Lamb's Lightning Fork, a fork of Lightning Labs' lnd, and PrivKey's Core Lightning fork. Paul also packages Knots-BLAKE2b and Lightning Fork for Umbrel and StartOS, and built the access grant the StartOS package uses. Hashrate rental is built around OCEAN's DATUM. The Stream Gateway, which powers mining (hashrate) rental, is built on <a href="https://github.com/FlyTheElephant1/datum_gateway">FlyTheElephant's datum_gateway</a>, with Lightning Stream's job masking added. FlyTheElephant's datum_gateway builds on CONVOY's datum_gateway (MIT), its upstream.</p>
+        <p>Lightning Stream is a small addition to other people's work. XBT runs on Bitcoin Knots, maintained by Luke Dashjr, who wrote the BLAKE2b proof of work; the signature hash that keeps a payment from being replayed on the SHA-256 fork is Kyle Santiago's. Lightning on XBT is Paul Lamb's Lightning Fork, a fork of Lightning Labs' lnd, and PrivKey's Core Lightning fork. Paul also packages Knots-BLAKE2b and Lightning Fork for Umbrel and StartOS, and built the access grant the StartOS package uses. Hashrate rental is built around OCEAN's DATUM. The Stream Gateway, which powers mining (hashrate) rental, is built on <a href="https://github.com/FlyTheElephant1/datum_gateway">FlyTheElephant's datum_gateway</a>, with Lightning Stream's job masking added. FlyTheElephant's datum_gateway builds on CONVOY's datum_gateway (MIT), its upstream.</p>
         <p>Chris Guida's two reviews are why Lightning Stream is built on Lightning, and they narrowed what it claims. Kyle Santiago pointed out the slot and dust limits the ticket defaults are built around. Kilombino named the hashmaker and the hashtaker and runs a relay the app uses. The mistakes that remain are ours.</p>
         <p>Ideas and prior work, with references, are in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/docs/REFERENCES.md">REFERENCES.md</a> and the <a href="/whitepaper/#references">whitepaper</a>; code and libraries from others in <a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</p>
 
@@ -100,7 +100,7 @@
           <div class="donate-addr">
             <p class="muted small">Bitcoin (XBT) address</p>
             <div class="copy"><code>bc1qw9eappz67w9d264ljtv64q7vxvv2680q3x9sxezjey80fcnfncsqheadh9</code><button type="button" hidden>Copy</button></div>
-            <p class="muted small">The QR code holds the plain address. Send it from a Bitcoin (XBT) wallet that follows BLAKE2b proof of work, not from a SHA-256 wallet.</p>
+            <p class="muted small">The QR code holds the plain address. Send it from a Bitcoin (XBT) wallet that follows BLAKE2b proof of work, not from a wallet for the SHA-256 fork.</p>
           </div>
         </div>
         <!-- /donate -->

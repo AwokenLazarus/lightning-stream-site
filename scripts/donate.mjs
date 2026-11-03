@@ -32,7 +32,7 @@ const block = `<!-- donate -->
           <div class="donate-addr">
             <p class="muted small">Bitcoin (XBT) address</p>
             <div class="copy"><code>${ADDRESS}</code><button type="button" hidden>Copy</button></div>
-            <p class="muted small">The QR code holds the plain address. Send it from a Bitcoin (XBT) wallet that follows BLAKE2b proof of work, not from a SHA-256 wallet.</p>
+            <p class="muted small">The QR code holds the plain address. Send it from a Bitcoin (XBT) wallet that follows BLAKE2b proof of work, not from a wallet for the SHA-256 fork.</p>
           </div>
         </div>
         <!-- /donate -->`;
