@@ -307,15 +307,21 @@
       ctx.globalAlpha = 1;
     });
 
-    // labels, most important first; any that would overlap a placed label or a node's icons is left out
+    // labels, most important first. A shop's name is always shown: it takes the first free spot near its shop, else a
+    // spot further out with a thin leader line back to it, else is drawn anyway. Any other label that would overlap a
+    // placed label or a shop's icons is left out.
     ctx.font = "500 12px Inter, system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
     var placed = [], want = [];
+    // the panel over the map's top left (wide screens) hides whatever is under it
+    if (panel && cv) {
+      var pr = panel.getBoundingClientRect(), cr = cv.getBoundingClientRect();
+      if (pr.width && pr.bottom > cr.top && pr.top < cr.bottom && pr.right > cr.left && pr.left < cr.right) placed.push({ x: pr.left - cr.left - 4, y: pr.top - cr.top - 4, w: pr.width + 8, h: pr.height + 8 });
+    }
     nodes.forEach(function (n) {
       if (n.shop) { placed.push({ x: sx(n.x) - 28, y: sy(n.y) - 30, w: 56, h: 41, owner: n }); }
     });
     nodes.filter(function (n) { return n.shop; }).forEach(function (n) {
       var y = sy(n.y) + 13;
-      want.push({ text: shopName(n), x: sx(n.x), y: y, col: C.shop, pri: 5, a: dimOf(n), bold: true, owner: n, side: 19 });
       if (n.priv) want.push({ text: "private node: not in the public graph", x: sx(n.x), y: y + 17, col: C.priv, pri: 4.9, a: dimOf(n), up: 64 });
     });
     relays.forEach(function (r) { want.push({ text: r.host, x: sx(r.x), y: sy(r.y) + 14, col: C.relay, pri: 4, a: 1, up: 28, side: 8 }); });
@@ -330,7 +336,7 @@
     var stripDone = false;
     want.forEach(function (w) {
       // once the strip's own labels are placed, nothing else may be labeled inside it
-      if (!w.strip && !stripDone) { stripDone = true; if (strip) placed.push({ x: 0, y: H - strip - 6, w: W, h: strip + 6 }); }
+      if (!w.strip && !stripDone) { stripDone = true; if (strip) placed.push({ x: 0, y: H - strip - 6, w: W, h: strip + 6 }); shopLabels(placed, dimOf); }
       ctx.font = (w.bold ? "650 " : "500 ") + "12px Inter, system-ui, sans-serif";
       // below first, then above, right and left of the thing it names; left out only when none is free
       var tw = ctx.measureText(w.text).width, down = w.y, tries = w.alt === false ? [[0, 0]] : [[0, 0], [tw / 2 + 16, -(w.side || 20)], [-tw / 2 - 16, -(w.side || 20)], [0, -(w.up || 30) - 17]];
@@ -343,6 +349,34 @@
         ctx.fillStyle = w.col; ctx.fillText(w.text, x, y); ctx.globalAlpha = 1;
         return;
       }
+    });
+    if (!stripDone) { if (strip) placed.push({ x: 0, y: H - strip - 6, w: W, h: strip + 6 }); shopLabels(placed, dimOf); }
+  }
+  // shops' names: never hidden, never on top of one another
+  function shopLabels(placed, dimOf) {
+    ctx.font = "650 12px Inter, system-ui, sans-serif";
+    var shops = nodes.filter(function (n) { return n.shop; }).map(function (n) { return { n: n, x: sx(n.x), y: sy(n.y) }; })
+      .filter(function (s) { return s.x > -20 && s.y > -20 && s.x < W + 20 && s.y < H + 20; })
+      .sort(function (a, b) { return a.y - b.y || a.x - b.x; });
+    shops.forEach(function (s) {
+      var text = shopName(s.n), tw = ctx.measureText(text).width, half = tw / 2 + 4, side = half + 32, near = [[0, 13], [side, -8], [-side, -8], [0, -51]], far = [];
+      for (var k = 1; k <= 7; k++) far.push([0, 13 + 18 * k], [0, -51 - 18 * k], [side, -8 + 18 * k], [-side, -8 + 18 * k], [side, -8 - 18 * k], [-side, -8 - 18 * k]);
+      var tries = near.concat(far), pick = null;
+      for (var i = 0; i < tries.length && !pick; i++) {
+        var x = Math.max(half + 2, Math.min(W - half - 2, s.x + tries[i][0])), y = s.y + tries[i][1], box = labelBox(x, y, text);
+        if (box.y < 2 || box.y + box.h > H - 2) continue;
+        if (placed.some(function (p) { return hits(p, box); })) continue;
+        pick = { x: x, y: y, box: box, lead: i >= near.length };
+      }
+      if (!pick) { var fy = Math.min(H - 19, s.y + 13), fx = Math.max(half + 2, Math.min(W - half - 2, s.x)); pick = { x: fx, y: fy, box: labelBox(fx, fy, text), lead: false }; }
+      placed.push(pick.box);
+      ctx.globalAlpha = dimOf(s.n);
+      if (pick.lead) {
+        var b = pick.box, lx = Math.max(b.x, Math.min(b.x + b.w, s.x)), ly = Math.max(b.y, Math.min(b.y + b.h, s.y)), dx = lx - s.x, dy = ly - s.y, d = Math.hypot(dx, dy) || 1;
+        ctx.beginPath(); ctx.moveTo(s.x + dx / d * 11, s.y + dy / d * 11); ctx.lineTo(lx, ly); ctx.strokeStyle = rgba(C.shop, 0.55); ctx.lineWidth = 1; ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(5,5,7,0.8)"; ctx.fillRect(pick.box.x, pick.box.y, pick.box.w, pick.box.h);
+      ctx.fillStyle = C.shop; ctx.fillText(text, pick.x, pick.y); ctx.globalAlpha = 1;
     });
   }
 
