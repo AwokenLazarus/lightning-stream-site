@@ -9,7 +9,8 @@
    - Nostr relays, where listings are found, are docked in a strip along the map's bottom edge (outside the channel
      graph: they carry signed listings, not traffic or payments), and listed beside the map;
    - a channel edge's rest length and width follow its capacity (summed when two nodes share several channels),
-     on a clamped log scale, so a few huge channels can't blow the layout up.
+     on a clamped log scale (35 to 240 long, 0.5 to 5.8 px wide, brighter when bigger), so a few huge
+     channels can't blow the layout up. The charge between nodes is weak, so these lengths shape the layout.
    The page re-reads /api/graph and /api/listings every 2 minutes while open (and when its tab is shown again),
    and updates in place: positions, zoom, pan and the selected node are kept.
    A small force layout on a 2D canvas; with prefers-reduced-motion it settles before the first frame. */
@@ -77,7 +78,9 @@
         e.sat += c.sat || 0; e.n++; a.deg++; b.deg++;
       });
       edges.forEach(function (e) {
-        var t = capT(e.sat); e.t = t; e.rest = 30 + 70 * t; e.lw = 0.6 + 1.7 * t;
+        // clearly visible at a glance: 35 to 240 long; 0.5 to 5.8 px wide and faint to bright, both convex in t so the
+        // many mid-sized channels stay thin and the big ones stand out
+        var t = capT(e.sat); e.t = t; e.rest = 35 + 205 * t; e.lw = 0.5 + 5.3 * Math.pow(t, 1.6); e.a.pd = (e.a.pd || 0) + 1; e.b.pd = (e.b.pd || 0) + 1;
         e.info = [["Channel", e.a.label + " to " + e.b.label], ["Capacity", satXbt(e.sat)]].concat(e.n > 1 ? [["Channels", e.n + " between these two nodes, capacity summed"]] : []);
       });
     }
@@ -144,7 +147,7 @@
 
   /* ---------- layout: the public graph; private shops and relays sit at its edge ---------- */
   function tick() {
-    var cell = 90, grid = {}, i, j, n, m, pub = nodes.filter(function (x) { return !x.priv; });
+    var cell = 120, grid = {}, i, j, n, m, pub = nodes.filter(function (x) { return !x.priv; });
     for (i = 0; i < pub.length; i++) { n = pub[i]; var k = Math.floor(n.x / cell) + "," + Math.floor(n.y / cell); (grid[k] || (grid[k] = [])).push(n); }
     for (i = 0; i < pub.length; i++) {
       n = pub[i]; var cx = Math.floor(n.x / cell), cy = Math.floor(n.y / cell);
@@ -153,15 +156,21 @@
         for (j = 0; j < list.length; j++) {
           m = list[j]; if (m === n) continue;
           var ex = n.x - m.x, ey = n.y - m.y, d2 = ex * ex + ey * ey + 0.01;
-          if (d2 > 40000) continue;
-          var f = (n.shop || m.shop ? 2600 : 900) / d2; n.vx += ex * f * alpha; n.vy += ey * f * alpha;
+          if (d2 > 57600) continue;
+          // a weak charge, so the channels' rest lengths shape the layout, plus a hard collision so nodes don't overlap
+          var f = (n.shop || m.shop ? 1400 : 160) / d2; n.vx += ex * f * alpha; n.vy += ey * f * alpha;
+          var gap = n.r + m.r + (n.shop || m.shop ? 30 : 10), d = Math.sqrt(d2);
+          if (d < gap) { var o = (gap - d) / d * 0.25; n.vx += ex * o; n.vy += ey * o; }
         }
       }
       n.vx -= n.x * 0.004 * alpha; n.vy -= n.y * 0.004 * alpha;
     }
+    // springs toward each channel's rest length, as d3's link force does: strength 1 / sqrt(the smaller end's
+    // degree), and the lighter end moves more, so a leaf sits at its channel's length from its hub and hubs stay steady
     edges.forEach(function (e) {
-      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, f = (d - (e.rest || 50)) / d * 0.06 * alpha;
-      e.a.vx += ex * f; e.a.vy += ey * f; e.b.vx -= ex * f; e.b.vy -= ey * f;
+      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, pa = e.a.pd || 1, pb = e.b.pd || 1;
+      var f = (d - (e.rest || 50)) / d * alpha * 0.5 / Math.sqrt(Math.min(pa, pb)), bias = pa / (pa + pb);
+      e.a.vx += ex * f * (1 - bias); e.a.vy += ey * f * (1 - bias); e.b.vx -= ex * f * bias; e.b.vy -= ey * f * bias;
     });
     pub.forEach(function (n) { n.vx *= 0.6; n.vy *= 0.6; n.x += Math.max(-20, Math.min(20, n.vx)); n.y += Math.max(-20, Math.min(20, n.vy)); });
     alpha *= 0.985;
@@ -184,7 +193,7 @@
       var mx = 0, my = 0; r.shops.forEach(function (n) { mx += n.x; my += n.y; }); mx /= r.shops.length; my /= r.shops.length;
       var vx = mx - cx, vy = my - cy, d = Math.hypot(vx, vy) || 1;
       var R = Math.max(b.x1 - b.x0, b.y1 - b.y0) / 2;
-      r.x = cx + vx / d * (R + 70); r.y = cy + vy / d * (R + 70);
+      r.x = cx + vx / d * (R + 110); r.y = cy + vy / d * (R + 110);
     });
   }
   // Nostr relays are docked in a strip along the canvas's bottom edge, in screen space, so they stay put and
@@ -207,7 +216,7 @@
   }
   function sx(x) { return (x - cam.x) * cam.z + W / 2; }
   function sy(y) { return (y - cam.y) * cam.z + H / 2; }
-  function nodeR(n) { return n.shop ? 9 : Math.max(1.8, n.r * Math.min(1.6, Math.max(0.65, cam.z))); }
+  function nodeR(n) { return n.shop ? 9 : Math.max(1.8, n.r * Math.min(1.6, Math.max(W < 600 ? 0.45 : 0.65, cam.z))); }
 
   /* ---------- drawing ---------- */
   function hexPath(x, y, r) { ctx.beginPath(); for (var i = 0; i < 6; i++) { var t = Math.PI / 6 + i * Math.PI / 3; ctx[i ? "lineTo" : "moveTo"](x + Math.cos(t) * r, y + Math.sin(t) * r); } ctx.closePath(); }
@@ -237,9 +246,9 @@
     function dimOf(n) { return focus && !near[n.id] ? 0.3 : 1; }
     ctx.lineCap = "round";
     edges.forEach(function (e) {
-      var on = focus && (e === focus || e.a === focus || e.b === focus), dim = focus && !on ? 0.35 : 1, lw = e.lw * (W < 600 ? 0.8 : 1);
+      var on = focus && (e === focus || e.a === focus || e.b === focus), dim = focus && !on ? 0.35 : 1, lw = e.lw * (W < 600 ? 0.75 : 1);
       ctx.beginPath(); ctx.moveTo(sx(e.a.x), sy(e.a.y)); ctx.lineTo(sx(e.b.x), sy(e.b.y));
-      ctx.strokeStyle = e === focus ? "rgba(255,214,10,0.95)" : on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.08 + 0.17 * e.t) * dim + ")";
+      ctx.strokeStyle = e === focus ? "rgba(255,214,10,0.95)" : on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.05 + 0.4 * Math.pow(e.t, 1.5)) * dim + ")";
       ctx.lineWidth = e === focus ? lw + 1.4 : on ? Math.max(1.4, lw + 0.4) : lw; ctx.stroke();
     });
     // relays' traffic links: thin, dotted, blue; never part of the channel graph
@@ -270,7 +279,7 @@
       } else if (n.priv) {
         ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.strokeStyle = rgba(C.priv, 0.8); ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
       } else {
-        ctx.drawImage(glow(C.node), x - r * 4, y - r * 4, r * 8, r * 8);
+        var gr = W < 600 ? 3 : 4; ctx.drawImage(glow(C.node), x - r * gr, y - r * gr, r * gr * 2, r * gr * 2);
         ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = n === focus ? C.shop : "#fff"; ctx.fill();
       }
       ctx.globalAlpha = 1;
