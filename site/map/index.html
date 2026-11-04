@@ -10,9 +10,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=3a623b64a3">
-<script src="/assets/site.js?v=3a623b64a3" defer></script>
-<script src="/assets/map.js?v=3a623b64a3" defer></script>
+<link rel="stylesheet" href="/assets/site.css?v=590d1c4c66">
+<script src="/assets/site.js?v=590d1c4c66" defer></script>
+<script src="/assets/map.js?v=590d1c4c66" defer></script>
 </head>
 <body>
 <!-- chrome:header -->
@@ -47,7 +47,7 @@
       <div class="map-legend" aria-label="Legend">
           <span><i class="lg-node"></i>Lightning node</span><span><i class="lg-shop lg-hex"></i>Stream shop</span>
           <span><i class="lg-ico lg-app"></i>web app, films</span><span><i class="lg-ico lg-files"></i>files</span><span><i class="lg-ico lg-ai"></i>AI</span>
-          <span><i class="lg-ico lg-hash"></i>hashrate</span><span><i class="lg-ico lg-vpn"></i>VPN exit</span><span><i class="lg-relay"></i>Stream relay (traffic)</span>
+          <span><i class="lg-ico lg-hash"></i>hashrate</span><span><i class="lg-ico lg-vpn"></i>VPN exit</span><span><i class="lg-relay"></i>Stream relay (traffic)</span><span><i class="lg-nostr lg-diamond"></i>Nostr relay: where listings are found</span><span><i class="lg-chan"></i>channel: longer and thicker when larger</span>
           <span><i class="lg-priv"></i>private node</span>
         </div>
       </div>
@@ -55,9 +55,9 @@
       <noscript><p class="empty section-gap">The map needs JavaScript. The data is at <a href="/api/graph">/api/graph</a> and <a href="/api/listings">/api/listings</a>.</p></noscript>
 
       <section class="section-gap grid grid-3" aria-label="What the map shows">
-        <div class="tile"><h3>Lightning</h3><p>Every public node and channel in a snapshot of the XBT Lightning graph, taken by a node of the network and published here. Node size follows its number of channels. Private channels are not in the public graph.</p></div>
+        <div class="tile"><h3>Lightning</h3><p>Every public node and channel in a snapshot of the XBT Lightning graph, taken by a node of the network and published here. Node size follows its number of channels; a link's length and thickness follow the channel's capacity (summed when two nodes share several). The map checks for new data every 2 minutes while it is open. Private channels are not in the public graph.</p></div>
         <div class="tile"><h3>Shops</h3><p>A shop sits on the Lightning node it is paid at: the node that signs for its link key, or the node its hashrate offer names. A shop on a private node is shown at the graph's edge. Its icons are what it sells: web apps and films, files, AI, hashrate, VPN exits.</p></div>
-        <div class="tile"><h3>Relays</h3><p>A Stream relay carries encrypted traffic between a buyer's app and a shop when they can't connect directly, and can't read it. It moves traffic, not payments, so it is drawn beside the shops that use it, not in the channel graph. Nobody's address, balance or payments are shown.</p></div>
+        <div class="tile"><h3>Relays</h3><p>A Stream relay carries encrypted traffic between a buyer's app and a shop when they can't connect directly, and can't read it. It moves traffic, not payments, so it is drawn beside the shops that use it, not in the channel graph. The Nostr relays where the listings are found are drawn along the map's bottom edge. Nobody's address, balance or payments are shown.</p></div>
       </section>
       <div id="map-text" class="prose section-gap" aria-live="polite"></div>
     </div>

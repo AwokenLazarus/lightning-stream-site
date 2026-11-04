@@ -581,3 +581,8 @@ a.live-card:hover { text-decoration: none; border-color: rgba(255, 214, 10, 0.4)
 .donate-addr .copy { margin-bottom: 10px; }
 .donate-addr .copy code { white-space: normal; word-break: break-all; }
 .split > * { min-width: 0; }
+.map-legend .lg-diamond { width: 9px; height: 9px; border-radius: 1px; transform: rotate(45deg); background: transparent; border: 1.5px solid var(--k-nostr); }
+.map-legend .lg-chan { width: 16px; height: 0; border-radius: 0; border-top: 2px solid rgba(255, 255, 255, 0.45); }
+.map-panel .map-updated { margin-top: 6px; }
+.map-panel .map-stale { margin-top: 6px; color: var(--warn); }
+.map-panel .map-stale[hidden] { display: none; }

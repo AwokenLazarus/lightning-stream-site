@@ -6,21 +6,30 @@
    - a Stream relay is a bridge: it carries traffic between buyer and shop without seeing it, so it sits beside the
      shops that use it, with thin dotted traffic links, and is not part of the channel graph (relays move traffic,
      not payments);
-   - Nostr relays, where listings are found, are listed beside the map, not drawn on it.
+   - Nostr relays, where listings are found, are docked in a strip along the map's bottom edge (outside the channel
+     graph: they carry signed listings, not traffic or payments), and listed beside the map;
+   - a channel edge's rest length and width follow its capacity (summed when two nodes share several channels),
+     on a clamped log scale, so a few huge channels can't blow the layout up.
+   The page re-reads /api/graph and /api/listings every 2 minutes while open (and when its tab is shown again),
+   and updates in place: positions, zoom, pan and the selected node are kept.
    A small force layout on a 2D canvas; with prefers-reduced-motion it settles before the first frame. */
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var C = { node: "#ffffff", shop: "#ffd60a", app: "#ffb648", files: "#fff09a", ai: "#b9a4ff", web: "#9fd8ff", hash: "#ff8f45", vpn: "#5fe8d2", relay: "#7fb9ff", priv: "#a4a8b1" };
+  var C = { node: "#ffffff", shop: "#ffd60a", app: "#ffb648", files: "#fff09a", ai: "#b9a4ff", web: "#9fd8ff", hash: "#ff8f45", vpn: "#5fe8d2", relay: "#7fb9ff", nostr: "#c58cff", priv: "#a4a8b1" };
   var SVC = { app: "web app or films", files: "files", ai: "AI", web: "web service", hash: "hashrate", vpn: "VPN exit" };
   var cv, ctx, tip, panel, W = 0, H = 0, dpr = 1;
-  var nodes = [], edges = [], byId = {}, relays = [];
-  var cam = { x: 0, y: 0, z: 1 }, alpha = 1, hover = null, pinned = null, found = null, pulses = [];
-  var graphInfo = null, listInfo = null;
+  var nodes = [], edges = [], byId = {}, relays = [], nostr = [];
+  var cam = { x: 0, y: 0, z: 1 }, alpha = 1, hover = null, pinned = null, found = null, pulses = [], tipAt = null;
+  var graphInfo = null, listInfo = null, loadedAt = 0, lastTry = 0, failedAt = 0, started = false;
+  var POLL_MS = 120000, STALE_S = 45 * 60;
 
   function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
   function pl(n, one, many) { return n + " " + (n === 1 ? one : many); }
   function ago(t) { var s = Math.max(0, Date.now() / 1000 - t); return s < 90 ? "just now" : s < 5400 ? Math.round(s / 60) + " min ago" : s < 172800 ? Math.round(s / 3600) + " h ago" : Math.round(s / 86400) + " days ago"; }
+  function satXbt(n) { return Math.round(n).toLocaleString("en-US") + " sat (" + (n / 1e8).toLocaleString("en-US", { maximumFractionDigits: 8 }) + " XBT)"; }
+  // a channel's size on a log scale, clamped: 0 at 30k sat or less, 1 at 10 XBT or more
+  function capT(sat) { return Math.max(0, Math.min(1, (Math.log10(Math.max(1, sat)) - 4.5) / (9 - 4.5))); }
   function fmtSat(n) { return n >= 1e8 ? (n / 1e8).toFixed(2) + " XBT" : n >= 1e6 ? (n / 1e6).toFixed(1) + "M sat" : n >= 1e3 ? Math.round(n / 1e3) + "k sat" : n + " sat"; }
   function short(k) { return k ? k.slice(0, 10) + "…" + k.slice(-4) : ""; }
   function rgba(h, a) { var n = parseInt(h.slice(1), 16); return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")"; }
@@ -52,19 +61,35 @@
   function addSvc(sh, k) { if (sh.svc.indexOf(k) < 0) sh.svc.push(k); }
 
   function build(g, l) {
+    nodes = []; edges = []; byId = {}; relays = []; nostr = []; pulses = [];
     if (g && g.nodes) {
       var deg = {}; g.channels.forEach(function (c) { deg[c.a] = (deg[c.a] || 0) + 1; deg[c.b] = (deg[c.b] || 0) + 1; });
-      var maxSat = 1; g.channels.forEach(function (c) { if (c.sat > maxSat) maxSat = c.sat; });
       g.nodes.forEach(function (n) {
         if (!deg[n.id]) return;
         addNode("ln:" + n.id, n.alias || short(n.id), [["Lightning node", n.alias || "(no alias)"], ["Key", n.id], ["Channels", String(deg[n.id])]], 2.2 + Math.sqrt(deg[n.id]) * 1.5);
       });
+      // one edge per pair of nodes, sized by the pair's summed capacity
+      var pair = {};
       g.channels.forEach(function (c) {
-        var a = byId["ln:" + c.a], b = byId["ln:" + c.b]; if (!a || !b) return;
-        edges.push({ a: a, b: b, w: 0.35 + 0.65 * Math.sqrt(c.sat / maxSat) }); a.deg++; b.deg++;
+        var a = byId["ln:" + c.a], b = byId["ln:" + c.b]; if (!a || !b || a === b) return;
+        var k = c.a < c.b ? c.a + "|" + c.b : c.b + "|" + c.a, e = pair[k];
+        if (!e) { e = pair[k] = { id: "ch:" + k, a: a, b: b, sat: 0, n: 0 }; edges.push(e); }
+        e.sat += c.sat || 0; e.n++; a.deg++; b.deg++;
+      });
+      edges.forEach(function (e) {
+        var t = capT(e.sat); e.t = t; e.rest = 30 + 70 * t; e.lw = 0.6 + 1.7 * t;
+        e.info = [["Channel", e.a.label + " to " + e.b.label], ["Capacity", satXbt(e.sat)]].concat(e.n > 1 ? [["Channels", e.n + " between these two nodes, capacity summed"]] : []);
       });
     }
     if (!l) return;
+    // Nostr relays: where the listings were read from
+    (l.relays || []).forEach(function (r) {
+      var host = r.url.replace(/^wss:\/\//, "").replace(/\/$/, ""), seen = 0;
+      l.shops.forEach(function (s) { if (!s.stale && (s.seen_on || []).indexOf(host) >= 0) seen++; });
+      nostr.push({ id: "nostr:" + r.url, nostr: true, label: host, ok: !!r.ok, x: 0, y: 0, shops: [], info: [["Nostr relay", r.url],
+        ["Status", r.ok ? "read" : "failing: " + (r.error || "no answer")], ["Events", String(r.events || 0)], ["Answered in", (r.ms || 0) + " ms"],
+        ["Shops found here", String(seen)], ["What it does", "carries the shops' signed listings; it is not part of the network: no traffic and no payments go through it"]] });
+    });
     var shopNode = {}, relayUse = {};
     function useRelay(host, n) { if (!host) return; (relayUse[host] || (relayUse[host] = [])).indexOf(n) < 0 && relayUse[host].push(n); }
     l.shops.filter(function (s) { return !s.stale; }).forEach(function (s) {
@@ -83,6 +108,7 @@
         if (k !== "hash") sh.lines.push([x.name || SVC[k], x.prices.join(", ") || "price on asking"]);
       });
       s.iroh_relays.forEach(function (h) { useRelay(h, n); });
+      nostr.forEach(function (r) { if ((s.seen_on || []).indexOf(r.label) >= 0 && r.shops.indexOf(n) < 0) r.shops.push(n); });
     });
     l.hashrate.forEach(function (h) {
       var n = h.shop && shopNode[h.shop] ? shopNode[h.shop] : nodeFor(h.pay_node, "hash:" + h.id), sh = shopOn(n, h.shop ? "" : h.name);
@@ -102,11 +128,19 @@
     Object.keys(relayUse).concat(Object.keys(announced)).forEach(function (h) {
       if (relays.some(function (r) { return r.host === h; })) return;
       var r = announced[h];
-      relays.push({ host: h, shops: relayUse[h] || [], x: 0, y: 0, info: [["Stream relay", h], ["What it does", "carries encrypted traffic between a buyer's app and a shop when they can't connect directly; it can't read it, and carries no money"],
+      relays.push({ id: "relay:" + h, host: h, shops: relayUse[h] || [], x: 0, y: 0, info: [["Stream relay", h], ["What it does", "carries encrypted traffic between a buyer's app and a shop when they can't connect directly; it can't read it, and carries no money"],
         ["Used by", (relayUse[h] || []).map(function (n) { return n.shop.names.join(" / ") || n.label; }).join(", ") || "no shop named it"]].concat(r ? [["Region", r.region || "not given"]] : []) });
     });
   }
-  function shopName(n) { return n.shop ? n.shop.names.join(" / ") || n.label : n.label; }
+  function shopName(n) { return n.host ? n.host : n.shop ? n.shop.names.join(" / ") || n.label : n.label; }
+  // the thing with this id in the current model (after a refresh, the same node, relay or channel)
+  function find(id) {
+    if (!id) return null;
+    if (byId[id]) return byId[id];
+    var all = relays.concat(nostr, edges);
+    for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+    return null;
+  }
 
   /* ---------- layout: the public graph; private shops and relays sit at its edge ---------- */
   function tick() {
@@ -126,7 +160,7 @@
       n.vx -= n.x * 0.004 * alpha; n.vy -= n.y * 0.004 * alpha;
     }
     edges.forEach(function (e) {
-      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, f = (d - 50) / d * 0.06 * alpha;
+      var ex = e.b.x - e.a.x, ey = e.b.y - e.a.y, d = Math.sqrt(ex * ex + ey * ey) + 0.01, f = (d - (e.rest || 50)) / d * 0.06 * alpha;
       e.a.vx += ex * f; e.a.vy += ey * f; e.b.vx -= ex * f; e.b.vy -= ey * f;
     });
     pub.forEach(function (n) { n.vx *= 0.6; n.vy *= 0.6; n.x += Math.max(-20, Math.min(20, n.vx)); n.y += Math.max(-20, Math.min(20, n.vy)); });
@@ -153,11 +187,23 @@
       r.x = cx + vx / d * (R + 70); r.y = cy + vy / d * (R + 70);
     });
   }
+  // Nostr relays are docked in a strip along the canvas's bottom edge, in screen space, so they stay put and
+  // readable whatever the zoom: one row on a wide screen, two to a row on a phone. Returns the strip's height.
+  function dock() {
+    if (!nostr.length) return 0;
+    var cols = W < 600 ? 2 : nostr.length, rowsN = Math.ceil(nostr.length / cols), rowH = 46, h = rowsN * rowH + 12;
+    nostr.forEach(function (r, i) {
+      var c = i % cols, row = Math.floor(i / cols), inRow = Math.min(cols, nostr.length - row * cols), cw = W / inRow;
+      r.px = cw * (c + 0.5); r.py = H - h + 16 + row * rowH;
+    });
+    return h;
+  }
   function fit() {
     if (!nodes.length) return;
-    var b = bounds(nodes.concat(relays)), padX = 110, padY = 80;
-    var z = Math.min(W / (b.x1 - b.x0 + padX * 2), H / (b.y1 - b.y0 + padY * 2));
-    cam = { x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2, z: Math.max(0.15, Math.min(z, 2.4)) };
+    var strip = dock(), b = bounds(nodes.concat(relays)), padX = 110, padY = 80, h = H - strip;
+    var z = Math.max(0.15, Math.min(W / (b.x1 - b.x0 + padX * 2), h / (b.y1 - b.y0 + padY * 2), 2.4));
+    // centered in the part of the canvas above the strip
+    cam = { x: (b.x0 + b.x1) / 2, y: (b.y0 + b.y1) / 2 + strip / 2 / z, z: z };
   }
   function sx(x) { return (x - cam.x) * cam.z + W / 2; }
   function sy(y) { return (y - cam.y) * cam.z + H / 2; }
@@ -186,13 +232,15 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     var focus = pinned || hover || found, near = {};
     if (focus && focus.id) { near[focus.id] = 1; edges.forEach(function (e) { if (e.a === focus) near[e.b.id] = 1; if (e.b === focus) near[e.a.id] = 1; }); }
-    if (focus && focus.host) focus.shops.forEach(function (n) { near[n.id] = 1; });
+    if (focus && focus.shops) focus.shops.forEach(function (n) { near[n.id] = 1; });
+    if (focus && focus.a && focus.b) { near[focus.a.id] = near[focus.b.id] = 1; }
     function dimOf(n) { return focus && !near[n.id] ? 0.3 : 1; }
     ctx.lineCap = "round";
     edges.forEach(function (e) {
-      var on = focus && (e.a === focus || e.b === focus), dim = focus && !on ? 0.35 : 1;
+      var on = focus && (e === focus || e.a === focus || e.b === focus), dim = focus && !on ? 0.35 : 1, lw = e.lw * (W < 600 ? 0.8 : 1);
       ctx.beginPath(); ctx.moveTo(sx(e.a.x), sy(e.a.y)); ctx.lineTo(sx(e.b.x), sy(e.b.y));
-      ctx.strokeStyle = on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.07 + 0.16 * e.w) * dim + ")"; ctx.lineWidth = on ? 1.6 : 1; ctx.stroke();
+      ctx.strokeStyle = e === focus ? "rgba(255,214,10,0.95)" : on ? "rgba(255,214,10,0.7)" : "rgba(255,255,255," + (0.08 + 0.17 * e.t) * dim + ")";
+      ctx.lineWidth = e === focus ? lw + 1.4 : on ? Math.max(1.4, lw + 0.4) : lw; ctx.stroke();
     });
     // relays' traffic links: thin, dotted, blue; never part of the channel graph
     ctx.setLineDash([1.5, 5]); ctx.lineWidth = 1.3;
@@ -235,6 +283,20 @@
       ctx.beginPath(); ctx.arc(x, y, 11, -0.7, 0.7); ctx.moveTo(x - 11 * Math.cos(0.7), y - 11 * Math.sin(0.7)); ctx.arc(x, y, 11, Math.PI - 0.7, Math.PI + 0.7); ctx.strokeStyle = rgba(C.relay, 0.7); ctx.lineWidth = 1.2; ctx.stroke();
       ctx.globalAlpha = 1;
     });
+    // Nostr relays: violet diamonds in a strip on the bottom edge; dashed when the last read failed
+    var strip = dock();
+    if (strip) {
+      var bg = ctx.createLinearGradient(0, H - strip - 18, 0, H); bg.addColorStop(0, "rgba(5,5,7,0)"); bg.addColorStop(0.3, "rgba(5,5,7,0.82)"); bg.addColorStop(1, "rgba(5,5,7,0.9)");
+      ctx.fillStyle = bg; ctx.fillRect(0, H - strip - 18, W, strip + 18);
+    }
+    nostr.forEach(function (r) {
+      var x = r.px, y = r.py; ctx.globalAlpha = (focus && focus !== r ? 0.35 : 1) * (r.ok ? 1 : 0.6);
+      if (r.ok) ctx.drawImage(glow(C.nostr), x - 22, y - 22, 44, 44);
+      ctx.beginPath(); ctx.moveTo(x, y - 8); ctx.lineTo(x + 8, y); ctx.lineTo(x, y + 8); ctx.lineTo(x - 8, y); ctx.closePath();
+      ctx.fillStyle = "#0a0710"; ctx.fill(); ctx.strokeStyle = C.nostr; ctx.lineWidth = r === focus ? 2.4 : 1.6; if (!r.ok) ctx.setLineDash([2.5, 2.5]); ctx.stroke(); ctx.setLineDash([]);
+      if (r.ok) { ctx.beginPath(); ctx.arc(x, y, 2.4, 0, 7); ctx.fillStyle = C.nostr; ctx.fill(); }
+      ctx.globalAlpha = 1;
+    });
 
     // labels, most important first; any that would overlap a placed label or a node's icons is left out
     ctx.font = "500 12px Inter, system-ui, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "top";
@@ -248,6 +310,7 @@
       if (n.priv) want.push({ text: "private node: not in the public graph", x: sx(n.x), y: y + 17, col: C.priv, pri: 4.9, a: dimOf(n), up: 64 });
     });
     relays.forEach(function (r) { want.push({ text: r.host, x: sx(r.x), y: sy(r.y) + 14, col: C.relay, pri: 4, a: 1, up: 28, side: 8 }); });
+    nostr.forEach(function (r) { want.push({ text: r.label + (r.ok ? "" : " (failing)"), x: r.px, y: r.py + 12, col: C.nostr, pri: 9, a: r.ok ? 1 : 0.7, alt: false, strip: true }); });
     var top = nodes.filter(function (n) { return !n.priv && !n.shop; }).sort(function (a, b) { return b.deg - a.deg; }).slice(0, cam.z > 1.3 ? 40 : W < 600 ? 5 : 12);
     nodes.forEach(function (n) {
       if (n.priv || n.shop) return;
@@ -255,7 +318,10 @@
       want.push({ text: n.label, x: sx(n.x), y: sy(n.y) + nodeR(n) + 5, col: "rgba(255,255,255,0.78)", pri: near[n.id] ? 3 : 1 + n.deg / 1000, a: dimOf(n) });
     });
     want.sort(function (a, b) { return b.pri - a.pri; });
+    var stripDone = false;
     want.forEach(function (w) {
+      // once the strip's own labels are placed, nothing else may be labeled inside it
+      if (!w.strip && !stripDone) { stripDone = true; if (strip) placed.push({ x: 0, y: H - strip - 6, w: W, h: strip + 6 }); }
       ctx.font = (w.bold ? "650 " : "500 ") + "12px Inter, system-ui, sans-serif";
       // below first, then above, right and left of the thing it names; left out only when none is free
       var tw = ctx.measureText(w.text).width, down = w.y, tries = w.alt === false ? [[0, 0]] : [[0, 0], [tw / 2 + 16, -(w.side || 20)], [-tw / 2 - 16, -(w.side || 20)], [0, -(w.up || 30) - 17]];
@@ -287,9 +353,18 @@
     var best = null, bd = 18 * 18;
     nodes.forEach(function (n) { if (!n.shop) return; var dx = sx(n.x) - px, dy = sy(n.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = n; } });
     relays.forEach(function (r) { var dx = sx(r.x) - px, dy = sy(r.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = r; } });
+    nostr.forEach(function (r) { var dx = r.px - px, dy = r.py - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = r; } });
     if (best) return best;
     bd = 14 * 14;
     nodes.forEach(function (n) { var dx = sx(n.x) - px, dy = sy(n.y) - py, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = n; } });
+    if (best) return best;
+    // a channel: the nearest edge within a few pixels
+    bd = 5 * 5;
+    edges.forEach(function (e) {
+      var ax = sx(e.a.x), ay = sy(e.a.y), bx = sx(e.b.x) - ax, by = sy(e.b.y) - ay, L = bx * bx + by * by || 1;
+      var t = Math.max(0, Math.min(1, ((px - ax) * bx + (py - ay) * by) / L)), dx = ax + bx * t - px, dy = ay + by * t - py, d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = e; }
+    });
     return best;
   }
   function rows(n) {
@@ -303,9 +378,10 @@
     return out;
   }
   function showTip(n, px, py) {
-    if (!n) { tip.hidden = true; return; }
+    if (!n) { tip.hidden = true; tipAt = null; return; }
+    tipAt = { x: px, y: py };
     tip.textContent = "";
-    (n.host ? n.info : rows(n)).forEach(function (row, i) {
+    rows(n).forEach(function (row, i) {
       if (i === 0) { tip.appendChild(el("b", null, row[0] + ": " + row[1])); return; }
       var d = el("div"); d.appendChild(el("span", "muted", row[0] + ": ")); d.appendChild(document.createTextNode(row[1])); tip.appendChild(d);
     });
@@ -345,9 +421,10 @@
     var q = document.getElementById("map-q");
     q.addEventListener("input", function () {
       var s = q.value.trim().toLowerCase(); found = null;
-      function m(x) { return (x.host || shopName(x) || "").toLowerCase().indexOf(s) >= 0 || (x.id || "").toLowerCase().indexOf(s) >= 0 || (x.host ? x.info : rows(x)).some(function (r) { return String(r[1]).toLowerCase().indexOf(s) >= 0; }); }
-      if (s.length >= 2) found = nodes.filter(function (n) { return n.shop && m(n); })[0] || relays.filter(m)[0] || nodes.filter(m)[0] || null;
-      if (found) { cam.x = found.x; cam.y = found.y; cam.z = Math.max(cam.z, 1.6); showTip(found, W / 2, H / 2); } else if (!pinned) tip.hidden = true;
+      function m(x) { return (shopName(x) || "").toLowerCase().indexOf(s) >= 0 || (x.id || "").toLowerCase().indexOf(s) >= 0 || rows(x).some(function (r) { return String(r[1]).toLowerCase().indexOf(s) >= 0; }); }
+      if (s.length >= 2) found = nodes.filter(function (n) { return n.shop && m(n); })[0] || relays.filter(m)[0] || nostr.filter(m)[0] || nodes.filter(m)[0] || null;
+      if (found && found.nostr) showTip(found, found.px, Math.max(8, found.py - 150));
+      else if (found) { cam.x = found.x; cam.y = found.y; cam.z = Math.max(cam.z, 1.6); showTip(found, W / 2, H / 2); } else if (!pinned) tip.hidden = true;
       redraw();
     });
   }
@@ -364,6 +441,9 @@
       panel.appendChild(el("p", "small muted", "No snapshot of the public graph has been published, so Stream's shops are shown on their own."));
     }
     if (l) panel.appendChild(el("p", "small", pl(shops.length, "Stream shop", "Stream shops") + ", " + shops.filter(function (n) { return !n.priv; }).length + " of them on the public graph"));
+    panel.appendChild(el("p", "small muted map-updated"));
+    panel.appendChild(el("p", "small map-stale"));
+    status();
     // Nostr relays: where the listings come from, beside the map
     var side = document.getElementById("map-sources");
     if (side && l) {
@@ -374,7 +454,7 @@
       var ul = el("ul");
       l.relays.forEach(function (r) { ul.appendChild(el("li", r.ok ? null : "muted", r.url.replace("wss://", "") + (r.ok ? ": " + pl(r.events, "event", "events") : ": not read (" + (r.error || "no answer") + ")"))); });
       side.appendChild(ul);
-      side.appendChild(el("p", "muted small", "Nostr relays only carry the signed listings; they are not part of the network shown on the map."));
+      side.appendChild(el("p", "muted small", "Nostr relays only carry the signed listings. They are drawn along the map's bottom edge, outside the network: no traffic and no payments go through them."));
     }
     // a text version of what the map shows
     var t = document.getElementById("map-text"); t.textContent = "";
@@ -397,22 +477,71 @@
     }
   }
 
+  // "updated N min ago", and a note when the graph snapshot is old or the last read failed
+  function status() {
+    var u = panel.querySelector(".map-updated"), st = panel.querySelector(".map-stale"), t = Date.now() / 1000;
+    if (u) u.textContent = loadedAt ? "Map updated " + ago(loadedAt) + (listInfo ? " · listings read " + ago(listInfo.fetched_at) : "") + " · checks again every 2 min" : "";
+    if (!st) return;
+    var notes = [];
+    if (graphInfo && t - graphInfo.taken_at > STALE_S) notes.push("Map data is stale: the newest channel-graph snapshot is from " + ago(graphInfo.taken_at) + ". A new one is normally published every 15 minutes.");
+    if (listInfo && t - listInfo.fetched_at > STALE_S) notes.push("The listings were last read from the Nostr relays " + ago(listInfo.fetched_at) + ".");
+    if (failedAt && failedAt > loadedAt) notes.push("The last check, " + ago(failedAt) + ", could not reach the map's data; showing what was read before.");
+    st.textContent = notes.join(" "); st.hidden = !notes.length;
+  }
+  function getJ(u) { return fetch(u, { headers: { accept: "application/json" }, cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+  function load() {
+    lastTry = Date.now();
+    return Promise.all([getJ("/api/graph"), getJ("/api/listings")]).then(function (res) {
+      var g = res[0] && res[0].nodes ? res[0] : res[0] ? null : graphInfo, l = res[1] || listInfo;
+      if (!res[0] || !res[1]) failedAt = Date.now() / 1000;
+      if (!res[0] && !res[1]) { if (started) status(); else apply(null, null); return; }
+      apply(g, l);
+      loadedAt = Date.now() / 1000;
+      status();
+    });
+  }
+  // rebuild from new data, keeping positions, the camera and what is selected
+  function apply(g, l) {
+    var old = {}, keep = pinned && pinned.id, keepF = found && found.id, keepH = hover && hover.id;
+    nodes.concat(relays, nostr).forEach(function (n) { old[n.id] = n; });
+    graphInfo = g; listInfo = l;
+    build(g, l);
+    var fresh = 0;
+    nodes.forEach(function (n) {
+      var o = old[n.id]; if (o) { n.x = o.x; n.y = o.y; n.vx = o.vx; n.vy = o.vy; return; }
+      fresh++;
+      // a new node starts beside a neighbor that was already placed
+      for (var i = 0; i < edges.length; i++) {
+        var e = edges[i], m = e.a === n ? e.b : e.b === n ? e.a : null;
+        if (m && old[m.id]) { n.x = old[m.id].x + (Math.random() - 0.5) * 40; n.y = old[m.id].y + (Math.random() - 0.5) * 40; break; }
+      }
+    });
+    pinned = find(keep); found = find(keepF); hover = find(keepH);
+    if (!started) {
+      for (var i = 0; i < (reduce ? 500 : 300); i++) tick();
+      if (reduce) alpha = 0;
+      fit(); started = true;
+      if (!reduce) requestAnimationFrame(loop);
+    } else {
+      // settle gently around what was already there; the camera is left alone
+      alpha = Math.max(alpha, fresh ? 0.25 : 0.06);
+      if (reduce) { for (var k = 0; k < 120; k++) tick(); alpha = 0; } else placeOutside();
+    }
+    draw();
+    writePanel();
+    if (pinned && tipAt) showTip(pinned, tipAt.x, tipAt.y); else if (keep && !pinned) showTip(null);
+    if (!nodes.length) { panel.textContent = ""; panel.appendChild(el("h2", null, "Nothing to draw yet")); panel.appendChild(el("p", "small muted", "Neither a graph snapshot nor live listings could be loaded.")); }
+  }
+
   function init() {
     cv = document.getElementById("map"); if (!cv) return;
     ctx = cv.getContext("2d"); tip = document.getElementById("map-tip"); panel = document.getElementById("map-panel");
     resize(); window.addEventListener("resize", resize);
     bind();
-    function getJ(u) { return fetch(u, { headers: { accept: "application/json" } }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
-    Promise.all([getJ("/api/graph"), getJ("/api/listings")]).then(function (res) {
-      graphInfo = res[0] && res[0].nodes ? res[0] : null; listInfo = res[1];
-      build(graphInfo, listInfo);
-      for (var i = 0; i < (reduce ? 500 : 300); i++) tick();
-      if (reduce) alpha = 0;
-      fit(); draw();
-      if (!reduce) requestAnimationFrame(loop);
-      writePanel();
-      if (!nodes.length) { panel.textContent = ""; panel.appendChild(el("h2", null, "Nothing to draw yet")); panel.appendChild(el("p", "small muted", "Neither a graph snapshot nor live listings could be loaded.")); }
-    });
+    load();
+    setInterval(function () { if (!document.hidden) load(); }, POLL_MS);
+    setInterval(function () { if (!document.hidden && started) status(); }, 20000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden && Date.now() - lastTry > 60000) load(); });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
