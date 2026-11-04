@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Changelog: Lightning Stream, peer-to-peer services on Bitcoin Lightning</title>
-<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.11, 4 November 2026.">
+<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.12, 4 November 2026.">
 <link rel="canonical" href="https://lightning-stream.com/changelog/">
 <meta name="theme-color" content="#050507">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -22,7 +22,7 @@
   <div class="wrap">
     <a class="brand" href="/" aria-label="Lightning Stream, home"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><defs><linearGradient id="ls-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".55" stop-color="#ffd60a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient></defs><circle cx="16" cy="16" r="15" fill="#0b0c10" stroke="#ffd60a" stroke-opacity=".38"/><circle cx="16" cy="1" r="1.6" fill="#9fd8ff"/><circle cx="3" cy="23.5" r="1.6" fill="#9fd8ff"/><circle cx="29" cy="23.5" r="1.6" fill="#9fd8ff"/><path d="M18.6 5 9.8 17.6h5.9l-2.1 9.6 9.4-13.2h-6.1z" fill="url(#ls-g)"/></svg><span>Lightning Stream</span></a>
     <nav class="nav" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li></ul><a class="btn btn-volt btn-sm nav-cta" href="/download/">Download</a></nav>
-    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.11</a></nav></details>
+    <details class="menu"><summary>Menu</summary><nav class="menu-panel" aria-label="Main"><ul><li><a href="/how-it-works/">How it works</a></li><li><a href="/guide/">Guide</a></li><li><a href="/shops/">Shops</a></li><li><a href="/map/">Network map</a></li><li><a href="/changelog/" aria-current="page">Changelog</a></li><li><a href="/whitepaper/">Whitepaper</a></li><li><a href="/about/">About</a></li><li><a href="/download/">Download</a></li></ul><a class="btn btn-volt" href="/download/">Download 0.2.12</a></nav></details>
   </div>
 </header>
 <!-- /chrome:header -->
@@ -34,12 +34,13 @@
       <h1>Every version, newest first.</h1>
       <div class="lede"><p>Lightning Stream versions, newest first. One version number covers the Umbrel app, the StartOS package (from 0.1.14) and the Linux package (from 0.1.12). Dates are UTC.</p>
 <p>Lightning Stream is early software. It runs on mainnet; use small amounts.</p></div>
-      <div class="meta"><span class="tag tag-volt">Latest: 0.2.11</span><span>4 November 2026</span><span>32 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
+      <div class="meta"><span class="tag tag-volt">Latest: 0.2.12</span><span>4 November 2026</span><span>33 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
     </div>
   </header>
   <div class="page-body">
     <div class="wrap with-toc">
       <aside class="toc" aria-label="Versions"><div class="toc-inner"><h2>Versions</h2><ol>
+<li><a href="#v0-2-12">0.2.12 <span class="muted">&middot; 4 November 2026</span></a></li>
 <li><a href="#v0-2-11">0.2.11 <span class="muted">&middot; 4 November 2026</span></a></li>
 <li><a href="#v0-2-10">0.2.10 <span class="muted">&middot; 3 November 2026</span></a></li>
 <li><a href="#v0-2-9">0.2.9 <span class="muted">&middot; 3 November 2026</span></a></li>
@@ -74,8 +75,14 @@
 <li><a href="#v0-1-0">0.1.0 <span class="muted">&middot; 26 October 2026</span></a></li>
       </ol></div></aside>
       <div>
+<article class="release" id="v0-2-12" aria-labelledby="v0-2-12-h">
+<div class="release-head"><h2 id="v0-2-12-h">0.2.12</h2><time datetime="2026-11-04">4 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="prose"><p>A fix for renting hashrate on spending rules signed before renting hashrate existed. The wallet UI changes.</p>
+<ul><li><strong>Rules signed before renting hashrate get a way to add it.</strong> Spending rules signed before the app could rent hashrate have stream tickets on but no budget for it, so the wallet refused every rental's first payment, while Buy → Hashrate said "Ready to rent". The page now says "Your spending rules don't allow renting hashrate yet", with a button, "Allow renting hashrate in your spending rules". It opens your signed rules with only that added, at the starter values (on mainnet 200,000 sats in any 24 hours, tickets of up to 10,000 sats, at most 600 payments an hour). Everything else stays exactly as you signed it, and you sign the change with your approval key as usual. Rent stays off, and says why, until the rules have it.</li><li><strong>Stream tickets off is said too.</strong> When the rules have stream tickets off, the Hashrate page says so and points to the spending rules, and Rent stays off.</li><li><strong>A rental refused for it says why.</strong> A rental card whose payment was refused because the rules have no task for it says "Your spending rules don't allow renting hashrate yet. Nothing was paid.", with the same button. A refusal with no way to pay lists why each way was passed over, in words.</li><li><strong>The rules page shows the budget for renting hashrate,</strong> read-only, under "Renting hashrate", or says it is missing, with the link to add it.</li></ul></div>
+</article>
+
 <article class="release" id="v0-2-11" aria-labelledby="v0-2-11-h">
-<div class="release-head"><h2 id="v0-2-11-h">0.2.11</h2><time datetime="2026-11-04">4 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="release-head"><h2 id="v0-2-11-h">0.2.11</h2><time datetime="2026-11-04">4 November 2026</time></div>
 <div class="prose"><p>Hashrate fixes sent by a hashmaker who runs the app. The wallet UI and the hashrate component change.</p>
 <ul><li><strong>A payment the wallet's socket can't take for a moment is made again.</strong> A 24 h rental ended after about 11 hours as "a piece of work was not paid in time": one payment's call to the wallet's signer failed with "Resource temporarily unavailable" before any of it was sent, and the renter stopped paying. A call that never reached the signer is now made again within the hashmaker's grace. A call that got out even in part is never made again, so a slice is never paid twice. Writing a call to the signer now gives up after 5 seconds instead of 200, so there is time to ask again.</li><li><strong>Ended rentals move under History.</strong> Buy → Hashrate lists only the rentals going on under Your rentals. The ended ones are folded under "History: N ended rentals", newest first. Each rental's card says when it started, when it ended and after how long, and why it ended.</li><li><strong>Your gateway's own status pages.</strong> "Your gateway" on Buy → Hashrate has a Gateway status link to the Stream Gateway's own pages (status, threads, coinbaser, clients, config), read-only, under the app's login. Only those pages are shown, with GET only, and no script runs on them. The gateway has no admin password, so its clients and config pages say they need admin access and show nothing else.</li><li><strong>A link that can't be made again says why</strong> in the hashrate component's log, instead of only "failed to fill whole buffer".</li></ul>
 <p>Thanks to Kilombino, who found and fixed the payment the wallet's socket couldn't take, and sent History for ended rentals, the rental times and the gateway status pages.</p></div>
