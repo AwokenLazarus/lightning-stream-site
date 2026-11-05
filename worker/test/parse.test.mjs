@@ -6,15 +6,15 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { schnorr, secp256k1 } from "@noble/curves/secp256k1";
 import { bytesToHex } from "@noble/hashes/utils";
-import { digest, verifyEvent, eventId, npub, canonical, priceLabels, listingDigest, bindDigest } from "../src/parse.js";
+import { digest, verifyEvent, eventId, npub, canonical, priceLabels, listingDigest, bindDigest, expired } from "../src/parse.js";
 import { normalize, summary } from "../src/graph.js";
 
 const events = JSON.parse(readFileSync(new URL("./fixtures/events-2026-11-02.json", import.meta.url)));
 const NOW = 1793584000;
 
 // A shop signed here, as a seller's gateway signs one, with a transport tag that carries direct addresses.
-function signedShop({ withAddresses = true } = {}) {
-  const nsk = secp256k1.utils.randomPrivateKey(), npk = bytesToHex(schnorr.getPublicKey(nsk));
+function signedShop({ withAddresses = true, at = NOW - 60, extra = [], nsk = secp256k1.utils.randomPrivateKey() } = {}) {
+  const npk = bytesToHex(schnorr.getPublicKey(nsk));
   const rsk = secp256k1.utils.randomPrivateKey(), rpk = bytesToHex(secp256k1.getPublicKey(rsk, true));
   const seller = "https://shop.example";
   const doc = { version: "listing/1", name: "Test shop", seller, receipt_key: rpk, updated: "2026-11-01",
@@ -23,7 +23,8 @@ function signedShop({ withAddresses = true } = {}) {
   const bind = bytesToHex(secp256k1.sign(bindDigest(npk, seller), rsk, { lowS: true }).toDERRawBytes());
   const tags = [["d", seller], ["title", "Test shop"], ["t", "lightning-stream"], ["t", "files"], ["xbt402-listing", JSON.stringify(doc)], ["xbt402-bind", bind]];
   if (withAddresses) tags.push(["transport", JSON.stringify({ version: "transport/1", transport: [{ kind: "iroh", relays: ["https://relay.example/"], direct: ["192.0.2.7:4433", "198.51.100.9:4433"] }] })]);
-  const ev = { pubkey: npk, created_at: NOW - 60, kind: 30402, tags, content: "" };
+  tags.push(...extra);
+  const ev = { pubkey: npk, created_at: at, kind: 30402, tags, content: "" };
   ev.id = eventId(ev);
   ev.sig = bytesToHex(schnorr.sign(ev.id, nsk));
   return ev;
@@ -86,4 +87,27 @@ test("a shop's node is recovered from its link signature, as the app checks it",
   const sig = "d6bm7gybsgonkagryz3j15kxjg1axrpjsncyg6wixi1a3yqub1u8ksbb51ozhtgk17558wtdsd3jz13djop97gjc9tz4gaxms9kw6txc";
   assert.equal(recoverLndSigner(msg, sig), "035d867908cdcdbccda8763bf81a99574dc042e2a6d00e44e9845836b7123d0b7d");
   assert.notEqual(recoverLndSigner(msg.replace("1796176492", "1796176493"), sig), "035d867908cdcdbccda8763bf81a99574dc042e2a6d00e44e9845836b7123d0b7d");
+});
+
+test("a listing whose NIP-40 expiration has passed is not shown, as the app ignores it (0.2.14)", () => {
+  assert.equal(expired({ tags: [["expiration", String(NOW)]] }, NOW), true);
+  assert.equal(expired({ tags: [["expiration", String(NOW + 1)]] }, NOW), false);
+  assert.equal(expired({ tags: [] }, NOW), false, "an older app's listing has none");
+  assert.equal(expired({ tags: [["expiration", "soon"]] }, NOW), false);
+  const lapsed = digest([signedShop({ extra: [["expiration", String(NOW - 1)]] })], NOW);
+  assert.equal(lapsed.shops.length, 0);
+  assert.equal(lapsed.expired, 1);
+  assert.equal(lapsed.rejected, 0, "lapsed, not refused");
+  const live = digest([signedShop({ extra: [["expiration", String(NOW + 7 * 86400 - 60)]] })], NOW);
+  assert.equal(live.shops.length, 1);
+  assert.equal(digest([signedShop()], NOW).shops.length, 1, "no expiration: shown as before");
+  // the newest listing of a shop has lapsed: an older one of the same key and d is not shown in its place
+  const nsk = secp256k1.utils.randomPrivateKey();
+  const older = signedShop({ nsk, at: NOW - 3 * 86400 });
+  const oldest = signedShop({ nsk, at: NOW - 8 * 86400 + 60, extra: [["expiration", String(NOW - 86400 + 60)]] });
+  assert.equal(digest([older, oldest], NOW).shops.length, 1, "a lapsed event older than the newest changes nothing");
+  const newest = signedShop({ nsk, at: NOW - 60, extra: [["expiration", String(NOW - 1)]] });
+  const d = digest([older, newest], NOW);
+  assert.equal(d.shops.length, 0);
+  assert.equal(d.expired, 1);
 });

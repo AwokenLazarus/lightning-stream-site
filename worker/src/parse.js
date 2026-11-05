@@ -39,6 +39,14 @@ const HASH_MAX_AGE_S = 48 * 3600;       // a hashrate offer older than this is f
 export const STALE_S = 2 * 86400;        // shops republish every six hours; two days unseen is stale
 export const DROP_S = 14 * 86400;        // and two weeks unseen is dropped
 
+// NIP-40: an event whose expiration has passed is not shown. Shops' listings carry one from 0.2.14 (a week after
+// they were made, crates/xbt-nostr/src/market.rs); hashrate offers, VPN exits and relay announcements already did.
+// One without the tag (an older app's) never lapses by this rule.
+export function expired(ev, now) {
+  const e = Number(tag(ev, "expiration"));
+  return Number.isFinite(e) && e > 0 && e <= now;
+}
+
 const isHex = (s, n) => typeof s === "string" && s.length === n && /^[0-9a-f]+$/.test(s);
 const tag = (ev, k) => { const t = ev.tags.find((x) => x[0] === k); return t ? t[1] : undefined; };
 const tags = (ev, k) => ev.tags.filter((x) => x[0] === k).map((x) => x[1]);
@@ -319,9 +327,11 @@ export function digest(events, now, { hide = [] } = {}) {
     if (cur) ev._seen = [...new Set([...(cur._seen || []), ...(ev._seen || [])])];
     newest.set(k, ev);
   }
-  const out = { shops: [], hashrate: [], exits: [], relays: [], rejected: 0 };
+  const out = { shops: [], hashrate: [], exits: [], relays: [], rejected: 0, expired: 0 };
   for (const ev of newest.values()) {
     if (!verifyEvent(ev)) { out.rejected++; continue; }
+    // the newest event of each author, kind and d has lapsed: the listing is gone, and an older one is not shown instead
+    if (expired(ev, now)) { out.expired++; continue; }
     const rec = readShop(ev, now) || readHashrate(ev, now) || readExit(ev, now) || readRelay(ev, now);
     if (!rec) { out.rejected++; continue; }
     rec.seen_on = (ev._seen || []).map((u) => u.replace(/^wss:\/\//, "").replace(/\/$/, ""));
