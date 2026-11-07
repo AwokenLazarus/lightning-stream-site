@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Changelog: Lightning Stream, peer-to-peer services on Bitcoin Lightning</title>
-<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.15, 7 November 2026.">
+<meta name="description" content="What changed in each version of Lightning Stream, newest first. Latest: 0.2.16, 7 November 2026.">
 <link rel="canonical" href="https://lightning-stream.com/changelog/">
 <meta name="theme-color" content="#050507">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -34,12 +34,13 @@
       <h1>Every version, newest first.</h1>
       <div class="lede"><p>Lightning Stream versions, newest first. One version number covers the Umbrel app, the StartOS package (from 0.1.14) and the Linux package (from 0.1.12). Dates are UTC.</p>
 <p>Lightning Stream is early software. It runs on mainnet; use small amounts.</p></div>
-      <div class="meta"><span class="tag tag-volt">Latest: 0.2.15</span><span>7 November 2026</span><span>36 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
+      <div class="meta"><span class="tag tag-volt">Latest: 0.2.16</span><span>7 November 2026</span><span>37 versions</span><a href="https://github.com/AwokenLazarus/Lightning-Stream/releases">Releases on GitHub</a><a href="https://github.com/AwokenLazarus/Lightning-Stream/blob/main/CHANGELOG.md">CHANGELOG.md</a></div>
     </div>
   </header>
   <div class="page-body">
     <div class="wrap with-toc">
       <aside class="toc" aria-label="Versions"><div class="toc-inner"><h2>Versions</h2><ol>
+<li><a href="#v0-2-16">0.2.16 <span class="muted">&middot; 7 November 2026</span></a></li>
 <li><a href="#v0-2-15">0.2.15 <span class="muted">&middot; 7 November 2026</span></a></li>
 <li><a href="#v0-2-14">0.2.14 <span class="muted">&middot; 5 November 2026</span></a></li>
 <li><a href="#v0-2-13">0.2.13 <span class="muted">&middot; 4 November 2026</span></a></li>
@@ -78,8 +79,16 @@
 <li><a href="#v0-1-0">0.1.0 <span class="muted">&middot; 26 October 2026</span></a></li>
       </ol></div></aside>
       <div>
+<article class="release" id="v0-2-16" aria-labelledby="v0-2-16-h">
+<div class="release-head"><h2 id="v0-2-16-h">0.2.16</h2><time datetime="2026-11-07">7 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<p>Small fixes from a fresh StartOS install.</p>
+<ul><li><strong>Your node shows no missing-key error before a key is connected</strong>: it says "No key connected yet".</li>
+<li><strong>Home's First steps and Setup are named as the two step lists they are</strong>, each with its own count.</li>
+<li><strong>StartOS: the log explains the expected "Not Found" for Grant app access</strong> on a Lightning Fork that doesn't have it.</li>
+<li><strong>StartOS: the Node connection banner fits the form</strong>: once a node is saved, it says so instead of asking for new credentials.</li></ul>
+</article>
 <article class="release" id="v0-2-15" aria-labelledby="v0-2-15-h">
-<div class="release-head"><h2 id="v0-2-15-h">0.2.15</h2><time datetime="2026-11-07">7 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="release-head"><h2 id="v0-2-15-h">0.2.15</h2><time datetime="2026-11-07">7 November 2026</time></div>
 <p>StartOS works with Lightning Fork's current releases, and a hashrate rental whose budget is spent ends cleanly.</p>
 <ul><li><strong>StartOS: connect Lightning Fork by pasting its address.</strong> Lightning Fork's current releases have no <em>Grant app access</em> action, so a fresh install showed a task that couldn't run and a service that kept failing. Now the app checks for the action. Without it, Your node walks you through pasting Lightning Fork's REST LND Connect address once; the app makes its own narrow key from it (it can pay and read, nothing more) and keeps neither the address nor the full-access key.</li>
 <li><strong>StartOS: the Node connection form offers Knots BLAKE2b's address</strong> (host <code>knots-blake2b.startos</code>, port 18443), and says to generate its RPC user first.</li>
