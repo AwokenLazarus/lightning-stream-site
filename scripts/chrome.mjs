@@ -9,7 +9,7 @@ import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "site");
-export const VERSION = "0.2.14";
+export const VERSION = "0.2.15";
 
 const NAV = [
   ["/how-it-works/", "How it works"],

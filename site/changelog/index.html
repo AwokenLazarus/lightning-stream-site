@@ -40,6 +40,7 @@
   <div class="page-body">
     <div class="wrap with-toc">
       <aside class="toc" aria-label="Versions"><div class="toc-inner"><h2>Versions</h2><ol>
+<li><a href="#v0-2-15">0.2.15 <span class="muted">&middot; 7 November 2026</span></a></li>
 <li><a href="#v0-2-14">0.2.14 <span class="muted">&middot; 5 November 2026</span></a></li>
 <li><a href="#v0-2-13">0.2.13 <span class="muted">&middot; 4 November 2026</span></a></li>
 <li><a href="#v0-2-12">0.2.12 <span class="muted">&middot; 4 November 2026</span></a></li>
@@ -77,8 +78,17 @@
 <li><a href="#v0-1-0">0.1.0 <span class="muted">&middot; 26 October 2026</span></a></li>
       </ol></div></aside>
       <div>
+<article class="release" id="v0-2-15" aria-labelledby="v0-2-15-h">
+<div class="release-head"><h2 id="v0-2-15-h">0.2.15</h2><time datetime="2026-11-07">7 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<p>StartOS works with Lightning Fork's current releases, and a hashrate rental whose budget is spent ends cleanly.</p>
+<ul><li><strong>StartOS: connect Lightning Fork by pasting its address.</strong> Lightning Fork's current releases have no <em>Grant app access</em> action, so a fresh install showed a task that couldn't run and a service that kept failing. Now the app checks for the action. Without it, Your node walks you through pasting Lightning Fork's REST LND Connect address once; the app makes its own narrow key from it (it can pay and read, nothing more) and keeps neither the address nor the full-access key.</li>
+<li><strong>StartOS: the Node connection form offers Knots BLAKE2b's address</strong> (host <code>knots-blake2b.startos</code>, port 18443), and says to generate its RPC user first.</li>
+<li><strong>A rental whose budget is spent ends as that.</strong> It used to end as "hashmaker closed: unpaid" with a failed slice. Now the card says "Ended: its budget was spent", nothing counts as failed, and a top-up after that asks the wallet again.</li>
+<li><strong>Your node says why Lightning Fork isn't ready:</strong> its wallet isn't made yet, it's locked, or it's still waiting for the XBT node to sync.</li>
+<li><strong>Smaller fixes.</strong> Home and Setup count the same steps done, and each platform's setup-code page shows only its own instructions.</li></ul>
+</article>
 <article class="release" id="v0-2-14" aria-labelledby="v0-2-14-h">
-<div class="release-head"><h2 id="v0-2-14-h">0.2.14</h2><time datetime="2026-11-05">5 November 2026</time><span class="tag tag-volt">Latest</span></div>
+<div class="release-head"><h2 id="v0-2-14-h">0.2.14</h2><time datetime="2026-11-05">5 November 2026</time></div>
 <p>No hashrate rental is paid to a hashmaker with no miner online or to a seller the wallet can't reach, a rental going on can be topped up, and shops that stopped are said to be offline and folded away.</p>
 <ul><li><strong>No rental is paid to a hashmaker whose miners are offline.</strong> A hashmaker refuses a new rental before any payment when it hasn't enough free miners, Rent is off for an offer with no free machine or hashrate, and the offer is read again right before the renter dials.</li>
 <li><strong>A seller the wallet can't reach is found before anything is paid.</strong> The renter asks the wallet's node for a route to the seller first, and a definite no says so on the offer's card.</li>
